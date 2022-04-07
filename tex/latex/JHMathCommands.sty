@@ -1,0 +1,259 @@
+\ProvidesPackage{JHMathCommands}[2021/04/10]
+\ExplSyntaxOn
+\RequirePackage{JHGeneralCommands}
+% \input_Setup_Package{JHGeneralCommands}
+
+
+%%% Grundlagen Mathematik
+\newcommand{\fa}[1]{\underset{{#1}}{\forall} \ }
+\newcommand{\ex}[1]{\underset{{#1}}{\exists} \ }
+\newcommand{\Ex}[1]{\underset{{#1}}{\exists!} \ }
+\newcommand{\Prod}[1]{\underset{{#1}}{\prod{}} \ }
+\newcommand{\Sum}[1]{\underset{{#1}}{\sum{}} \ }
+
+\newcommand{\und}{\mathbin{\wedge}}
+\newcommand{\oder}{\mathbin{\vee}}
+\newcommand{\nicht}{\neg}
+\mathname  {\gdw}{\Leftrightarrow}
+\mathname  {\dgdw}{:\!\Leftrightarrow}
+\newcommand{\falsch}{\perp}
+\newcommand{\wahr}{\top}
+\newcommand{\xoder}{\mathbin{\dot\vee}}
+\newcommand{\dann}{\Rightarrow}
+\newcommand{\wenn}{\Leftarrow}
+\newcommand{\unklar}[1]{\text{?`}#1\text{?}}
+
+\newcommand{\comp}[1]{#1^\textrm{c}}
+\newcommand{\ohne}{\setminus}
+\newcommand{\union}{\cup}
+\newcommand{\Union}{\bigcup}
+\newcommand{\schnitt}{\cap}
+\newcommand{\Schnitt}{\bigcap}
+\newcommand{\TeilM}{\subseteq}
+\newcommand{\OberM}{\supseteq}
+\newcommand{\symmDiff}∆%{\triangle}
+\NewDocumentCommand{\PotM}{d()}{\mathcal{P}\IfValueT{#1}{\left(#1\right)}} % wie die Befehle in physics
+
+\newcommand{\NDni}{\,\xcancel{\ni}\,}
+\newcommand{\NDin}{\,\xcancel{\in}\,} % für nicht definierte Aussagen
+\newcommand{\Gni}{\,\overline{\ni}\,}
+\newcommand{\Gin}{\,\overline{\in}\,} % für andere Elementbeziehung (etwa eine höhere Mengenlehre)
+
+\newcommand{\unmenge}[1]{\mathfrak{#1}}
+\newcommand{\Kat}[1]{{\ensuremath{\mathtt{#1}}}} % Kategorien
+\newcommand{\Cat}{{\Kat{C}}}
+
+\NewDocumentCommand\nach{ssoo}{
+    \mathrel{
+        \IfValueT{#3}{\overset{#3}} {
+            \IfValueT{#4}{\underset{#4}}
+            {
+                \IfBooleanTF{#1}{
+                    \IfBooleanTF{#2}{
+                            \twoheadrightarrow
+                    }{
+                            \hookrightarrow
+                    }
+                }{
+                    \rightarrow
+                }
+            }
+        }
+    }
+} % Abbildung von A nach B
+\NewDocumentCommand\von{ssoo}{
+    \mathrel{
+        \IfValueT{#3}{\overset{#3}} {
+            \IfValueT{#4}{\underset{#4}}
+            {
+                \IfBooleanTF{#1}{
+                    \IfBooleanTF{#2}{
+                            \twoheadleftarrow
+                    }{
+                            \hookleftarrow
+                    }
+                }{
+                    \leftarrow
+                }
+            }
+        }
+    }
+} % Abbildung von B nach A
+\NewDocumentCommand\nachKat{ssO{}m}{
+    
+    \IfBooleanTF{#1}{
+        \IfBooleanTF{#2}{
+            \nach**[#3][\Kat{#4}]
+        }{
+            \nach*[#3][\Kat{#4}]
+        }
+    }{
+        \nach[#3][\Kat{#4}]
+    }
+}
+
+\NewDocumentCommand\nachvon{oo}
+{
+    \IfValueT{#1}{\overset{#1}} {
+        \IfValueT{#2}{\underset{#2}}
+        {
+            \rightleftarrows
+        }
+    }
+}
+
+\newcommand\zu[1][]{\overset{#1}\mapsto} % wird abgebildet auf
+\newcommand\uz[1][]{\overset{#1}\mapsfrom} % wird abgebildet von 
+\newcommand\Mor[3][]{\qty[#2 \nachKat{#1} #3]} % Menge der Morphismen von A nach B
+\newcommand\Hom[3][]{\qty[#2 \nachKat{#1} #3]} % = \Mor
+\newcommand\End[1][]{\operatorname{End}\sb{\Kat{#1}}}
+\newcommand\Aut[1][]{\operatorname{Aut}\sb{\Kat{#1}}}
+
+\newcommand{\kri}{\circ} % Kringel
+\newcommand{\iso}[1][]{\overset{\Kat{#1}}\cong} % isomorph 
+\NewDocumentCommand{\id}{o}{\IfValueTF{#1}{\operatorname{id}\sb{#1}}{\operatorname{id}}}
+\newcommand{\Unter}[1]{\overset{\Kat{#1}}\TeilM} % X \Unter {K-VR} Y 
+
+\NewDocumentCommand\bisn{sO{n}}{
+    \IfValueTF{#1}{
+        {\left\lBrack#2\right\rbrack}
+    }{
+        {\left\lbrack#2\right\rBrack}
+    }
+}
+% \newcommand\bisn[1][n]{{\left\lBrack#1\right\rbrack}} % = {k \in \nN| k <= n}
+
+\newcommand{\AlgStr}[1][A]{\ensuremath{\mathcal{#1}}}
+\newcommand\Algstr[1][A]{\AlgStr[#1]}
+\newcommand{\algStr}[1]{\ensuremath{\symbf{#1}}}
+\newcommand\algstr[1]{\algStr{#1}} % Wenn man z.B. einen Ring von der zugrundeliegenden Menge unterscheiden will
+\newcommand{\algRegel}[1][R]{\mathfrak{#1}}
+
+\NewDocumentCommand\card{}\# % Kardinalität
+\NewDocumentCommand\Bild{}{\operatorname{im}}
+\NewDocumentCommand\interior{m}{\overset\circ{#1}}
+\NewDocumentCommand\Inneres{m}{\overset\circ{#1}}
+\NewDocumentCommand\Abschluss{m}{\overline{#1}}
+\newcommand\offUmg[1][]{\overset{\symcal O}\ni\sb{#1}}
+\newcommand\Umg[1][]{\overset{\symcal U}\ni\sb{#1}}
+\newcommand\off[1]{\overset{\symcal O}#1}
+\NewDocumentCommand\gegen{smmo}{
+    \IfValueT{#4}{
+            \underset{#4}
+        }
+    {
+        \IfBooleanTF{#1}{
+            \overset{#2 \searrow #3}
+        }{
+            \overset{#2 \rightarrow #3}
+        }
+        \longrightarrow
+    }
+}
+
+
+\mathname\dars{\doteq} % wird dargestellt (in Koordinaten) durch
+\mathname\sheq{\overset!=} % should equal (um eine Forderung hervorzuheben, oder was in der Äquivalenzkette bei mehreren Gleichheitszeichen als äquivalent gemeint ist)
+\newcommand\XM[1][M]{\mathcal{X}(#1)} % Vektorfelder auf M
+\newcommand\FM[1][M]{\mathcal{F}(#1)} % Skalarfelder auf M
+
+\NewDocumentCommand\Cr{O{r}}{\ensuremath{\mathnormal{C^{#1}}}} % r-mal stetig differenzierbar
+\NewDocumentCommand\Cinfty{O{\infty}}{\ensuremath{\mathnormal{C^{#1}}}} % glatt
+
+
+% META
+\NewDocumentCommand\NewAsymptoticRelation{m m m}{
+    \NewDocumentCommand#1{s s O{x} O{x\sb{0}} m}{
+        \IfBooleanTF{##1}{
+            \IfBooleanT{##2}{\in}
+            \underset{{##3\nach ##4}}{\mathop{#2}}\qty(##5)
+        }
+        {
+            \underset{{##3\nach ##4}}{\mathop{#3}} ##5
+        }
+    }
+}
+\NewAsymptoticRelation\asVern{\operatorname{o}}{\prec}
+\NewAsymptoticRelation\asMax{\symcal{O}}{\preccurlyeq}
+\NewAsymptoticRelation\asAppr{\operatorname{Θ}}{\asymp}
+\NewAsymptoticRelation\asMin{\operatorname{Ω}}{\curlyeqsucc }
+\NewAsymptoticRelation\asDom{\operatorname{ω}}{\succ}
+\NewAsymptoticRelation\asEqui{\sim}{\sim}
+
+\newcommand\invM{^{[-1]}} % Urbild einer Menge unter einer Funktion
+
+\newcommand{\varNum}[1]{\mathit{#1}}
+\mathname\0{\varNum 0}
+\mathname\1{\varNum 1}
+\mathname\+{\varNum{+}} % bringt in vielen Schriften nichts
+
+\newcommand\teilt{\dashv} % gehört noch überarbeitet % TODO
+\newcommand\vielf{\vdash}
+\newcommand\assoz{\parallel}
+
+
+%%%%%%% TUPEL
+
+\DeclareDocumentCommand{\vek}{m}{\rightharpoonaccent{#1}} % ⇀
+\DeclareDocumentCommand{\kovek}{m}{\leftharpoonaccent{#1}} % ↼
+\DeclareDocumentCommand\tup{m}{\underline{\smash{#1}}}
+\DeclareDocumentCommand\tuptup{m}{\underline{\tup{#1}}}
+% \DeclareDocumentCommand{\tup}{m}{\underline{#1}} % Tupel
+% \DeclareDocumentCommand{\tuptup}{m}{\underline{\underline{#1}}} % Doppeltes Tupel
+\newcommand\etwas{{\vern{\boxdot}}}
+
+\DeclareDocumentCommand\matr{sm}{
+    \IfBooleanTF{#1}{
+        \ensuremath{\begin{bmatrix}#2\end{bmatrix}}
+    }
+    {
+        \ensuremath{\begin{pmatrix}#2\end{pmatrix}}
+    }
+} % Spaltenvektoren, Matrizen etc. Mit Stern in eckigen Klammern, ohne mit runden Klammern
+
+\DeclareDocumentCommand\smallmatr{sm}{
+    \IfBooleanTF{#1}{
+        \ensuremath{\left\lbrack\begin{smallmatrix}#2\end{smallmatrix}\right\rbrack }
+    }{
+        \ensuremath{\left(\begin{smallmatrix}#2\end{smallmatrix}\right) }
+    }
+} % Kleinere Matrizen
+
+% \newcommand\Matr[2][;]{\ensuremath{\begin{pmatrix}\StrSubstitute{#1}{#2}{\\}\end{pmatrix}}}
+%% end Spaltentupel
+
+\DeclareDocumentCommand\smallcases{m}{\left\{ \begin{smallmatrix}#1\end{smallmatrix}\right.}
+
+% \renewcommand\underbrace[1]{\LaTeXunderbrace{#1}}
+% \renewcommand\overbrace[1]{\LaTeXoverbrace{#1}}
+
+
+\NewDocumentCommand\sigmaMat{s m}{
+    \IfBooleanTF{#1}{
+        \sigma\sb{#2}
+    }{
+        \str_if_eq:eeTF{#2}{0}{
+            \smallmatr*{1 & \\&1}
+        }{
+            \str_if_eq:eeTF{#2}{1}{
+                \smallmatr*{0 & 1\\1&0}
+            }{
+                \str_if_eq:eeTF{#2}{2}{
+                    \smallmatr*{0 & -i \\ i & 0}
+                }{
+                        \str_if_eq:eeTF{#2}{3}{
+                            \smallmatr*{1&\\ &-1}
+                        }
+                        {
+                            \sigmaMat*{#2}
+                        }
+                }
+            }
+        }
+    }
+}
+
+
+\DeclareBigOp{\Sternchen}{*}%leider nicht schön, funktioniert nicht mehr (Division durch 0, wahrscheinlich fehlt Größenangabe in der Schriftart)
+\DeclareBigOp{\Opex}{\opex}
+\newcommand\opex{⟐}

@@ -1,0 +1,44 @@
+\PassOptionsToPackage{ footinclude=false }{typearea}
+
+\LoadClass[
+	12pt,
+	DIV=13, % Bestimmt monoton fallend die Größe des Rands. 12 für Schriftgröße 12pt voreingestellt.
+	% headheight=18.86pt, %temporär. Hat sich beschwert, ich glaube seit 1.3 der linespread ist. Beschwert sich auch bei lokal größerem Linespread
+	% footheight=18.86pt, % ebenso
+	% twoside=true,
+	% BCOR=10mm, Buchinneres Correction
+	toc=bibliography,
+	cleardoublepage=empty,
+	open=right
+	]{scrreprt} % Lädt KOMA-Script-Pakete (insb. typearea)
+
+\RequirePackage[automark]{scrlayer-scrpage} %gehört zum KOMA-Script
+
+\RequirePackage[onehalfspacing]{setspace}
+% etwa äquivalent zu \linespread{1.3}
+
+\recalctypearea
+\AfterEndPreamble{ % AtBeginDocument schmeißt unverständlichen Fehler bei \begin{titlepage} wegen Wechselwirkung mit irgendwas mit pgf color
+	\makeatletter
+	\ifJHPreamble@simpleTitle
+		\begin{titlepage}
+            \maketitle
+        \end{titlepage}
+	\fi
+	\makeatother
+	\pagestyle{scrheadings}
+}
+
+\AtEndDocument{
+    \cleardoublepage 
+    \raggedright 
+    \printbibliography%
+}
+
+\newcommand\Inhaltsverzeichnis{
+    \clearpage
+    \pagenumbering{roman}
+    \tableofcontents
+    \clearpage
+    \pagenumbering{arabic}
+}

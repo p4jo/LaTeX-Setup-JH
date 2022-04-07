@@ -1,0 +1,214 @@
+\ProvidesPackage{JHGeneralCommands}
+\ExplSyntaxOn
+
+%%%%%%% META COMMANDS
+\NewDocumentCommand\mathname{mm}{\NewDocumentCommand{#1}{}{\ensuremath{#2}\xspace}}
+
+\RequirePackage{scalerel}
+\newcommand\DeclareBigOp[2]{\DeclareMathOperator*{#1}{\scalerel*{#2}{\sum}}} % Müssen in Präambel benutzt werden
+
+
+%%%%%%% Grundlagen 
+
+\newcommand{\Def}[1]{\textbf{#1}}
+\newcommand{\ger}[1]{\mathrm{#1}} % gerade, d.h. aufrecht
+
+
+\renewcommand\|{\,\middle|\,} % Für z.B. \qty{x \in A \| x \text{ dumm}}.
+
+\newcommand{\de}{\partial}
+% \renewcommand{\dd}{\mathup{d}}
+\newcommand{\vern}[1]{{\color{grau} #1 }} % Für vernachlässigbare oder unwichtige Stellen, wie \kB
+\newcommand{\sub}[1]{
+    \TextOrMath{\textsubscript{#1}}{\sb{\text{#1}}} % \sb = _ (das wird aber hier in ExplSyntax nicht als \sb interpretiert)
+}
+\newcommand{\supt}[1]{
+    \TextOrMath{\textsuperscript{#1}}{\sp{\text{#1}}} % \sp = ^ (for consistency)
+}
+\newcommand{\inv}{^{-1}}
+\newcommand{\konst}{\text{konst.}}
+
+\newcommand{\wert}[1]{\num{#1}} % obsolet
+\newcommand{\Wert}[2]{\SI{#1}{#2}\xspace} % obsolet
+
+\newcommand\numfrac[2]{\frac{\num{#1}}{\num{#2}}} 
+
+\RequirePackage{interval} % Optionen in format
+\newcommand\ivoo[2]{\ointerval[scaled]{#1}{#2}}
+\newcommand\ivao[2]{\rinterval[scaled]{#1}{#2}}
+\newcommand\ivoa[2]{\linterval[scaled]{#1}{#2}}
+\newcommand\ivaa[2]{\interval[scaled]{#1}{#2}}
+
+% \makeatletter
+% \def\interval@left@value\relax
+% \def\interval@right@value\relax
+% \def\set@interval@value[#1]{
+%     \ifx\interval@left@value\relax
+%         \def\interval@left@value{#1}
+%     \else
+%         \def\interval@right@value{#1}
+%     \fi
+% }
+\NewDocumentCommand\Ivaa{> { \SplitArgument{1} {,} } O{0,1} }{
+    \ivaa#1
+}
+\NewDocumentCommand\Ivao{> { \SplitArgument{1} {,} } D[[{0,1} }{
+    \ivao#1
+}
+\NewDocumentCommand\Ivoa{>{ \SplitArgument{1} {,} }d]] >{ \SplitArgument{1}{,} }D(]{0,1} }{
+    \IfValueTF{#1}{
+        \ivoa#1
+    }
+    {
+        \ivoa#2
+    }
+}
+\NewDocumentCommand\Ivoo{>{ \SplitArgument{1} {,} }d][ >{ \SplitArgument{1}{,} }D(){0,1} }{
+    \IfValueTF{#1}{
+        \ivoo#1
+    }
+    {
+        \ivoo#2
+    }
+}
+\@ifpackageloaded{unicode-math}{
+    \newcommand\numberset[1]{{\symbb{#1}}} % Zahlmengen (natürliche, ganze, reelle, etc.)
+}
+{
+    \newcommand\numberset[1]{{\mathbb{#1}}} 
+}
+\mathname\nN{\numberset{N}}
+\mathname\NN{{\numberset{N}\sb 0}} % "größer"
+\mathname\ZZ{\numberset{Z}}
+\mathname\RR{\numberset{R}}
+\mathname\CC{\numberset{C}}
+\mathname\QQ{\numberset{Q}}
+
+\@ifpackageloaded{hyperref}{
+    \newcommand\mathintitle[1]{\texorpdfstring{$#1$}{#1}}
+}{}
+
+%%%%% Komplexe Commands
+\newcommand\__Grafik_END{}
+\newcommand\__Grafik_PRE{}
+\newcommand\__Grafik_PATH{}
+\NewDocumentCommand\Grafik{O{} m m g D(){} d<> d|| s O{12}}{
+    \IfValueTF{#6}{
+        \renewcommand\__Grafik_END{#6}
+    }{
+        \renewcommand\__Grafik_END{}
+    }
+    \IfValueTF{#4}{
+        \renewcommand\__Grafik_PRE{}
+        \renewcommand\__Grafik_PATH{#4}
+    }{
+        \renewcommand\__Grafik_PRE{F.}
+        \renewcommand\__Grafik_PATH{\currentPath/#2}
+    }
+    
+    \IfBooleanTF#8{
+        \begin{figure}[H]
+    }
+    {
+        \begin{figure}[htb]
+    }
+        \begin{center}
+        \caption{#3} % #3 ist zweites m {Text}
+        \label{\__Grafik_PRE#2\__Grafik_END} % #2 ist erstes m {Label} bzw. {Name}
+            
+        \IfValueTF{#6} { % <Seite>
+            \includegraphics[width=#1\textwidth,page=#6]{\__Grafik_PATH}
+        }{ 
+            \IfValueTF{#7}{ % |Letzter Frame|
+                \animategraphics[width=#1\textwidth,autoplay,loop,controls={play,stop,step}]{#9}{\__Grafik_PATH}{0}{#7}
+            }{
+                \includegraphics[width=#1\textwidth]{\__Grafik_PATH}
+            }
+        }
+        \IfValueT{#5}{\\
+            {\scriptsize
+            % \sffamily
+            % \mathversion{sans}
+            #5}
+        }
+    \end{center}
+    \end{figure}
+}
+
+
+\newcommand{\Tabelle}[4]{
+    \begin{table}[htb]
+        \caption{#2}
+        \label{#1}
+        \centering
+        % \adjustbox{}{
+        % \adjustbox{max width=\textwidth}{
+            \begin{tabular}{#3}
+                #4
+            \end{tabular}
+        % }
+    \end{table}
+} 
+% BEISPIEL: \Tabelle{T.test}{Testtabelle}{c|c}{a&b\\b&a}
+
+
+% \pgfqkeys{/Code}{
+%   x1/.store in=\xone,
+%   y1/.store in=\yone,
+%   x2/.store in=\xtwo,
+%   y2/.store in=\ytwo
+% }
+% \newcommand\MyVal[1]{\pgfkeysvalueof{/Code/#1}}
+% \DeclareDocumentCommand\Code{O{} O{myPython} G{Code} g +d``}{
+%     \IfValueTF{#4}{
+%         \def\__Code_caption{#4}
+%     }{
+%         \def\__Code_caption{#3}
+%     }
+%     \IfValueTF{#5}{
+%         \begin{lstlisting}[language=#2,caption={\__Code_caption}]
+%             #5
+%         \end{lstlisting}
+%     }{
+%         \lstinputlisting[language=#2,caption={\__Code_caption}]{\currentPath/#3}%
+%     }
+% }
+
+% \def\code\lstlinline%
+
+\newcommand{\glei}[2]{\begin{equation}\tag{#1}\label{G.#1}
+    #2
+\end{equation}} % Gleichung, die keine Nummer, sondern einen Namen hat
+
+
+% equation environment. You can prepend \Gleichung* before inline-math with $...$ to allow multi-line equations.
+\NewDocumentCommand\Gleichung{
+    s % #1: Optional * for no name and number
+    g % #2: Optional {<Name>} for (<Name>) instead of (1.1.1) and label G.<Name>
+    D$${\text{\textcolor{red}{Gleichung fehlt.}}} % #3: Content of the equation in $...$
+    t. % #4: If you have a dot after the closing $, it will be pulled inside (instead of it being on the beginning of the next line)
+    t, % #5: Same for commas
+}{ 
+    \IfBooleanTF{#1}{
+        \begin{equation*}
+    }{
+        \begin{equation}
+    }
+        \IfValueT{#2}{
+            \IfBooleanTF{#1}{
+            }{
+                \tag{#2}
+            }
+            \label{G.#2}
+        }
+        \begin{split}
+            #3
+            \IfBooleanT{#4}{.}
+            \IfBooleanT{#5}{,}
+        \end{split}
+    \IfBooleanTF{#1}{
+        \end{equation*}
+    }{
+        \end{equation}
+    }
+}

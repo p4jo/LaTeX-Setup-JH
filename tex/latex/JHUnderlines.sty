@@ -1,0 +1,25 @@
+\ProvidesPackage{JHUnderlines}{2021/04/10}
+
+% Aus dem Internet. Unterstreichung, die den Text weiß umrandet, damit der Unterstrich nicht die Buchstaben schneidet
+\usepackage[outline]{contour}
+
+\usepackage{ulem}
+\normalem % use classical emph
+
+\newcommand \myul[4]{%
+  \begingroup%
+  \renewcommand \ULdepth {#1}%
+  \renewcommand \ULthickness {#2}%
+  \contourlength{#3}%
+  \uline{\phantom{#4}}\llap{\contour{white}{#4}}%
+  \endgroup%
+}
+
+\newcommand \myulline[4]{%
+  \begingroup%
+  \renewcommand \ULdepth {#1}%
+  \renewcommand \ULthickness {#2}%
+  \contourlength{#3}%
+  \noindent\rlap{\uline{\hspace{\textwidth}}}\contour{white}{#4}%
+  \endgroup%
+}

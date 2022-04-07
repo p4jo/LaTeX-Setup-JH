@@ -1,0 +1,101 @@
+\addtokomafont{sectioning}{\rmfamily\boldmath\color{dunkelblau}}
+%\addtokomafont{sectioning}{\mathversion{sansbold}}
+\addtokomafont{pagehead}{\normalfont\color{dunkelgrau}}
+\addtokomafont{caption}{\sffamily\mathversion{sans}\footnotesize}
+\addtokomafont{captionlabel}{\sffamily\bfseries\footnotesize}
+\setcapindent{0cm}
+%\addtokomafont{pagenumber}{\sffamily}
+\setkomafont{pagenumber}{\normalfont}
+
+\renewcaptionname{ngerman}{\figurename}{Abb.}
+\renewcaptionname{ngerman}{\figureautorefname}{Abb.}
+\renewcaptionname{ngerman}{\tableautorefname}{Tabelle} %War auf 'Abschnitt' ?
+
+
+% \linespread{1.3}
+
+% \renewcommand{\topfraction}{0.85}
+% \renewcommand{\bottomfraction}{0.85}
+% \renewcommand{\textfraction}{0.1}
+% \renewcommand{\floatpagefraction}{0.8}
+
+
+\clubpenalty9998
+\widowpenalty9999
+\displaywidowpenalty=9999
+
+
+\usepackage{amsthm}
+\usepackage{thmtools}
+
+\declaretheoremstyle[
+    bodyfont=\upshape,
+    headfont={\sffamily\bfseries},
+    notefont={\sffamily\bfseries},
+    headpunct={:},
+]{JHDefinition}
+
+\declaretheoremstyle[
+    bodyfont={\color{dunkelgrau}}
+]{JHProof}
+
+\declaretheoremstyle[
+    bodyfont={\upshape%\color{dunkelgrau}
+        },
+    headfont=\itshape,
+    notefont=\itshape,
+    headpunct={:},
+]{JHRemark}
+
+
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=blasshellblau
+    }
+]{definition}
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=hellgrün
+    }
+]{Satz}
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=hellgrau
+    },
+    numberlike=Satz
+]{Lemma}
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=hellgrau
+    },
+    numberlike=Satz
+]{Korollar}
+\declaretheorem[
+    style=JHDefinition,
+    numbered=no
+]{Beispiel}
+
+\declaretheorem[
+    style=JHProof,
+    numbered=no
+]{Beweis}
+
+\declaretheorem[
+    style=JHRemark,
+    name=Bemerkung,
+    numbered=no
+]{remark}
+\declaretheorem[
+    style=JHRemark,
+    name=Bemerkung,
+    numbered=no
+]{bem}
+\declaretheorem[
+    style=JHRemark,
+    name=Bemerkung,
+    numbered=no
+]{Bemerkung}

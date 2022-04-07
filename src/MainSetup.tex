@@ -1,0 +1,38 @@
+
+
+%braucht man für altes pdflatex
+% \RequirePackage[LGR,T1]{fontenc} %
+	%\RequirePackage[utf8]{inputenc} 
+%scheint man für lualatex zu brauchen, aber nur, wenn die Schriftart nicht unicode ist.
+% \RequirePackage[utf8]{luainputenc} 
+
+\RequirePackage[
+	greek,
+	english,
+	ngerman
+	]{babel} % Setzt Sprache des Texts, wird von vielen Paketen für Locale verwendet. (z.B. enquote oder siunitx)
+
+% \RequirePackage{polyglossia} %funktioniert wahrsch nur mit einer TTF Schrift (XeLaTeX)
+% \setdefaultlanguage[spelling=new]{german}
+% \setotherlanguage{greek}
+
+
+\RequirePackage[
+	backend=biber,
+	style=phys,
+	biblabel=brackets]{biblatex} % Verwendet Referenzen.bib
+
+\RequirePackage{hyperref}
+
+% %%Zusatzstuff
+\ifbool{JHPreamble@useSilence}{
+	\RequirePackage{silence} % Um Fehlermeldungen auszublenden
+
+	% \WarningFilter{stmaryrd}{Font shape}
+	\WarningFilter{latex}{Some font shapes}
+	\WarningFilter{latex}{Empty bibliography}
+	% \WarningFilter{latex}{Underfull }
+	% \WarningFilter{fontspec}{OpenType feature}
+	\WarningFilter{latex}{requested package}
+}{} %% Kann man in LateX-Workshop auch \enquote{muten} -- ist dann noch im Log, aber nicht unten bei Problems
+

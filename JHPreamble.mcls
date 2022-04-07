@@ -1,0 +1,97 @@
+\ProvidesClass{JHPreamble}[2020/12/01 Preamble of Johannes H.]
+\NeedsTeXFormat{LaTeX2e}[2020/03/03] % should have expl3 native support
+
+%%% PrePreamble
+\ExplSyntaxOn
+
+\RequirePackage{etoolbox} %toggles
+\RequirePackage{kvoptions} % key-value options
+
+%%% Options
+\DeclareStringOption[Anonymous author]{author}
+\DeclareStringOption[Empty title]{title}
+\DeclareStringOption[NoName]{name}
+\DeclareStringOption[tex/latex]{SetupPath}
+
+
+\DeclareBoolOption{Presentation}
+\DeclareBoolOption{useAccents}
+\DeclareBoolOption{useGreekLetterCommands}
+\DeclareBoolOption{useSilence}
+\DeclareBoolOption{KpMath}
+\DeclareBoolOption{STIX}
+\DeclareBoolOption{StandardMathFonts}
+\DeclareBoolOption{StandardTextFonts}
+\DeclareBoolOption{simpleTitle}
+% \DeclareBoolOption{Moritz}
+\DeclareBoolOption{omitFloat}
+\DeclareBoolOption{useIdealSymbols}
+\DeclareBoolOption{PackagesByPath}
+
+
+\DeclareDefaultOption{ %Jede weitere Option
+    \PassOptionsToClass{\CurrentOption}{scrreport}
+    \PassOptionsToClass{\CurrentOption}{beamer}
+}
+
+\ProcessKeyvalOptions*
+% \ProcessOptions\relax
+
+%%% Stuff
+
+% \newcommand\input_Setup_File[1]{\input{\JHPreamble@SetupPath/#1}}
+% Seit 11.2.22 ersetzt durch % TeX input ⇒ erzeugt fixe Datei
+% !TeX input ~ ./tex/latex
+
+\ifJHPreamble@PackagesByPath
+    \newcommand\input_Setup_Package[1]{\RequirePackage{\JHPreamble@SetupPath/#1}\ExplSyntaxOn}
+\else
+    \newcommand\input_Setup_Package[1]{\RequirePackage{#1}\ExplSyntaxOn} % Only works if this is added to tex    
+\fi
+
+%%%%%%%%%%%%%%
+%%% Files and Packages
+%%%%%%%%%%%%%% 
+
+\ifJHPreamble@Presentation
+% !TeX input PresentationMainSetup
+\else
+% !TeX input ArticleMainSetup
+\fi
+% !TeX input MainSetup
+
+\RequirePackage{mathtools} % überschreibt underbrace in unicode-math, was dann nicht mehr funktioniert, muss deshalb vor unicode-math geladen werden.
+
+% !TeX input Fonts 
+
+% !TeX input Packages 
+% !TeX input Colors
+% !TeX input GeneralSetup
+% !TeX input BibliographySettings
+
+\ifJHPreamble@Presentation
+% !TeX input PresentationFormatSettings
+\else
+% !TeX input ArticleFormatSettings
+\fi
+
+\input_Setup_Package{JHGeneralCommands}
+\input_Setup_Package{JHMathCommands}
+\input_Setup_Package{JHPhysicsCommands}
+% !TeX input GreekLetterNames
+
+% \ifJHPreamble@useGreekLetterCommands
+%     \input_Setup_Package{JHGreekLetters}
+% \fi
+\ifJHPreamble@useAccents
+    \message{Tensors}
+    \input_Setup_Package{JHTensors}
+\fi
+\ifJHPreamble@useIdealSymbols
+    \input_Setup_Package{JHIdealSymbols}
+\fi
+
+\author{\JHPreamble@author}
+\title{\JHPreamble@title}
+
+\ExplSyntaxOff

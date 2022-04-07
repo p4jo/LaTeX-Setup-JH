@@ -1,0 +1,98 @@
+\ProvidesPackage{JHGreekLetters}
+
+
+
+%%% Griechische Buchstaben 
+
+% Quasi obsolet mit unicode-maths und OTF und LuaLaTeX
+
+
+\newcommand{\IfInAMathMode}[2]{\TextOrMath{#2}{#1}}
+
+\newcommand{\griechischeBuchstabenNurInMathe}{\toggletrue{griechischeBuchstabenNurInMathe}}
+\newcommand{\griechischeBuchstabenNichtNurInMathe}{\togglefalse{griechischeBuchstabenNurInMathe}}
+\newtoggle{griechischeBuchstabenNurInMathe}
+\griechischeBuchstabenNichtNurInMathe
+
+% \newcommand{\griechischeBuchstaben}[2]{\texorpdfstring{\iftoggle{griechischeBuchstabenNurInMathe}{$#2$}{\foreignlanguage{greek}{#1}}}{#1}} % Erstes Argument: κ, zweites \kappa
+
+\newcommand{\griechischerText}[1]{\texorpdfstring{\foreignlanguage{greek}{#1}}{#1}} % Argument: τεχτ
+\newcommand{\defineGreekLetterCommand}[3]{\newcommand{#1}{
+    {\texorpdfstring{
+        \iftoggle{griechischeBuchstabenNurInMathe}{\ensuremath{#2}\xspace}{\foreignlanguage{greek}{#1}}
+    }{#3}}    
+}}
+
+\defineGreekLetterCommand\α \alpha α
+\defineGreekLetterCommand\β \beta β
+\defineGreekLetterCommand\ϐ \varbeta ϐ
+\defineGreekLetterCommand\γ \gamma γ
+\defineGreekLetterCommand\δ \delta δ
+\defineGreekLetterCommand\ϵ \epsilon ϵ % lunate epsilon symbol
+\defineGreekLetterCommand\ε \varepsilon ε % normales epsilon
+\defineGreekLetterCommand\ζ \zeta ζ
+\defineGreekLetterCommand\η \eta η
+\defineGreekLetterCommand\θ \theta θ
+\defineGreekLetterCommand\ϑ \vartheta ϑ %theta symbol
+\defineGreekLetterCommand\ι \iota ι
+\defineGreekLetterCommand\κ \kappa κ
+\defineGreekLetterCommand\λ \lambda λ
+\defineGreekLetterCommand\μ \mu μ
+\defineGreekLetterCommand\ν \nu ν
+\defineGreekLetterCommand\ξ \xi ξ
+\defineGreekLetterCommand\π \pi π
+\defineGreekLetterCommand\ρ \rho ρ
+\defineGreekLetterCommand\ϱ \varrho ϱ %rho symbol
+\defineGreekLetterCommand\σ \sigma σ
+\defineGreekLetterCommand\ς \varsigma ς %sigma Endform
+\defineGreekLetterCommand\τ \tau τ
+\defineGreekLetterCommand\υ \upsilon υ
+\defineGreekLetterCommand\φ \varphi φ % phi normal
+\defineGreekLetterCommand\ϕ \phi ϕ %phi symbol
+\defineGreekLetterCommand\χ \chi χ
+\defineGreekLetterCommand\ψ \psi ψ
+\defineGreekLetterCommand\ω \omega ω
+
+\defineGreekLetterCommand\Α \Alpha Α
+\defineGreekLetterCommand\Β \Beta Β
+\defineGreekLetterCommand\Γ \Gamma Γ
+\defineGreekLetterCommand\Δ \Delta Δ
+\defineGreekLetterCommand\Ε \epsilon Ε
+\defineGreekLetterCommand\Ζ \Zeta Ζ
+\defineGreekLetterCommand\Η \Eta Η
+\defineGreekLetterCommand\Θ \Theta Θ
+\defineGreekLetterCommand\ϴ \Theta ϴ % Theta symbol
+\defineGreekLetterCommand\Ι \Iota Ι
+\defineGreekLetterCommand\Κ \Kappa Κ
+\defineGreekLetterCommand\Λ \Lambda Λ
+\defineGreekLetterCommand\Μ \Mu Μ
+\defineGreekLetterCommand\Ν \Nu Ν
+\defineGreekLetterCommand\Ξ \Xi Ξ
+\defineGreekLetterCommand\Π \Pi Π
+\defineGreekLetterCommand\Ρ \Rho Ρ
+\defineGreekLetterCommand\Σ \Sigma Σ
+\defineGreekLetterCommand\Τ \Tau Τ
+\defineGreekLetterCommand\ϒ \Upsilon ϒ
+\defineGreekLetterCommand\Φ \Phi Φ
+\defineGreekLetterCommand\Χ \Chi Χ
+\defineGreekLetterCommand\Ψ \Psi Ψ
+\defineGreekLetterCommand\Ω \Omega Ω
+
+\providecommand\ita\η
+\providecommand\Ita\Η
+\providecommand\alfa\α
+\providecommand\Alfa\Α
+\providecommand\eps\ε
+\providecommand\ro\ϱ
+\providecommand\vita\β
+\providecommand\Vita\Β
+\providecommand\fii\φ %varphi
+\providecommand\ffi\ϕ %phi symb
+\providecommand\Fii\Φ
+\providecommand\lamda\λ
+\providecommand\Lamda\Λ
+\providecommand\taf\τ
+\providecommand\Taf\Τ
+\providecommand\ny\ν
+\providecommand\my\μ
+\providecommand\teta\ϑ

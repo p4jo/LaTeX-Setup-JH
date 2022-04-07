@@ -1,0 +1,57 @@
+\ProvidesPackage{JHTensors}{2021/04/10}
+%%% Vektorrechnung
+% \makeatletter
+% \newcommand{\oset}[3][0ex]{%
+%   \mathop{#3}\limits^{
+%     \vbox to#1{\kern-2ex
+%     \hbox{$\scriptstyle{#2}$}\vss}}}
+% \makeatother
+% \vec aus physics gibt Vektorpfeile nach oben und unten
+\DeclareDocumentCommand{\vek}{m}{\rightharpoonaccent{#1}} % ⇀
+\DeclareDocumentCommand{\kovek}{m}{\leftharpoonaccent{#1}} % ↼
+
+\DeclareDocumentCommand\tup{m}{\underline{\smash{#1}}}
+\DeclareDocumentCommand\tuptup{m}{\underline{\tup{#1}}}
+% \DeclareDocumentCommand{\tup}{m}{\underline{#1}} % Tupel
+% \DeclareDocumentCommand{\tuptup}{m}{\underline{\underline{#1}}} % Doppeltes Tupel
+
+
+% \DeclareDocumentCommand\matr{m}{\ensuremath{\begin{pmatrix}#1\end{pmatrix}}}
+% \newcommand\Matr[2][;]{\ensuremath{\begin{pmatrix}\StrSubstitute{#1}{#2}{\\}\end{pmatrix}}}
+%% end Spaltentupel
+
+\RequirePackage[single]{accents} % Um auch ↽ u.ä. als accent zu haben
+%%%% accents definiert irgendwie \vec und \dot nicht richtig
+
+\let\cc@palette\mathpalette
+
+% \let\vec\relax
+\DeclareMathAccent{\vec}{\mathord}{letters}{"7E}  % Das ist aus der Dokumentation und funktioniert gut
+
+%die folgenden sind mein Versuch, den \dot auch zu definieren. Ist aber kacke und es kommt aufrecht und nicht italic raus.
+% \renewcommand\dot[1]{\accentset{.}#1}
+\DeclareSymbolFont{zeug}{OT1}{cmr}{m}{n} % muss besser gehen, ich kenne mich aber nicht aus. Das ist so ein Müll.
+% \DeclareMathAccent{\dot}{\mathord}{symit}{"B7}
+% \DeclareMathAccent{\dot}{\mathord}{mathb}{"38}
+\DeclareMathAccent{\dot}{\mathord}{zeug}{"5F}
+% {"2E} % ist falsches Symbol (.)
+% {"B7} %ist unsichtbar oder so
+\DeclareMathAccent{\ddot}{\mathord}{zeug}{"7F}
+% \renewcommand{\tilde}[1]{\accentset{∼}{#1}}
+\renewcommand{\tilde}[1]{\accentset{\widetilde{}}{#1}}
+%%%%%
+
+\newcommand{\Vek}[1]{\accentset ⇁{#1}}
+\newcommand{\Kovek}[1]{\accentset ↽{#1}}
+
+
+\newcommand{\vekkovek}[1]{\accentset ⥎{#1}}
+\newcommand{\vekKovek}[1]{\accentset ⥋{#1}}
+\newcommand{\Vekkovek}[1]{\accentset ⥊{#1}}
+\newcommand{\VekKovek}[1]{\accentset ⥐{#1}}
+% \RequirePackage{harpoon}
+% \newcommand{\kovek}[1]{\leftharpoonaccent{#1}} 
+% \newcommand{\Kovek}[1]{\text{\overleftharpdown{\ensuremath{#1}}}} % Leider nicht schön
+\newcommand{\vektup}[1]{\underaccent ⇁{#1}}
+\newcommand{\kovektup}[1]{\underaccent ↽{#1}}
+\newcommand{\tyup}[2]{\underset{\neg}{#2}} %Typ-Tupel %todo

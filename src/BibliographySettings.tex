@@ -1,0 +1,15 @@
+% \addbibresource{\currentPath/Referenzen.bib}
+\DeclareFieldFormat{journaltitle}{\textsl{#1}\isdot} 
+\DeclareFieldFormat{titlecase}{{#1}}
+\ExecuteBibliographyOptions
+{
+    articletitle = true,
+    autocite  = inline, %superscript,
+    autopunct = false,
+    sorting   = none
+    % style     = plain
+}  
+\renewbibmacro*{journal+issuetitle}{%
+\mbox{\printfield{journaltitle}~\usebibmacro{volume+number+eid}}%
+\setunit*{\addnbspace}%
+}

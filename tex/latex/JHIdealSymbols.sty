@@ -1,0 +1,76 @@
+\ProvidesPackage{JHIdealSymbols}[Symbols for writing specific ideal relations on rings (prime ideals, maximal ideals etc.)]
+
+\ExplSyntaxOn
+\RequirePackage{kvoptions}
+
+
+\DeclareBoolOption{slanted}
+
+\ProcessKeyvalOptions*
+
+
+
+
+\RequirePackage{mathtools,centernot}
+%%%%% Symbole
+\newcommand\__homidealsymbol		{\ensuremath{\scriptscriptstyle{\oplus}}}
+\newcommand\__radicalsymbol		{\ensuremath{\scriptscriptstyle{\sqrt{\,}}}}
+\newcommand\__primeidealsymbol	{\ensuremath{\scriptscriptstyle{\mathfrak p}}}
+\newcommand\__nothomidealsymbol	{\ensuremath{\scriptscriptstyle{\not{\oplus}}}}
+\newcommand\__notradicalsymbol	{\ensuremath{\scriptscriptstyle{\not{\sqrt{\,}}}}}
+\newcommand\__notprimeidealsymbol	{\ensuremath{\scriptscriptstyle{\mathfrak{\not p}}}}
+
+\def\__rotation{90}
+\ifJHIdealSymbols@slanted
+	\def\__rotation{65}
+\fi
+
+\newcommand\__idealsymbol{\ensuremath{\vartriangleleft}}
+\newcommand\__notidealsymbol{\ensuremath{\centernot\vartriangleleft}}
+\newcommand\__orequalsymbol{\rotatebox{\__rotation}{\ensuremath{\scalerel*\mid\vartriangleleft}}}
+\newcommand\__butnotequalsymbol{\rotatebox{\__rotation}{\reflectbox{\ensuremath{\scalerel*{\not\mid}\vartriangleleft}}}}
+
+%%%%% TeX
+
+\newcommand\__idealNOT[1]{\centernot#1}
+% \newcommand\__idealNOT[1]{{\mathrlap{~\,/}}#1}
+\newcommand\newMathRelation[2]{\newcommand{#1}{\ensuremath{\mathrel{#2}}}}
+\newcommand\putabove[3]{\ooalign{
+	#1\cr
+	\hidewidth
+	\raisebox{#2}{#3}\cr
+}}%#1\llap{\raise#2\hbox{#3}}  
+
+
+%%%%%% Idealrelationen
+
+\newMathRelation\ideal			\__idealsymbol
+\newMathRelation\idealeq		{\putabove{\__idealsymbol}{-0.5ex}{\__orequalsymbol}}
+\newMathRelation\idealneq		{\putabove{\__idealsymbol}{-0.6ex}{\__butnotequalsymbol}}
+\newcommand\notideal			{\putabove{\__notidealsymbol}{-0.5ex}{\__orequalsymbol}}
+\newcommand\notidealeq			{\putabove{\__notidealsymbol}{-0.6ex}{\__butnotequalsymbol}}
+
+\newMathRelation\maxideal		{\putabove{\__idealsymbol}{0.7ex}{\reflectbox{\__butnotequalsymbol}}}
+\newcommand\nmaxideal			{\__idealNOT\maxideal}
+
+\newcommand\primeideal     		{\overset{\__primeidealsymbol}{\ideal}}
+\newcommand\primeidealeq   		{\overset{\__primeidealsymbol}{\idealeq}}
+\newcommand\primeidealneq  		{\overset{\__primeidealsymbol}{\idealneq}}
+\newcommand\nprimeideal    		{\overset{\__notprimeidealsymbol}{\ideal}}
+\newcommand\nprimeidealeq  		{\overset{\__notprimeidealsymbol}{\idealeq}}
+\newcommand\nprimeidealneq 		{\overset{\__notprimeidealsymbol}{\idealneq}}
+
+\newcommand\homideal          	{\overset{\__homidealsymbol}{\ideal}}
+\newcommand\homidealeq   		{\overset{\__homidealsymbol}{\idealeq}}
+\newcommand\homidealneq  		{\overset{\__homidealsymbol}{\idealneq}}
+\newcommand\nhomideal    		{\overset{\__nothomidealsymbol}{\ideal}}
+\newcommand\nhomidealeq  		{\overset{\__nothomidealsymbol}{\idealeq}}
+\newcommand\nhomidealneq 		{\overset{\__nothomidealsymbol}{\idealneq}}
+
+\newcommand\radideal      		{\overset\__radicalsymbol{\ideal}}
+\newcommand\radidealeq    		{\overset\__radicalsymbol{\idealeq}}
+\newcommand\radidealneq   		{\overset\__radicalsymbol{\idealneq}}
+\newcommand\nradideal     		{\overset{\__notradicalsymbol}{\ideal}}
+\newcommand\nradidealeq   		{\overset{\__notradicalsymbol}{\idealeq}}
+\newcommand\nradidealneq  		{\overset{\__notradicalsymbol}{\idealneq}}
+\ExplSyntaxOff

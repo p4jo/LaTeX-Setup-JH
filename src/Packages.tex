@@ -1,0 +1,59 @@
+
+% \AtBeginDocument{
+
+%     \RequirePackage{microtype} % sorgt für besseres Schriftbild, indem es micro-Anpassungen macht. 
+% }
+\RequirePackage[autostyle=true]{csquotes} % \enquote{...} statt "...". Lokalisierbare Anführungszeichen 
+
+\RequirePackage{graphicx} % für \Grafik
+\RequirePackage{animate} % für gif-\Grafik 
+
+\RequirePackage{pdfpages} %Um pdfs anzuhängen 
+\RequirePackage[export]{adjustbox} %Um Bilder nur eingeschränkt anzuhängen
+
+\RequirePackage{listings} % Um code anzuhängen. Einstellungen in GeneralSetup
+
+
+\ifbool{JHPreamble@omitFloat}
+{
+
+}
+{
+    \RequirePackage{float} % Um \begin{figure}[H] zu machen
+}
+\RequirePackage{color}
+% \RequirePackage[dvipsnames]{xcolor}
+
+\RequirePackage{amsmath} % in kpfonts
+
+% \RequirePackage{breqn} % Verändert equation parsing, sodass sie automatische Zeilenumbrüche haben.
+
+\RequirePackage{siunitx} %\si{\kilo\metre\per\second\squared} \num{3,14(7)E-4} \SI{8,7+-2.3}\ampere\
+% \RequirePackage{ziffer} %macht Kommas in Zahlen zu ,\! oder so, aber besser wäre \num aus siunitx
+
+% \ 
+
+\RequirePackage{physics} %\bra, \ket, \qty (macht Klammern zu \left \right Paaren)
+
+\RequirePackage{interval} % um Intervalle gut zu setzen. Einstellungen in format.
+
+% \RequirePackage{titling} % Um Titelseite zu verändern, müsste man aber mit der KOMA-Script Klasse eh können
+
+% \RequirePackage{pgffor} % Funktionalität wahrscheinlich in etoolbox oder lua oder xparse (-> LaTeX3) enthalten
+
+\RequirePackage{cancel} % Durchstreichen in Mathe
+
+\RequirePackage{xspace} % Ein Leerzeichen, das man ans Ende von Befehlen bauen kann, das keines wird, wenn da ein Satzzeichen steht
+\RequirePackage{scalerel} % Größe von Symbolen anpassen (für Große Operatoren à la \sum)
+\RequirePackage{xfrac} % für \sfrac, ein schräger Bruch mit kleinerer Schrift. Leider etwas seltsam
+
+% \RequirePackage{amssymb} % geht nicht gescheit. Geht nicht zusammen mit unicode-math % Inhalt eh in kpfonts-otf drin
+
+% \RequirePackage{stmaryrd} % Eigentlich nur für \llbracket, das gibts in kpfonts (als \lBrack) und in unicode-math
+% \RequirePackage{bm} % braucht es auch mit kpfonts nicht
+%\RequirePackage{upgreek} % braucht's mit unicode-math natürlich auch nicht
+
+\RequirePackage{tensind} % 
+% \tensordelimiter{§} % Funktioniert nicht, da unicode-math so normale Zeichen überschreibt, auf eine Art und Weise, die tensind nicht überschreibt
+\tensordelimiter{￭}
+\tensorformat{}

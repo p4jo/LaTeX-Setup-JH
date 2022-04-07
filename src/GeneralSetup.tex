@@ -1,0 +1,69 @@
+\xspaceaddexceptions{“ "-}
+
+
+% \intervalconfig{soft open fences} %kann man verwenden, um Intervalle (a,b] zu erzeugen
+% \intervalconfig{separator symbol=;} %kann man verwenden, um Intervalle ]a;b] zu erzeugen
+
+\sisetup
+{
+	detect-all, %Alle äußeren Font-Veränderungen werden übernommen
+	locale=DE, %insb. , statt .
+	range-phrase={\ bis\ }, %in \SIrange
+	separate-uncertainty=true, % (1,32 \pm 0, 22) statt 1,32(22) in Ausgabe
+	%table-figures-uncertainty = 1, % reserves space for one \pm sign (use as \tabular{S[tab..]})
+	% EITHER
+		% per-mode=symbol-or-fraction,
+	% OR
+		per-mode=fraction, %
+		fraction-function=\sfrac,
+	% ENDEITHER
+	% round-integer-to-decimal=true,
+	% quotient-mode=fraction, % Option wurde entfernt
+	% literal-superscript-as-power=true % Option nicht mehr notwendig
+}
+
+\shorthandoff{"} % Würde normalerweise "a zu ä machen.
+
+
+\hypersetup
+{
+	colorlinks	= true,
+	linkcolor   = dunkelblau, 
+	citecolor   = dunkelblau,
+	bookmarksnumbered = true,
+	urlcolor    = dunkelblau,
+	pdfauthor   = {\JHPreamble@author},
+	pdftitle    = {\JHPreamble@title}%,
+	% pdfsubject  = {Mathematik},
+	% pdfkeywords = {Fundamental, Mathematik}
+}
+
+
+\lstset{
+    basicstyle=\scriptsize\codeFont,
+    keywordstyle=\bfseries\color{lila},
+    emphstyle=\color{dunkelrot},
+    stringstyle=\color{dunkelgrün},
+    commentstyle=\color{dunkelgrau},
+    identifierstyle=\color{dunkelblau},
+    numbers=left,
+    stepnumber=5,
+    frame=tb,
+    showstringspaces=false,
+    showspaces=false,
+    showtabs=false,
+    breaklines=true,
+    tabsize=2
+}
+
+\lstdefinelanguage
+    [JH]{Python} % dialect JH of Python
+    []{Python} % based on standard dialect of Python
+{
+    morekeywords={self,True,False,as,assert},           
+    emph={__init__,__str__,__repr__,\#\#\#\#\#\#\#}
+}
+
+
+
+% \hyphenation{Hoch-tem-pera-tur-su-pra-lei-tern Ku-pfer-atomen}

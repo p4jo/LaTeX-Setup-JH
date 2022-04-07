@@ -1,0 +1,157 @@
+\ExplSyntaxOn
+
+% \RequirePackage{fontspec} % in unicode-math
+
+\RequirePackage[
+    math-style=ISO, % Macht gr. Großbuchstaben kursiv
+    bold-style=ISO 
+    ]{unicode-math} 
+% \ifJHPreamble@PackagesByPath
+    % \newcommand{\__FontPath}{fonts/opentype}
+% \else
+%     \newcommand\__FontPath{}
+% \fi
+    
+\newcommand{\__FontPath}{fonts/opentype/}
+
+\ifJHPreamble@StandardMathFonts
+\else
+    \ifJHPreamble@KpMath
+        %%% kpfonts haben einige Zeichen nicht, deshalb zu STIX2Math gewechselt. Passen beide nicht wirklich zu MinionPro
+
+        % \RequirePackage{kpfonts}
+        % \RequirePackage[mathcal,bbsans,notext]{kpfonts-otf}
+        \setmathfont[
+            Path=\__FontPath,
+            version=normal
+        ]{KpMath-Regular.otf}
+
+        \setmathfont[
+            Path=\__FontPath,
+            version=bold
+        ]{KpMath-Bold.otf}
+
+        % % \setmathfont{KpMath-Semibold.otf}[Path=\__FontPath,version=semibold]
+        % \setmathfont{KpMath-Sans.otf}[Path=\__FontPath,version=sans]
+        % \setmathfont{KpMath-Light.otf}[Path=\__FontPath,version=light]
+
+
+        % \newfontfamily{\fallbackfont}{STIX2Math}[Path=\__FontPath,
+        %     Extension = .otf
+        % ]
+
+        % \DeclareTextFontCommand{\usefallbackfont}{\fallbackfont}
+
+    \else
+        \setmathfont[
+            Path=\__FontPath,
+            version=bold
+        ]{XITSMath-Bold.otf}
+
+        %%% STIX2Math und XITS (STIX)
+        \ifJHPreamble@STIX
+            \setmathfont[
+                Path=\__FontPath,
+                version=normal
+            ]{STIX2Math.otf}
+        \else
+            \setmathfont[
+                Path=\__FontPath,
+                version=normal
+            ]{XITSMath.otf} 
+        \fi
+    \fi
+
+
+    % \setmathfont[
+    %     Path=\__FontPath,
+    %     version=sans
+    % ]{GFSNeohellenicMath.otf}
+    
+    % \setmathfont[
+    %     Path=\__FontPath,
+    %     range={"2983-"29FC},
+    %     version=sans
+    % ]{XITSMath.otf}
+    
+    \setmathfont[
+        Path=\__FontPath,
+        % range={up, it, bb, frak, cal, scr, sfup, sfit, bfup,bfit, bfcal},
+        version=sans
+    ]{KpMath-Sans.otf}
+    % \setmathfont[
+    %     Path=\__FontPath,
+    %     range={it,up, bb},
+    %     version=sans
+    % ]{FiraMath-Regular.otf}
+    %%%
+
+
+
+    \mathversion{normal}
+\fi
+
+%%% Text Fonts
+
+\ifJHPreamble@StandardTextFonts
+\else
+    % \IfFontExistsTF{MinionPro}{
+    \setmainfont{MinionPro}[
+        Path=\__FontPath,
+        Extension = .otf,
+        UprightFont = *-Medium,
+        BoldFont = *-Bold, %SemiBold
+        ItalicFont = *-It, %
+        BoldItalicFont = *-BoldIt, %SemiboldIt
+        Language = German
+    ] % Minion Pro und Myriad Pro sind anscheinend zur privaten Verwendung legal (aus der Installation von Adobe Acrobat Reader zu bekommen)
+    % }{}
+
+    %   \IfFontExistsTF{Myriad-Pro}{
+    \setsansfont{Myriad-Pro}[ %SansSerif 
+        Path=\__FontPath, 
+        UprightFont = *-Regular.ttf,
+        BoldFont = *-Bold.ttf, %SemiBold
+        ItalicFont = *-It.otf, %
+        Language = German,
+        % Script = Default, % Seems to be on CustomDefault although that doesn't exist in the documentaion
+        Contextuals = ResetAll
+    ]
+    % }{}
+
+
+
+    %%% Braucht kompliziert konvertierte und installierte Myriad und Minion Type 1 Schriften mit Paketen. (Für pdflatex)
+
+    % \RequirePackage{alphabeta}
+    % \RequirePackage[Path=\__FontPath,lf]{MinionPro}
+    % \RequirePackage[Path=\__FontPath,
+    % 	scale=1,
+    % 	lf,
+    % 	sansmath]{MyriadPro}
+
+\fi
+
+\newfontfamily\codeFont{CascadiaCode}[
+    Path=\__FontPath, 
+    UprightFont = *-Regular.ttf,
+    BoldFont = *-Bold.ttf
+]
+
+%%%% FallbackFont
+% Mit Kp-Math notwendig, weil die das nicht hatten.
+% Diese Kommandos könnte man wahrscheinlich auch durch \setmathfont{STIXMath2}[Unicode-range] irgendwie weglassen.
+
+% \RequirePackage{newunicodechar}
+% \newunicodechar{Δ}{\increment} % Könnte man machen, aber unnötig. Es gibt das Zeichen ∆, das ist dasselbe wie \increment, aber verschieden von Δ (\Delta)
+
+% \newcommand{\MakeCharAlwaysUseFont}[2][\fallbackfont]{\newunicodechar{#2}{#1{#2}}}
+% \newcommand{\MakeCharAlwaysUseFontAndTextMode}[2][\fallbackfont]{\newunicodechar{#2}{\text{#1{#2}}}}
+
+% \NewDocumentCommand\MakeCharactersAlwaysUseFallbackFont{ > { \SplitList {,} } m }{ \ProcessList{#1}{\MakeCharAlwaysUseFont} }
+% \NewDocumentCommand\MakeCharactersAlwaysUseFallbackFontAndTextMode{ > { \SplitList {,} } m }{ \ProcessList{#1}{\MakeCharAlwaysUseFontAndTextMode} }
+
+
+% \MakeCharactersAlwaysUseFallbackFontAndTextMode{𝟙}
+
+% \MakeCharactersAlwaysUseFallbackFontAndTextMode{⥎,⥋,⥊,⥐}
