@@ -196,7 +196,7 @@
 \ifJHPreamble@PackagesByPath
     \newcommand{\__FontPath}{\JHPreamble@SetupPath/../../fonts/opentype/}
 \else
-    \newcommand{\__FontPath}{fonts/opentype/} % it will probably retry and find it in the System installation
+    \newcommand{\__FontPath}{} % it will probably retry and find it in the System installation
 \fi
 
 \ifJHPreamble@StandardMathFonts
