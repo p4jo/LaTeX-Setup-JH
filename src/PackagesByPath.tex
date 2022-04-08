@@ -1,0 +1,24 @@
+\ifJHPreamble@PackagesByPath
+    \typeout{PackagesByPath~provided}
+    
+    \ifx\JHPreamble@SetupPath\relax
+        % If it was not provided
+        \typeout{SetupPath~not~provided}
+        
+        % Gets the Value from \CurrentFilePath and saves it into \JHPreamble@SetupPath
+        \exp_args:NNV\newcommand\JHPreamble@SetupPath{\CurrentFilePath}
+        \typeout{now~using~SetupPath=\CurrentFilePath}
+    \fi
+    
+    \newcommand\RequirePackageByPath[2][]{
+        \typeout{Requiring~Package~
+            \JHPreamble@SetupPath/#2
+            ~by~path
+        }
+        \RequirePackage[#1]{
+            \JHPreamble@SetupPath/#2
+        }
+    }
+\else
+    \newcommand\RequirePackageByPath\RequirePackage
+\fi

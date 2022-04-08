@@ -18,14 +18,16 @@
 % etwa äquivalent zu \linespread{1.3}
 
 \recalctypearea
-\AfterEndPreamble{ % AtBeginDocument schmeißt unverständlichen Fehler bei \begin{titlepage} wegen Wechselwirkung mit irgendwas mit pgf color
-	\makeatletter
-	\ifJHPreamble@simpleTitle
+
+\ifJHPreamble@simpleTitle
+	\AfterEndPreamble{ % AtBeginDocument schmeißt unverständlichen Fehler bei \begin{titlepage} wegen Wechselwirkung mit irgendwas mit pgf color
 		\begin{titlepage}
-            \maketitle
-        \end{titlepage}
-	\fi
-	\makeatother
+			\maketitle
+		\end{titlepage}
+	}
+\fi
+
+\AfterEndPreamble{
 	\pagestyle{scrheadings}
 }
 

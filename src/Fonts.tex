@@ -6,13 +6,12 @@
     math-style=ISO, % Macht gr. Großbuchstaben kursiv
     bold-style=ISO 
     ]{unicode-math} 
-% \ifJHPreamble@PackagesByPath
-    % \newcommand{\__FontPath}{fonts/opentype}
-% \else
-%     \newcommand\__FontPath{}
-% \fi
     
-\newcommand{\__FontPath}{fonts/opentype/}
+\ifJHPreamble@PackagesByPath
+    \newcommand{\__FontPath}{\JHPreamble@SetupPath/../../fonts/opentype/}
+\else
+    \newcommand{\__FontPath}{fonts/opentype/} % it will probably retry and find it in the System installation
+\fi
 
 \ifJHPreamble@StandardMathFonts
 \else
@@ -118,8 +117,6 @@
         Contextuals = ResetAll
     ]
     % }{}
-
-
 
     %%% Braucht kompliziert konvertierte und installierte Myriad und Minion Type 1 Schriften mit Paketen. (Für pdflatex)
 

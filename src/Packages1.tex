@@ -1,10 +1,4 @@
-
-
-%braucht man für altes pdflatex
-% \RequirePackage[LGR,T1]{fontenc} %
-	%\RequirePackage[utf8]{inputenc} 
-%scheint man für lualatex zu brauchen, aber nur, wenn die Schriftart nicht unicode ist.
-% \RequirePackage[utf8]{luainputenc} 
+%before unicode-math and fonts
 
 \RequirePackage[
 	greek,
@@ -16,7 +10,6 @@
 % \setdefaultlanguage[spelling=new]{german}
 % \setotherlanguage{greek}
 
-
 \RequirePackage[
 	backend=biber,
 	style=phys,
@@ -24,8 +17,8 @@
 
 \RequirePackage{hyperref}
 
-% %%Zusatzstuff
-\ifbool{JHPreamble@useSilence}{
+%%%Zusatzstuff
+\ifJHPreamble@useSilence
 	\RequirePackage{silence} % Um Fehlermeldungen auszublenden
 
 	% \WarningFilter{stmaryrd}{Font shape}
@@ -33,6 +26,9 @@
 	\WarningFilter{latex}{Empty bibliography}
 	% \WarningFilter{latex}{Underfull }
 	% \WarningFilter{fontspec}{OpenType feature}
-	\WarningFilter{latex}{requested package}
-}{} %% Kann man in LateX-Workshop auch \enquote{muten} -- ist dann noch im Log, aber nicht unten bei Problems
+	\WarningFilter{latex}{You have requested}
 
+%% Kann man in LateX-Workshop auch \enquote{muten} -- ist dann noch im Log, aber nicht unten bei Problems
+\fi
+
+\RequirePackage{mathtools} % überschreibt underbrace in unicode-math, was dann nicht mehr funktioniert, muss deshalb vor unicode-math geladen werden.

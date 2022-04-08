@@ -1,18 +1,20 @@
-\ProvidesClass{JHPreamble}[2020/12/01 Preamble of Johannes H.]
-\NeedsTeXFormat{LaTeX2e}[2020/03/03] % should have expl3 native support
+% Auto generated file, created from src\JHPreamble.mcls. Will be overwritten. Change the source files instead.
+\ProvidesExplClass{JHPreamble}{2022/04/08}{0.2.1}{Preamble of Johannes H. Needs LuaLaTeX or XeLaTeX}
+
+%%% Base Path for inserts with % !TeX input set to src %%%
 
 %%% PrePreamble
 \ExplSyntaxOn
 
-\RequirePackage{etoolbox} %toggles
 \RequirePackage{kvoptions} % key-value options
 
 %%% Options
 \DeclareStringOption[Anonymous author]{author}
 \DeclareStringOption[Empty title]{title}
-\DeclareStringOption[NoName]{name}
-\DeclareStringOption[tex/latex]{SetupPath}
 
+\DeclareStringOption{SetupPath}
+\let\JHPreamble@SetupPath\relax 
+% undefine the default value for easy check below. Not equivalent to [\relax]{SetupPath}
 
 \DeclareBoolOption{Presentation}
 \DeclareBoolOption{useAccents}
@@ -23,7 +25,6 @@
 \DeclareBoolOption{StandardMathFonts}
 \DeclareBoolOption{StandardTextFonts}
 \DeclareBoolOption{simpleTitle}
-% \DeclareBoolOption{Moritz}
 \DeclareBoolOption{omitFloat}
 \DeclareBoolOption{useIdealSymbols}
 \DeclareBoolOption{PackagesByPath}
@@ -34,31 +35,64 @@
     \PassOptionsToClass{\CurrentOption}{beamer}
 }
 
-\ProcessKeyvalOptions*
-% \ProcessOptions\relax
+\ProcessKeyvalOptions* %
 
 %%% Stuff
 
-% \newcommand\input_Setup_File[1]{\input{\JHPreamble@SetupPath/#1}}
-% Seit 11.2.22 ersetzt durch % TeX input ⇒ erzeugt fixe Datei
-%%% Base Path for inserts with % !TeX input set to tex\latex %%%
+%%% FILE src\PackagesByPath.tex  %%%
 \ifJHPreamble@PackagesByPath
-    \newcommand\input_Setup_Package[1]{\RequirePackage{\JHPreamble@SetupPath/#1}\ExplSyntaxOn}
+    \typeout{PackagesByPath~provided}
+    
+    \ifx\JHPreamble@SetupPath\relax
+        % If it was not provided
+        \typeout{SetupPath~not~provided}
+        
+        % Gets the Value from \CurrentFilePath and saves it into \JHPreamble@SetupPath
+        \exp_args:NNV\newcommand\JHPreamble@SetupPath{\CurrentFilePath}
+        \typeout{now~using~SetupPath=\CurrentFilePath}
+    \fi
+    
+    \newcommand\RequirePackageByPath[2][]{
+        \typeout{Requiring~Package~
+            \JHPreamble@SetupPath/#2
+            ~by~path
+        }
+        \RequirePackage[#1]{
+            \JHPreamble@SetupPath/#2
+        }
+    }
 \else
-    \newcommand\input_Setup_Package[1]{\RequirePackage{#1}\ExplSyntaxOn} % Only works if this is added to tex    
+    \newcommand\RequirePackageByPath\RequirePackage
 \fi
+%%% END OF INSERTED FILE src\PackagesByPath.tex %%%
+
+
+\author{\JHPreamble@author}
+\title{\JHPreamble@title}
 
 %%%%%%%%%%%%%%
 %%% Files and Packages
 %%%%%%%%%%%%%% 
+\RequirePackage{etoolbox} % For \AfterEndPreamble and such.
 
 \ifJHPreamble@Presentation
-%%% FILE tex\latex\PresentationMainSetup.tex %%%
+
+%%% FILE src\PresentationMainSetup.tex  %%%
 \LoadClass{beamer}
 
-%%% END OF INSERTED FILE tex\latex\PresentationMainSetup.tex %%%
+% \MakeCharactersAlwaysUseFallbackFont{⦃,⦄}
+\ifJHPreamble@simpleTitle
+    \AfterEndPreamble{
+        \begin{frame}[plain]
+            \maketitle
+        \end{frame}
+    }
+\fi
+%%% END OF INSERTED FILE src\PresentationMainSetup.tex %%%
+
 \else
-%%% FILE tex\latex\ArticleMainSetup.tex %%%
+
+%%% FILE src\ArticleMainSetup.tex  %%%
 \PassOptionsToPackage{ footinclude=false }{typearea}
 
 \LoadClass[
@@ -79,14 +113,16 @@
 % etwa äquivalent zu \linespread{1.3}
 
 \recalctypearea
-\AfterEndPreamble{ % AtBeginDocument schmeißt unverständlichen Fehler bei \begin{titlepage} wegen Wechselwirkung mit irgendwas mit pgf color
-	\makeatletter
-	\ifJHPreamble@simpleTitle
+
+\ifJHPreamble@simpleTitle
+	\AfterEndPreamble{ % AtBeginDocument schmeißt unverständlichen Fehler bei \begin{titlepage} wegen Wechselwirkung mit irgendwas mit pgf color
 		\begin{titlepage}
-            \maketitle
-        \end{titlepage}
-	\fi
-	\makeatother
+			\maketitle
+		\end{titlepage}
+	}
+\fi
+
+\AfterEndPreamble{
 	\pagestyle{scrheadings}
 }
 
@@ -104,16 +140,12 @@
     \pagenumbering{arabic}
 }
 
-%%% END OF INSERTED FILE tex\latex\ArticleMainSetup.tex %%%
+%%% END OF INSERTED FILE src\ArticleMainSetup.tex %%%
+
 \fi
-%%% FILE tex\latex\MainSetup.tex %%%
 
-
-%braucht man für altes pdflatex
-% \RequirePackage[LGR,T1]{fontenc} %
-	%\RequirePackage[utf8]{inputenc} 
-%scheint man für lualatex zu brauchen, aber nur, wenn die Schriftart nicht unicode ist.
-% \RequirePackage[utf8]{luainputenc} 
+%%% FILE src\Packages1.tex  %%%
+%before unicode-math and fonts
 
 \RequirePackage[
 	greek,
@@ -125,7 +157,6 @@
 % \setdefaultlanguage[spelling=new]{german}
 % \setotherlanguage{greek}
 
-
 \RequirePackage[
 	backend=biber,
 	style=phys,
@@ -133,8 +164,8 @@
 
 \RequirePackage{hyperref}
 
-% %%Zusatzstuff
-\ifbool{JHPreamble@useSilence}{
+%%%Zusatzstuff
+\ifJHPreamble@useSilence
 	\RequirePackage{silence} % Um Fehlermeldungen auszublenden
 
 	% \WarningFilter{stmaryrd}{Font shape}
@@ -142,15 +173,17 @@
 	\WarningFilter{latex}{Empty bibliography}
 	% \WarningFilter{latex}{Underfull }
 	% \WarningFilter{fontspec}{OpenType feature}
-	\WarningFilter{latex}{requested package}
-}{} %% Kann man in LateX-Workshop auch \enquote{muten} -- ist dann noch im Log, aber nicht unten bei Problems
+	\WarningFilter{latex}{You have requested}
 
-
-%%% END OF INSERTED FILE tex\latex\MainSetup.tex %%%
+%% Kann man in LateX-Workshop auch \enquote{muten} -- ist dann noch im Log, aber nicht unten bei Problems
+\fi
 
 \RequirePackage{mathtools} % überschreibt underbrace in unicode-math, was dann nicht mehr funktioniert, muss deshalb vor unicode-math geladen werden.
+%%% END OF INSERTED FILE src\Packages1.tex %%%
 
-%%% FILE tex\latex\Fonts.tex %%%
+
+
+%%% FILE src\Fonts.tex  %%%
 \ExplSyntaxOn
 
 % \RequirePackage{fontspec} % in unicode-math
@@ -159,13 +192,12 @@
     math-style=ISO, % Macht gr. Großbuchstaben kursiv
     bold-style=ISO 
     ]{unicode-math} 
-% \ifJHPreamble@PackagesByPath
-    % \newcommand{\__FontPath}{fonts/opentype}
-% \else
-%     \newcommand\__FontPath{}
-% \fi
     
-\newcommand{\__FontPath}{fonts/opentype/}
+\ifJHPreamble@PackagesByPath
+    \newcommand{\__FontPath}{\JHPreamble@SetupPath/../../fonts/opentype/}
+\else
+    \newcommand{\__FontPath}{fonts/opentype/} % it will probably retry and find it in the System installation
+\fi
 
 \ifJHPreamble@StandardMathFonts
 \else
@@ -272,8 +304,6 @@
     ]
     % }{}
 
-
-
     %%% Braucht kompliziert konvertierte und installierte Myriad und Minion Type 1 Schriften mit Paketen. (Für pdflatex)
 
     % \RequirePackage{alphabeta}
@@ -308,32 +338,29 @@
 % \MakeCharactersAlwaysUseFallbackFontAndTextMode{𝟙}
 
 % \MakeCharactersAlwaysUseFallbackFontAndTextMode{⥎,⥋,⥊,⥐}
-%%% END OF INSERTED FILE tex\latex\Fonts.tex %%%
+%%% END OF INSERTED FILE src\Fonts.tex %%%
 
-%%% FILE tex\latex\Packages.tex %%%
 
-% \AtBeginDocument{
 
+%%% FILE src\Packages2.tex  %%%
+% After unicode-math and fonts
 %     \RequirePackage{microtype} % sorgt für besseres Schriftbild, indem es micro-Anpassungen macht. 
-% }
 \RequirePackage[autostyle=true]{csquotes} % \enquote{...} statt "...". Lokalisierbare Anführungszeichen 
 
 \RequirePackage{graphicx} % für \Grafik
 \RequirePackage{animate} % für gif-\Grafik 
 
 \RequirePackage{pdfpages} %Um pdfs anzuhängen 
-% \RequirePackage[export]{adjustbox} %Um Bilder nur eingeschränkt anzuhängen
+\RequirePackage[export]{adjustbox} %Um Bilder nur eingeschränkt anzuhängen
 
 \RequirePackage{listings} % Um code anzuhängen. Einstellungen in GeneralSetup
 
 
-\ifbool{JHPreamble@omitFloat}
-{
-
-}
-{
+\ifJHPreamble@omitFloat
+\else
     \RequirePackage{float} % Um \begin{figure}[H] zu machen
-}
+\fi
+
 \RequirePackage{color}
 % \RequirePackage[dvipsnames]{xcolor}
 
@@ -342,9 +369,10 @@
 % \RequirePackage{breqn} % Verändert equation parsing, sodass sie automatische Zeilenumbrüche haben.
 
 \RequirePackage{siunitx} %\si{\kilo\metre\per\second\squared} \num{3,14(7)E-4} \SI{8,7+-2.3}\ampere\
+% Einstellungen in GeneralSetup
+
 % \RequirePackage{ziffer} %macht Kommas in Zahlen zu ,\! oder so, aber besser wäre \num aus siunitx
 
-% \ 
 
 \RequirePackage{physics} %\bra, \ket, \qty (macht Klammern zu \left \right Paaren)
 
@@ -366,12 +394,12 @@
 % \RequirePackage{bm} % braucht es auch mit kpfonts nicht
 %\RequirePackage{upgreek} % braucht's mit unicode-math natürlich auch nicht
 
-\RequirePackage{tensind} % 
-% \tensordelimiter{§} % Funktioniert nicht, da unicode-math so normale Zeichen überschreibt, auf eine Art und Weise, die tensind nicht überschreibt
-\tensordelimiter{￭}
-\tensorformat{}
-%%% END OF INSERTED FILE tex\latex\Packages.tex %%%
-%%% FILE tex\latex\Colors.tex %%%
+\RequirePackage{tensind} 
+%%% END OF INSERTED FILE src\Packages2.tex %%%
+
+
+
+%%% FILE src\Colors.tex  %%%
 \definecolor{dunkelblau}{rgb}{0, 0, 0.5}
 \definecolor{dunkelgrau}{rgb}{0.4, 0.4, 0.4}
 \definecolor{grau}{rgb}{0.5, 0.5, 0.5}
@@ -384,14 +412,18 @@
 \definecolor{lila}{rgb}{0.5,0,0.5}
 \definecolor{dunkelgrün}{rgb}{0,0.5,0}
 \definecolor{dunkelrot}{rgb}{0.5,0.05,0.05}
-%%% END OF INSERTED FILE tex\latex\Colors.tex %%%
-%%% FILE tex\latex\GeneralSetup.tex %%%
+%%% END OF INSERTED FILE src\Colors.tex %%%
+
+
+%%% FILE src\GeneralSetup.tex  %%%
+% xspace
 \xspaceaddexceptions{“ "-}
 
-
+% interval
 % \intervalconfig{soft open fences} %kann man verwenden, um Intervalle (a,b] zu erzeugen
 % \intervalconfig{separator symbol=;} %kann man verwenden, um Intervalle ]a;b] zu erzeugen
 
+% siunitx
 \sisetup
 {
 	detect-all, %Alle äußeren Font-Veränderungen werden übernommen
@@ -412,7 +444,7 @@
 
 \shorthandoff{"} % Würde normalerweise "a zu ä machen.
 
-
+% hyperref
 \hypersetup
 {
 	colorlinks	= true,
@@ -422,10 +454,11 @@
 	urlcolor    = dunkelblau,
 	pdfauthor   = {\JHPreamble@author},
 	pdftitle    = {\JHPreamble@title}%,
-	% pdfsubject  = {Mathematik},
-	% pdfkeywords = {Fundamental, Mathematik}
+	% pdfsubject  = {<set this yourself using \hypersetup>},
+	% pdfkeywords = {<same>}
 }
 
+% lstlisting
 
 \lstset{
     basicstyle=\scriptsize\codeFont,
@@ -452,13 +485,17 @@
     emph={__init__,__str__,__repr__,\#\#\#\#\#\#\#}
 }
 
-
+% tensind
+% \tensordelimiter{§} % Funktioniert nicht, da unicode-math so normale Zeichen überschreibt, auf eine Art und Weise, die tensind nicht überschreibt
+\tensordelimiter{￭}
+\tensorformat{}
 
 % \hyphenation{Hoch-tem-pera-tur-su-pra-lei-tern Ku-pfer-atomen}
 
-%%% END OF INSERTED FILE tex\latex\GeneralSetup.tex %%%
-%%% FILE tex\latex\BibliographySettings.tex %%%
-% \addbibresource{\currentPath/Referenzen.bib}
+%%% END OF INSERTED FILE src\GeneralSetup.tex %%%
+
+
+%%% FILE src\BibliographySettings.tex  %%%
 \DeclareFieldFormat{journaltitle}{\textsl{#1}\isdot} 
 \DeclareFieldFormat{titlecase}{{#1}}
 \ExecuteBibliographyOptions
@@ -474,25 +511,15 @@
 \setunit*{\addnbspace}%
 }
 
-%%% END OF INSERTED FILE tex\latex\BibliographySettings.tex %%%
+%%% END OF INSERTED FILE src\BibliographySettings.tex %%%
+
 
 \ifJHPreamble@Presentation
-%%% FILE tex\latex\PresentationFormatSettings.tex %%%
 
+%%% FILE src\PresentationFormatSettings.tex  %%%
 \usetheme{Madrid}
 % \usetheme{Warsaw}
 \mathversion{sans}
-
-% \MakeCharactersAlwaysUseFallbackFont{⦃,⦄}
-
-\AfterEndPreamble{
-    \ifbool{JHPreamble@simpleTitle}{
-        \begin{frame}[plain]
-            \maketitle
-        \end{frame}
-    }
-    {}
-}
 
 \AtBeginSection{
     \begin{frame}
@@ -500,9 +527,11 @@
         \tableofcontents[currentsection]
     \end{frame}
 }
-%%% END OF INSERTED FILE tex\latex\PresentationFormatSettings.tex %%%
+%%% END OF INSERTED FILE src\PresentationFormatSettings.tex %%%
+
 \else
-%%% FILE tex\latex\ArticleFormatSettings.tex %%%
+
+%%% FILE src\ArticleFormatSettings.tex  %%%
 \addtokomafont{sectioning}{\rmfamily\boldmath\color{dunkelblau}}
 %\addtokomafont{sectioning}{\mathversion{sansbold}}
 \addtokomafont{pagehead}{\normalfont\color{dunkelgrau}}
@@ -605,19 +634,21 @@
     numbered=no
 ]{Bemerkung}
 
-%%% END OF INSERTED FILE tex\latex\ArticleFormatSettings.tex %%%
+%%% END OF INSERTED FILE src\ArticleFormatSettings.tex %%%
+
 \fi
 
-\input_Setup_Package{JHGeneralCommands}
-\input_Setup_Package{JHMathCommands}
-\input_Setup_Package{JHPhysicsCommands}
-%%% FILE tex\latex\GreekLetterNames.tex %%%
+\RequirePackageByPath{JHGeneralCommands}
+\RequirePackageByPath{JHMathCommands}
+\RequirePackageByPath{JHPhysicsCommands}
 
 
-\ifbool{JHPreamble@useGreekLetterCommands}{
-    \RequirePackage{JHGreekLetters}
-}{
-    
+%%% FILE src\GreekLetterNames.tex  %%%
+
+
+\ifJHPreamble@useGreekLetterCommands
+    \RequirePackageByPath{JHGreekLetters}
+\else 
     \newcommand\ita η
     \newcommand\Ita Η
     \newcommand\alfa α
@@ -636,21 +667,13 @@
     \newcommand\ny ν
     \newcommand\my μ
     \newcommand\teta ϑ
-}
-%%% END OF INSERTED FILE tex\latex\GreekLetterNames.tex %%%
+\fi
+%%% END OF INSERTED FILE src\GreekLetterNames.tex %%%
 
-% \ifJHPreamble@useGreekLetterCommands
-%     \input_Setup_Package{JHGreekLetters}
-% \fi
+
 \ifJHPreamble@useAccents
-    \message{Tensors}
-    \input_Setup_Package{JHTensors}
+    \RequirePackageByPath{JHTensors}
 \fi
 \ifJHPreamble@useIdealSymbols
-    \input_Setup_Package{JHIdealSymbols}
+    \RequirePackageByPath{JHIdealSymbols}
 \fi
-
-\author{\JHPreamble@author}
-\title{\JHPreamble@title}
-
-\ExplSyntaxOff

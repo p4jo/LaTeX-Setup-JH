@@ -1,1 +1,10 @@
 \LoadClass{beamer}
+
+% \MakeCharactersAlwaysUseFallbackFont{⦃,⦄}
+\ifJHPreamble@simpleTitle
+    \AfterEndPreamble{
+        \begin{frame}[plain]
+            \maketitle
+        \end{frame}
+    }
+\fi

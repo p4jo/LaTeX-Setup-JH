@@ -1,9 +1,11 @@
+% xspace
 \xspaceaddexceptions{“ "-}
 
-
+% interval
 % \intervalconfig{soft open fences} %kann man verwenden, um Intervalle (a,b] zu erzeugen
 % \intervalconfig{separator symbol=;} %kann man verwenden, um Intervalle ]a;b] zu erzeugen
 
+% siunitx
 \sisetup
 {
 	detect-all, %Alle äußeren Font-Veränderungen werden übernommen
@@ -24,7 +26,7 @@
 
 \shorthandoff{"} % Würde normalerweise "a zu ä machen.
 
-
+% hyperref
 \hypersetup
 {
 	colorlinks	= true,
@@ -34,10 +36,11 @@
 	urlcolor    = dunkelblau,
 	pdfauthor   = {\JHPreamble@author},
 	pdftitle    = {\JHPreamble@title}%,
-	% pdfsubject  = {Mathematik},
-	% pdfkeywords = {Fundamental, Mathematik}
+	% pdfsubject  = {<set this yourself using \hypersetup>},
+	% pdfkeywords = {<same>}
 }
 
+% lstlisting
 
 \lstset{
     basicstyle=\scriptsize\codeFont,
@@ -64,6 +67,9 @@
     emph={__init__,__str__,__repr__,\#\#\#\#\#\#\#}
 }
 
-
+% tensind
+% \tensordelimiter{§} % Funktioniert nicht, da unicode-math so normale Zeichen überschreibt, auf eine Art und Weise, die tensind nicht überschreibt
+\tensordelimiter{￭}
+\tensorformat{}
 
 % \hyphenation{Hoch-tem-pera-tur-su-pra-lei-tern Ku-pfer-atomen}

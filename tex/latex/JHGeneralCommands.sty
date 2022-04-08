@@ -1,5 +1,4 @@
-\ProvidesPackage{JHGeneralCommands}
-\ExplSyntaxOn
+\ProvidesExplPackage{JHGeneralCommands}{2022/04/07}{1.0.1}{General Commands by Johannes H}
 
 %%%%%%% META COMMANDS
 \NewDocumentCommand\mathname{mm}{\NewDocumentCommand{#1}{}{\ensuremath{#2}\xspace}}
@@ -7,6 +6,8 @@
 \RequirePackage{scalerel}
 \newcommand\DeclareBigOp[2]{\DeclareMathOperator*{#1}{\scalerel*{#2}{\sum}}} % Müssen in Präambel benutzt werden
 
+\newcommand\currentPath\CurrentFilePath
+% gets overwritten in <project>/<project>_generated.tex files when using JHAutomate
 
 %%%%%%% Grundlagen 
 
@@ -178,7 +179,7 @@
 
 \newcommand{\glei}[2]{\begin{equation}\tag{#1}\label{G.#1}
     #2
-\end{equation}} % Gleichung, die keine Nummer, sondern einen Namen hat
+\end{equation}} % obsolete
 
 
 % equation environment. You can prepend \Gleichung* before inline-math with $...$ to allow multi-line equations.

@@ -1,0 +1,41 @@
+% Unnecessary work I did. LaTeX supports by itself already
+% \CurrentFilePath
+
+\sys_if_engine_luatex:T
+{
+    \typeout{LuaTeX ~is ~used}
+    
+    \directlua{require 'lfs'}
+    % get directory of this file and replace backslashes with forward slashes, because else the \directlua{tex.print(setupDir)} would again be interpreted by LaTeX and it would understand the subdirectories as commands.
+    
+    \directlua{
+        setupDir = lfs.currentdir():gsub(
+                string.char(92), '/'
+            ):gsub(
+                string.char(32), string.char(126)
+            )
+    }
+
+    % Instead of string.char(92), '\noexpand\\' also works. But I can't seem to get spaces (string.char(20) = ' ') to work properly (Latex eats them, especially in ExplSyntax). 
+    
+    % That's why we have to replace them by char(126) = '~' in the first place (which ExplSyntax interprets as a normal space).
+
+    % We also can't quickly turn off ExplSyntax in \JHPreamble@SetupPath and turn it back on afterwards, because it doesn't behave normally inside macros...
+
+    % By setting setupDir = gsub(...), we ignore the second return of gsub which is the number of replacements: gsub(...) = '...', 2 (for example).
+
+    % a:gsub(...) is gsub(a, ...), similar to python
+    
+    \directlua{texio.write('setupDir=') texio.write(setupDir)}
+    
+    \newcommand\JHPreamble@SetupPath{
+        \directlua{
+            tex.print(setupDir)
+        }
+    }
+    \typeout{Lua~ran~and~found~current~working~directory~to~be~\JHPreamble@SetupPath}
+}
+
+% * oder hoffe, dass mein Lua-Code zur Detektion des Arbeitsordners (cwd) funktioniert (der viel zu aufwendig war in LaTeX-expl3 zum laufen zu kriegen) und
+%     - verwende `lualatex`
+%     - starte den LaTeX-Prozess immer in diesem Ordner (füge in `.vscode/settings.json/latex-workshop.latex.tools.(name=lualatex).command` vor `lualatex` noch `cd <dieser Pfad>;` ein.)

@@ -1,6 +1,5 @@
-\ProvidesPackage{JHUnderlines}{2021/04/10}
+\ProvidesPackage{JHUnderlines}[2021/04/10 v0.1.0 Underline that keeps its distance: https://tex.stackexchange.com/questions/36894/underline-omitting-the-descenders]
 
-% Aus dem Internet. Unterstreichung, die den Text weiß umrandet, damit der Unterstrich nicht die Buchstaben schneidet
 \usepackage[outline]{contour}
 
 \usepackage{ulem}
@@ -22,4 +21,8 @@
   \contourlength{#3}%
   \noindent\rlap{\uline{\hspace{\textwidth}}}\contour{white}{#4}%
   \endgroup%
+}
+
+\NewDocumentCommand\underlineContour{ooom}{
+  \myul{#1}{#2}{#3}{#4}
 }

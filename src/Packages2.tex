@@ -1,8 +1,5 @@
-
-% \AtBeginDocument{
-
+% After unicode-math and fonts
 %     \RequirePackage{microtype} % sorgt für besseres Schriftbild, indem es micro-Anpassungen macht. 
-% }
 \RequirePackage[autostyle=true]{csquotes} % \enquote{...} statt "...". Lokalisierbare Anführungszeichen 
 
 \RequirePackage{graphicx} % für \Grafik
@@ -14,13 +11,11 @@
 \RequirePackage{listings} % Um code anzuhängen. Einstellungen in GeneralSetup
 
 
-\ifbool{JHPreamble@omitFloat}
-{
-
-}
-{
+\ifJHPreamble@omitFloat
+\else
     \RequirePackage{float} % Um \begin{figure}[H] zu machen
-}
+\fi
+
 \RequirePackage{color}
 % \RequirePackage[dvipsnames]{xcolor}
 
@@ -29,9 +24,10 @@
 % \RequirePackage{breqn} % Verändert equation parsing, sodass sie automatische Zeilenumbrüche haben.
 
 \RequirePackage{siunitx} %\si{\kilo\metre\per\second\squared} \num{3,14(7)E-4} \SI{8,7+-2.3}\ampere\
+% Einstellungen in GeneralSetup
+
 % \RequirePackage{ziffer} %macht Kommas in Zahlen zu ,\! oder so, aber besser wäre \num aus siunitx
 
-% \ 
 
 \RequirePackage{physics} %\bra, \ket, \qty (macht Klammern zu \left \right Paaren)
 
@@ -53,7 +49,4 @@
 % \RequirePackage{bm} % braucht es auch mit kpfonts nicht
 %\RequirePackage{upgreek} % braucht's mit unicode-math natürlich auch nicht
 
-\RequirePackage{tensind} % 
-% \tensordelimiter{§} % Funktioniert nicht, da unicode-math so normale Zeichen überschreibt, auf eine Art und Weise, die tensind nicht überschreibt
-\tensordelimiter{￭}
-\tensorformat{}
+\RequirePackage{tensind} 

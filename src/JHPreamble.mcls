@@ -1,0 +1,84 @@
+\ProvidesExplClass{JHPreamble}{2022/04/08}{0.2.1}{Preamble of Johannes H. Needs LuaLaTeX or XeLaTeX}
+
+%** This file is incomplete. Input the files from /src using 
+%** py /src/inlineMagicInputs.py /scr/JHPreamble.mcls -o /tex/latex/JHPreamble.cls
+% !TeX input ~ ./src
+
+%%% PrePreamble
+\ExplSyntaxOn
+
+\RequirePackage{kvoptions} % key-value options
+
+%%% Options
+\DeclareStringOption[Anonymous author]{author}
+\DeclareStringOption[Empty title]{title}
+
+\DeclareStringOption{SetupPath}
+\let\JHPreamble@SetupPath\relax 
+% undefine the default value for easy check below. Not equivalent to [\relax]{SetupPath}
+
+\DeclareBoolOption{Presentation}
+\DeclareBoolOption{useAccents}
+\DeclareBoolOption{useGreekLetterCommands}
+\DeclareBoolOption{useSilence}
+\DeclareBoolOption{KpMath}
+\DeclareBoolOption{STIX}
+\DeclareBoolOption{StandardMathFonts}
+\DeclareBoolOption{StandardTextFonts}
+\DeclareBoolOption{simpleTitle}
+\DeclareBoolOption{omitFloat}
+\DeclareBoolOption{useIdealSymbols}
+\DeclareBoolOption{PackagesByPath}
+
+
+\DeclareDefaultOption{ %Jede weitere Option
+    \PassOptionsToClass{\CurrentOption}{scrreport}
+    \PassOptionsToClass{\CurrentOption}{beamer}
+}
+
+\ProcessKeyvalOptions* %
+
+%%% Stuff
+% !TeX input PackagesByPath
+
+\author{\JHPreamble@author}
+\title{\JHPreamble@title}
+
+%%%%%%%%%%%%%%
+%%% Files and Packages
+%%%%%%%%%%%%%% 
+\RequirePackage{etoolbox} % For \AfterEndPreamble and such.
+
+\ifJHPreamble@Presentation
+% !TeX input PresentationMainSetup
+\else
+% !TeX input ArticleMainSetup
+\fi
+% !TeX input Packages1
+
+% !TeX input Fonts 
+
+% !TeX input Packages2
+
+% !TeX input Colors
+% !TeX input GeneralSetup
+% !TeX input BibliographySettings
+
+\ifJHPreamble@Presentation
+% !TeX input PresentationFormatSettings
+\else
+% !TeX input ArticleFormatSettings
+\fi
+
+\RequirePackageByPath{JHGeneralCommands}
+\RequirePackageByPath{JHMathCommands}
+\RequirePackageByPath{JHPhysicsCommands}
+
+% !TeX input GreekLetterNames
+
+\ifJHPreamble@useAccents
+    \RequirePackageByPath{JHTensors}
+\fi
+\ifJHPreamble@useIdealSymbols
+    \RequirePackageByPath{JHIdealSymbols}
+\fi

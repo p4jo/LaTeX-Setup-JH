@@ -1,9 +1,8 @@
 
 
-\ifbool{JHPreamble@useGreekLetterCommands}{
-    \RequirePackage{JHGreekLetters}
-}{
-    
+\ifJHPreamble@useGreekLetterCommands
+    \RequirePackageByPath{JHGreekLetters}
+\else 
     \newcommand\ita η
     \newcommand\Ita Η
     \newcommand\alfa α
@@ -22,4 +21,4 @@
     \newcommand\ny ν
     \newcommand\my μ
     \newcommand\teta ϑ
-}
+\fi
