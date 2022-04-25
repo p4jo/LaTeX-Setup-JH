@@ -3,6 +3,8 @@
 \RequirePackage{JHGeneralCommands}
 % \RequirePackageByPath{JHGeneralCommands}
 
+\RequirePackage[normalem]{ulem} % underline and double underline
+\RequirePackage{physics}
 
 %%% Grundlagen Mathematik
 \newcommand{\fa}[1]{\underset{{#1}}{\forall} \ }
@@ -196,8 +198,16 @@
 
 \DeclareDocumentCommand{\vek}{m}{\rightharpoonaccent{#1}} % ⇀
 \DeclareDocumentCommand{\kovek}{m}{\leftharpoonaccent{#1}} % ↼
-\DeclareDocumentCommand\tup{m}{\underline{\smash{#1}}}
-\DeclareDocumentCommand\tuptup{m}{\underline{\tup{#1}}}
+\DeclareDocumentCommand\tup{m}{
+    \uline{
+        \smash{#1}
+    }
+}
+\DeclareDocumentCommand\tuptup{m}{
+    \uuline{
+        \smash{#1}
+    }
+}
 % \DeclareDocumentCommand{\tup}{m}{\underline{#1}} % Tupel
 % \DeclareDocumentCommand{\tuptup}{m}{\underline{\underline{#1}}} % Doppeltes Tupel
 \newcommand\etwas{{\vern{\boxdot}}}
