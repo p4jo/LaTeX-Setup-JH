@@ -42,7 +42,7 @@ Wenn du es in den Hauptordner einbinden willst:
 ```
 git clone https://github.com/p4jo/LaTeX-Setup-JH <Hauptordner>/Setup
     oder
-git submodule add https://github.com/p4jo/LaTeX-Setup-JH<Hauptordner>/Setup
+git submodule add https://github.com/p4jo/LaTeX-Setup-JH <Hauptordner>/Setup
 ```
 (je nachdem, ob dein Hauptordner schon ein Repository ist)
 
@@ -79,8 +79,8 @@ In VSCode verwende ich die Extension [LaTeX-Workshop](https://github.com/James-Y
 ## Automation
 In meinem Repository [LaTeX-Automate](https://github.com/p4jo/LaTeX-Automate.git) befindet sich ein Powershell-Skript zur Automation von \input{}.
 
-Wenn man das Skript Automate/automate.ps1 ausführt, wird jede Datei in einem Unterordner (z.B. VersuchE1; rekursiv) einer entsprechenden Unterordnername_generated.tex als import hinzugefügt und eine Unterorndername.tex auf dem Hauptordner erstellt, die als Hauptdatei verwendet werden sollte. 
+Wenn man das Skript Automate/automate.ps1 ausführt, wird jede Datei in einem Unterordner (rekursiv) einer entsprechenden <Unterordnername>_generated.tex als import hinzugefügt und eine <Unterordnername>.tex in dem Unterordner erstellt, die als Hauptdatei verwendet werden sollte. 
 
 Wenn man das Skript in seinen Buildvorgang mit einbaut (vorher) wird so immer der ganze Ordner (in lexikografischer Ordnung) in das Hauptdokument eingebunden, ohne, dass man sich da Gedanken machen muss. Das ist für VSCode mit Tex Workshop schon in der .vscode Config eingestellt.
 
-Man kann Unterordner mit einer Datei namens .texignore ausnehmen (z.B. beim Erstellen von mehreren Versionen sinnvoll, oder um beim Rebuild nur das aktuelle Kapitel zu rendern)
+Man kann Unter-Unterordner mit einer Datei namens .texignore ausnehmen (z.B. beim Erstellen von mehreren Versionen sinnvoll, oder um beim Rebuild nur das aktuelle Kapitel zu rendern).
