@@ -42,7 +42,7 @@ Wenn du es in den Hauptordner einbinden willst:
 ```
 git clone https://github.com/p4jo/LaTeX-Setup-JH <Hauptordner>/Setup
     oder
-git submodule add https://github.com/p4jo/LaTeX-Setup-JH<Hauptordner>/Setup
+git submodule add https://github.com/p4jo/LaTeX-Setup-JH <Hauptordner>/Setup
 ```
 (je nachdem, ob dein Hauptordner schon ein Repository ist)
 
