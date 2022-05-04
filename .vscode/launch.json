@@ -11,7 +11,7 @@
             "program": "${workspaceRoot}\\src\\inlineMagicInputs.py",
             "console": "integratedTerminal",
             "args": [
-                "${workspaceRoot}\\JHPreamble.mcls",
+                "${workspaceRoot}\\src\\JHPreamble.mcls",
                 "-o",
                 "${workspaceRoot}\\tex\\latex\\JHPreamble.cls"
             ]

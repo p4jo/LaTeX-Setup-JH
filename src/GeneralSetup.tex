@@ -73,3 +73,87 @@
 \tensorformat{}
 
 % \hyphenation{Hoch-tem-pera-tur-su-pra-lei-tern Ku-pfer-atomen}
+
+
+\usepackage{amsthm}
+\usepackage{thmtools}
+
+\declaretheoremstyle[
+    bodyfont=\upshape,
+    headfont={\sffamily\bfseries},
+    notefont={\sffamily\bfseries},
+    headpunct={:},
+]{JHDefinition}
+
+\declaretheoremstyle[
+    bodyfont={\color{dunkelgrau}}
+]{JHProof}
+
+\declaretheoremstyle[
+    bodyfont={\upshape%\color{dunkelgrau}
+        },
+    headfont=\itshape,
+    notefont=\itshape,
+    headpunct={:},
+]{JHRemark}
+
+
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=blasshellblau
+    }
+]{definition}
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=hellgrün
+    }
+]{Satz}
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=hellgrün
+    },
+    numberlike=Satz
+]{Lemma}
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=hellgrün
+    },
+    name=Definierendes Lemma,
+    numberlike=Satz
+]{DefLemma}
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=hellgrau
+    },
+    numberlike=Satz
+]{Korollar}
+\declaretheorem[
+    style=JHDefinition,
+    numbered=no
+]{Beispiel}
+
+\declaretheorem[
+    style=JHProof,
+    numbered=no
+]{Beweis}
+
+\declaretheorem[
+    style=JHRemark,
+    name=Bemerkung,
+    numbered=no
+]{remark}
+\declaretheorem[
+    style=JHRemark,
+    name=Bemerkung,
+    numbered=no
+]{bem}
+\declaretheorem[
+    style=JHRemark,
+    name=Bemerkung,
+    numbered=no
+]{Bemerkung}

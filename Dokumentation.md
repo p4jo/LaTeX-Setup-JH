@@ -27,7 +27,7 @@ BEISPIEL: `\Grafik[0.7]{F.Tree}{Picture of a tree}{./Bäume/Birken/Baum33_jwkj.j
 ### USAGE (kurz): 
 `\Grafik[Breite]{Name}{Text}(unterFußnote)<Seite>|LastFrame|`
 
-Äquivalent zu \Grafik[{Breite}]{F.{Name}}{{Text}}{/{Ordner dieses Projekts}/{Name}}({unterFußnote})<{Seite}>|{LastFrame}|`
+Äquivalent zu `\Grafik[{Breite}]{F.{Name}}{{Text}}{/{Ordner dieses Projekts}/{Name}}({unterFußnote})<{Seite}>|{LastFrame}|`
 
 
 BEISPIEL (Minimal): `\Grafik{Baum}{Foto von einem Baum}`
@@ -88,7 +88,7 @@ Man kann in der gesternten Version immer noch `{Label}` angeben, aber `\autoref{
 * `StandardMathFonts` unterdrückt das Laden von eigenen Fonts
 * `StandardTextFonts` unterdrückt das Laden der `Minion Pro` und `Myriad Pro` Schriftarten für den Text
 * `author` setzt den Autor (für die pdf-Metadaten und in `\author`),
-* `title` setzt den Autor (für die pdf-Metadaten und in `\title`),
+* `title` setzt den Titel (für die pdf-Metadaten und in `\title`),
 
 Für Namen mit mehr als einem Wort braucht man einen Befehl, d.h. 
 ```
@@ -103,7 +103,7 @@ Die Befehle von `JHPreamble` sind in `JHGeneralCommands`, `JHMathCommands` und `
 
 Es werden weitere Pakete mitgeliefert: 
 * `JHGreekLetters`, das mit `unicode-math` obsolet ist,
-*  `JHIdealSymbols`, in dem `\triangleleft`-Varianten definiert sind (für Primideale, maximale Ideale, etc.),
+*  `JHIdealSymbols`, in dem `\triangleleft`-Varianten definiert sind (für Primideale, maximale Ideale, etc.) - ursrpünglich von A.W.,
 * `JHTensors`, das verschiedene Pfeile über Buchstaben definiert, aber leider auch Probleme macht.
 * `JHUnderlines`, das eigentlich nicht von mir ist, das eine interessante Unterstreichung definiert.
 

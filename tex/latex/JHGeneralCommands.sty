@@ -89,6 +89,12 @@
     \newcommand\mathintitle[1]{\texorpdfstring{$#1$}{#1}}
 }{}
 
+\newcommand\ensuredisplaymath[1]{
+    \TextOrMath{
+        \[ #1 \]
+    }{#1}    
+}
+
 %%%%% Komplexe Commands
 \newcommand\__Grafik_END{}
 \newcommand\__Grafik_PRE{}

@@ -405,6 +405,7 @@
 \definecolor{grau}{rgb}{0.5, 0.5, 0.5}
 \definecolor{hellgrau}{rgb}{0.9, 0.9, 0.9}
 \definecolor{türkis}{rgb}{0, 0.5, 0.5}
+\definecolor{blasstürkis}{rgb}{0.5, 0.9., 0.9}
 \definecolor{blassblau}{rgb}{0.9,0.9,1}
 \definecolor{blasshellblau}{rgb}{0.76,0.97,1}
 \definecolor{hellblau}{rgb}{0.31,0.87,1}
@@ -492,6 +493,90 @@
 
 % \hyphenation{Hoch-tem-pera-tur-su-pra-lei-tern Ku-pfer-atomen}
 
+
+\usepackage{amsthm}
+\usepackage{thmtools}
+
+\declaretheoremstyle[
+    bodyfont=\upshape,
+    headfont={\sffamily\bfseries},
+    notefont={\sffamily\bfseries},
+    headpunct={:},
+]{JHDefinition}
+
+\declaretheoremstyle[
+    bodyfont={\color{dunkelgrau}}
+]{JHProof}
+
+\declaretheoremstyle[
+    bodyfont={\upshape%\color{dunkelgrau}
+        },
+    headfont=\itshape,
+    notefont=\itshape,
+    headpunct={:},
+]{JHRemark}
+
+
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=blasshellblau
+    }
+]{definition}
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=hellgrün
+    }
+]{Satz}
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=hellgrün
+    },
+    numberlike=Satz
+]{Lemma}
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=hellgrün
+    },
+    name=Definierendes Lemma,
+    numberlike=Satz
+]{DefLemma}
+\declaretheorem[
+    style=JHDefinition,
+    shaded={
+        bgcolor=hellgrau
+    },
+    numberlike=Satz
+]{Korollar}
+\declaretheorem[
+    style=JHDefinition,
+    numbered=no
+]{Beispiel}
+
+\declaretheorem[
+    style=JHProof,
+    numbered=no
+]{Beweis}
+
+\declaretheorem[
+    style=JHRemark,
+    name=Bemerkung,
+    numbered=no
+]{remark}
+\declaretheorem[
+    style=JHRemark,
+    name=Bemerkung,
+    numbered=no
+]{bem}
+\declaretheorem[
+    style=JHRemark,
+    name=Bemerkung,
+    numbered=no
+]{Bemerkung}
+
 %%% END OF INSERTED FILE src\GeneralSetup.tex %%%
 
 
@@ -559,81 +644,13 @@
 \displaywidowpenalty=9999
 
 
-\usepackage{amsthm}
-\usepackage{thmtools}
 
-\declaretheoremstyle[
-    bodyfont=\upshape,
-    headfont={\sffamily\bfseries},
-    notefont={\sffamily\bfseries},
-    headpunct={:},
-]{JHDefinition}
-
-\declaretheoremstyle[
-    bodyfont={\color{dunkelgrau}}
-]{JHProof}
-
-\declaretheoremstyle[
-    bodyfont={\upshape%\color{dunkelgrau}
-        },
-    headfont=\itshape,
-    notefont=\itshape,
-    headpunct={:},
-]{JHRemark}
-
-
-\declaretheorem[
-    style=JHDefinition,
-    shaded={
-        bgcolor=blasshellblau
-    }
-]{definition}
-\declaretheorem[
-    style=JHDefinition,
-    shaded={
-        bgcolor=hellgrün
-    }
-]{Satz}
-\declaretheorem[
-    style=JHDefinition,
-    shaded={
-        bgcolor=hellgrau
-    },
-    numberlike=Satz
-]{Lemma}
-\declaretheorem[
-    style=JHDefinition,
-    shaded={
-        bgcolor=hellgrau
-    },
-    numberlike=Satz
-]{Korollar}
-\declaretheorem[
-    style=JHDefinition,
-    numbered=no
-]{Beispiel}
-
-\declaretheorem[
-    style=JHProof,
-    numbered=no
-]{Beweis}
-
-\declaretheorem[
-    style=JHRemark,
-    name=Bemerkung,
-    numbered=no
-]{remark}
-\declaretheorem[
-    style=JHRemark,
-    name=Bemerkung,
-    numbered=no
-]{bem}
-\declaretheorem[
-    style=JHRemark,
-    name=Bemerkung,
-    numbered=no
-]{Bemerkung}
-
+\apptocmd\normalsize{%
+ \abovedisplayskip=9pt plus 3pt minus 7pt
+ \abovedisplayshortskip=0pt plus 3pt
+ \belowdisplayskip=9pt plus 3pt minus 2pt
+ \belowdisplayshortskip=6pt plus 3pt minus 3pt
+}{}{}
 %%% END OF INSERTED FILE src\ArticleFormatSettings.tex %%%
 
 \fi
