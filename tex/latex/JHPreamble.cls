@@ -1,4 +1,4 @@
-% Auto generated file, created from src\JHPreamble.mcls. Will be overwritten. Change the source files instead.
+% Auto generated file, created from B:\LaTeX Setup\src\JHPreamble.mcls. Will be overwritten. Change the source files instead.
 \ProvidesExplClass{JHPreamble}{2022/04/08}{0.2.1}{Preamble of Johannes H. Needs LuaLaTeX or XeLaTeX}
 
 %%% Base Path for inserts with % !TeX input set to src %%%
@@ -527,7 +527,8 @@
     style=JHDefinition,
     shaded={
         bgcolor=hellgrün
-    }
+    },
+    numberwithin=chapter
 ]{Satz}
 \declaretheorem[
     style=JHDefinition,
@@ -539,9 +540,9 @@
 \declaretheorem[
     style=JHDefinition,
     shaded={
-        bgcolor=hellgrün
+        bgcolor=blasstürkis
     },
-    name=Definierendes Lemma,
+    name=Definierendes\ Lemma,
     numberlike=Satz
 ]{DefLemma}
 \declaretheorem[
@@ -553,7 +554,8 @@
 ]{Korollar}
 \declaretheorem[
     style=JHDefinition,
-    numbered=no
+    numbered=no,
+    name=Beispiel
 ]{Beispiel}
 
 \declaretheorem[
@@ -648,7 +650,7 @@
 \apptocmd\normalsize{%
  \abovedisplayskip=9pt plus 3pt minus 7pt
  \abovedisplayshortskip=0pt plus 3pt
- \belowdisplayskip=9pt plus 3pt minus 2pt
+ \belowdisplayskip=4pt plus 3pt minus 2pt
  \belowdisplayshortskip=6pt plus 3pt minus 3pt
 }{}{}
 %%% END OF INSERTED FILE src\ArticleFormatSettings.tex %%%
