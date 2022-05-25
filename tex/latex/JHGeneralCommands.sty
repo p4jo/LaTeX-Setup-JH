@@ -6,7 +6,7 @@
 \RequirePackage{scalerel}
 \newcommand\DeclareBigOp[2]{\DeclareMathOperator*{#1}{\scalerel*{#2}{\sum}}} % Müssen in Präambel benutzt werden
 
-\newcommand\currentPath\CurrentFilePath
+\newcommand\currentPath\CurrentFilePath % this is relative to the main file
 % gets overwritten in <project>/<project>_generated.tex files when using JHAutomate
 
 %%%%%%% Grundlagen 
@@ -192,7 +192,7 @@
 \NewDocumentCommand\Gleichung{
     s % #1: Optional * for no name and number
     g % #2: Optional {<Name>} for (<Name>) instead of (1.1.1) and label G.<Name>
-    D$${\text{\textcolor{red}{Gleichung fehlt.}}} % #3: Content of the equation in $...$
+    +D$${\text{\textcolor{red}{Gleichung fehlt.}}} % #3: Content of the equation in $...$
     t. % #4: If you have a dot after the closing $, it will be pulled inside (instead of it being on the beginning of the next line)
     t, % #5: Same for commas
 }{ 

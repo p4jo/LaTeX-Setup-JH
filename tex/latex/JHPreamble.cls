@@ -521,7 +521,8 @@
     style=JHDefinition,
     shaded={
         bgcolor=blasshellblau
-    }
+    },
+    numberwithin=chapter
 ]{definition}
 \declaretheorem[
     style=JHDefinition,
