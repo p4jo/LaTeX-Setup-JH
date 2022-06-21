@@ -1,24 +1,34 @@
-\ProvidesExplPackage{JHGeneralCommands}{2022/04/07}{1.0.1}{General Commands by Johannes H}
+\ProvidesExplPackage{JHPhysicsCommands}{2022/04/07}{1.0.1}{Commands for use with physics}
 
 %%% Grundlagen Physik
 
 \newcommand{\mittelW}[1]{\overline{#1}}
 \newcommand{\relErr}[1]{\ensuremath{\frac{∆ #1}{#1}}} % relativer Fehler (dieses Zeichen (∆ = \increment) sollte für so Operatoren verwendet werden, nicht \Delta).
 
-\newcommand{\abl}[2][]{\frac{\de #1}{\de #2}} %\abl[f]x = \abl x f.
+\newcommand{\abl}[2][]{\frac{\partial #1}{\partial #2}} %\abl[f]x = \abl x f.
 \newcommand{\Abl}[2][]{\frac{\dd #1}{\dd #2}} %kann durch physics sachen ersetzt werden
 \newcommand\FT{\mathcal{F}} % Fourier-Transformation
 
+
 \newcommand\stei[2]{\frac{∆#1}{∆#2}} % Steigung
-\newcommand\naei{\text{\vern{[n.E.]}}} % natürliche Einheiten
-\newcommand\naein{\vern{1\sub{[n.E.]}}} % natürliche Einheit
 
-% \newcommand\dalem{\Box}
-\newcommand\dalem{\mdlgwhtsquare} % mit unicode-math
+\definecolor{grau}{rgb}{0.5, 0.5, 0.5} % aus Colors.txt
 
-\newcommand\cc{\vern c}
-\newcommand\kB{\vern {k\sub B}}
-\newcommand\hquer{\vern{\hbar}}
-\newcommand\mynull{\vern{μ_0}}
-\newcommand\epsnull{\vern{\varepsilon_0}}
-\newcommand\epsnullinv{\vern{ε_0\inv}}
+\NewDocumentCommand\vernmathname{mm}{
+    \NewDocumentCommand{#1}{}{
+        \ensuremath{\mathcolor{grau}{#2}
+    }
+}
+
+\vernmathname\cc{c}
+\vernmathname\kB{{k_{\text{B}}}}
+\vernmathname\hquer{\hbar}
+\vernmathname\mynull{\mu_0}
+\vernmathname\epsnull{\varepsilon_0}
+\vernmathname\epsnullinv{\varepsilon_0^{-1}}
+
+\@ifpackageloaded{unicode-math}{
+    \newcommand\dalem{\mdlgwhtsquare} % mit unicode-math
+}{
+    \newcommand\dalem{\Box}
+}
