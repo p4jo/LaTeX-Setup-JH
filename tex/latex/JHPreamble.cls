@@ -4,7 +4,6 @@
 %%% Base Path for inserts with % !TeX input set to src %%%
 
 %%% PrePreamble
-\ExplSyntaxOn
 
 \RequirePackage{kvoptions} % key-value options
 
@@ -184,8 +183,6 @@
 
 
 %%% FILE src\Fonts.tex  %%%
-\ExplSyntaxOn
-
 % \RequirePackage{fontspec} % in unicode-math
 
 \RequirePackage[
@@ -385,7 +382,6 @@
 \RequirePackage{cancel} % Durchstreichen in Mathe
 
 \RequirePackage{xspace} % Ein Leerzeichen, das man ans Ende von Befehlen bauen kann, das keines wird, wenn da ein Satzzeichen steht
-\RequirePackage{scalerel} % Größe von Symbolen anpassen (für Große Operatoren à la \sum)
 \RequirePackage{xfrac} % für \sfrac, ein schräger Bruch mit kleinerer Schrift. Leider etwas seltsam
 
 % \RequirePackage{amssymb} % geht nicht gescheit. Geht nicht zusammen mit unicode-math % Inhalt eh in kpfonts-otf drin
@@ -591,8 +587,8 @@
     articletitle = true,
     autocite  = inline, %superscript,
     autopunct = false,
-    sorting   = none
-    % style     = plain
+    sorting   = none,
+    url=true
 }  
 \renewbibmacro*{journal+issuetitle}{%
 \mbox{\printfield{journaltitle}~\usebibmacro{volume+number+eid}}%

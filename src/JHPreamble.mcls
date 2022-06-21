@@ -5,7 +5,6 @@
 % !TeX input ~ ./src
 
 %%% PrePreamble
-\ExplSyntaxOn
 
 \RequirePackage{kvoptions} % key-value options
 

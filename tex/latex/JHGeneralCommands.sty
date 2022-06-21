@@ -3,8 +3,6 @@
 %%%%%%% META COMMANDS
 \NewDocumentCommand\mathname{mm}{\NewDocumentCommand{#1}{}{\ensuremath{#2}\xspace}}
 
-\RequirePackage{scalerel}
-\newcommand\DeclareBigOp[2]{\DeclareMathOperator*{#1}{\scalerel*{#2}{\sum}}} % Müssen in Präambel benutzt werden
 
 \newcommand\currentPath\CurrentFilePath % this is relative to the main file
 % gets overwritten in <project>/<project>_generated.tex files when using JHAutomate
@@ -20,8 +18,28 @@
 \newcommand{\de}{\partial}
 % \renewcommand{\dd}{\mathup{d}}
 \newcommand{\vern}[1]{{\color{grau} #1 }} % Für vernachlässigbare oder unwichtige Stellen, wie \kB
-\newcommand{\sub}[1]{
-    \TextOrMath{\textsubscript{#1}}{\sb{\text{#1}}} % \sb = _ (das wird aber hier in ExplSyntax nicht als \sb interpretiert)
+\NewDocumentCommand{\sub}{o m o}{
+    \TextOrMath{
+        \textsubscript{
+            \IfValueT{#1}{
+                $#1$,~
+            }
+            #2
+            \IfValueT{#3}{
+                ,~$#3$
+            }
+        }
+    }{
+        \sb{ % \sb = _ (das wird aber hier in ExplSyntax nicht als \sb interpretiert)
+            \IfValueT{#1}{
+                #1\text{,~}
+            }
+            \text{#2}
+            \IfValueT{#3}{
+                \text{,~}#3
+            }
+        }
+    }
 }
 \newcommand{\supt}[1]{
     \TextOrMath{\textsuperscript{#1}}{\sp{\text{#1}}} % \sp = ^ (for consistency)

@@ -1,6 +1,6 @@
-\ProvidesPackage{JHMathCommands}[2021/04/10]
-\ExplSyntaxOn
-\RequirePackage{JHGeneralCommands}
+\ProvidesExplPackage{JHMathCommands}{2021/04/10}{1.0.0}{Mathe Befehle}
+
+\RequirePackage{physics}
 % \RequirePackageByPath{JHGeneralCommands}
 
 \RequirePackage[normalem]{ulem} % underline and double underline
@@ -17,8 +17,8 @@
 \newcommand{\und}{\mathbin{\wedge}}
 \newcommand{\oder}{\mathbin{\vee}}
 \newcommand{\nicht}{\neg}
-\mathname  {\gdw}{\Leftrightarrow}
-\mathname  {\dgdw}{:\!\Leftrightarrow}
+\newcommand{\gdw}{\ensuremath{\Leftrightarrow}}
+\newcommand{\dgdw}{\ensuremath{:\!\Leftrightarrow}}
 \newcommand{\falsch}{\perp}
 \newcommand{\wahr}{\top}
 \newcommand{\xoder}{\mathbin{\dot\vee}}
@@ -171,8 +171,8 @@
 }
 
 
-\mathname\dars{\doteq} % wird dargestellt (in Koordinaten) durch
-\mathname\sheq{\overset!=} % should equal (um eine Forderung hervorzuheben, oder was in der Äquivalenzkette bei mehreren Gleichheitszeichen als äquivalent gemeint ist)
+\newcommand\dars{\doteq} % wird dargestellt (in Koordinaten) durch
+\newcommand\sheq{\overset!=} % should equal (um eine Forderung hervorzuheben, oder was in der Äquivalenzkette bei mehreren Gleichheitszeichen als äquivalent gemeint ist)
 \newcommand\XM[1][M]{\mathcal{X}(#1)} % Vektorfelder auf M
 \newcommand\FM[1][M]{\mathcal{F}(#1)} % Skalarfelder auf M
 
@@ -201,10 +201,10 @@
 
 \newcommand\invM{^{[-1]}} % Urbild einer Menge unter einer Funktion
 
-\newcommand{\varNum}[1]{\mathit{#1}}
-\mathname\0{\varNum 0}
-\mathname\1{\varNum 1}
-\mathname\+{\varNum{+}} % bringt in vielen Schriften nichts
+\newcommand{\varNum}[1]{\ensuremath{\mathit{#1}}}
+\newcommand\0{\varNum 0}
+\newcommand\1{\varNum 1}
+\newcommand\+{\varNum{+}} % bringt in vielen Schriften nichts
 
 \newcommand\teilt{\dashv} % gehört noch überarbeitet % TODO
 \newcommand\vielf{\vdash}
@@ -328,7 +328,10 @@
     }
 }
 
+\RequirePackage{scalerel} % Größe von Symbolen anpassen (für Große Operatoren à la \sum)
+
+\newcommand\DeclareBigOp[2]{\DeclareMathOperator*{#1}{\scalerel*{#2}{\sum}}} % Müssen in Präambel benutzt werden
 
 \DeclareBigOp{\Sternchen}{*}%leider nicht schön, funktioniert nicht mehr (Division durch 0, wahrscheinlich fehlt Größenangabe in der Schriftart)
-\DeclareBigOp{\Opex}{\opex}
 \newcommand\opex{⟐}
+\DeclareBigOp{\Opex}{\opex}

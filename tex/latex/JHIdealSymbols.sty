@@ -1,17 +1,16 @@
-\ProvidesPackage{JHIdealSymbols}[Symbols for writing specific ideal relations on rings (prime ideals, maximal ideals etc.)]
+\ProvidesExplPackage{JHIdealSymbols}{2021/10/10}{1.0.1}{Symbols for writing specific ideal relations on rings (prime ideals, maximal ideals etc.)}
 
-\ExplSyntaxOn
 \RequirePackage{kvoptions}
-
 
 \DeclareBoolOption{slanted}
 
 \ProcessKeyvalOptions*
 
 
-
-
+\RequirePackage{scalerel} % Größe von Symbolen anpassen (für Große Operatoren à la \sum)
 \RequirePackage{mathtools,centernot}
+
+
 %%%%% Symbole
 \newcommand\__homidealsymbol		{\ensuremath{\scriptscriptstyle{\oplus}}}
 \newcommand\__radicalsymbol		{\ensuremath{\scriptscriptstyle{\sqrt{\,}}}}
@@ -73,4 +72,3 @@
 \newcommand\nradideal     		{\overset{\__notradicalsymbol}{\ideal}}
 \newcommand\nradidealeq   		{\overset{\__notradicalsymbol}{\idealeq}}
 \newcommand\nradidealneq  		{\overset{\__notradicalsymbol}{\idealneq}}
-\ExplSyntaxOff
