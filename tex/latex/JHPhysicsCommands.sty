@@ -16,7 +16,11 @@
 
 \NewDocumentCommand\vernmathname{mm}{
     \NewDocumentCommand{#1}{}{
-        \ensuremath{\mathcolor{grau}{#2}
+        \ensuremath{
+            \mathcolor{grau}{
+                #2
+            }
+        }
     }
 }
 
