@@ -19,6 +19,19 @@
 \RequirePackage{color}
 % \RequirePackage[dvipsnames]{xcolor}
 
+\ifdef{\mathcolor}{
+
+}{
+
+    \def\mathcolor#1#{\@mathcolor{#1}}
+    \def\@mathcolor#1#2#3{%
+        \protect\leavevmode
+        \begingroup
+           \color#1{#2}#3%
+        \endgroup
+    }
+}
+
 \RequirePackage{amsmath} % in kpfonts
 
 % \RequirePackage{breqn} % Verändert equation parsing, sodass sie automatische Zeilenumbrüche haben.
