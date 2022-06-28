@@ -16,8 +16,8 @@
     \RequirePackage{float} % Um \begin{figure}[H] zu machen
 \fi
 
-\RequirePackage{color}
-% \RequirePackage[dvipsnames]{xcolor}
+% \RequirePackage{color}
+\RequirePackage{xcolor} % Option [svgnames] may cause option clash ↦ \PassOptionsToPackage before first potential load 
 
 \ifdef{\mathcolor}{
 

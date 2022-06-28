@@ -1,4 +1,4 @@
-% Auto generated file, created from src\JHPreamble.mcls. Will be overwritten. Change the source files instead.
+% Auto generated file, created from B:\LaTeX Setup\src\JHPreamble.mcls. Will be overwritten. Change the source files instead.
 \ProvidesExplClass{JHPreamble}{2022/04/08}{0.2.1}{Preamble of Johannes H. Needs LuaLaTeX or XeLaTeX}
 
 %%% Base Path for inserts with % !TeX input set to src %%%
@@ -74,10 +74,14 @@
 %%%%%%%%%%%%%% 
 \RequirePackage{etoolbox} % For \AfterEndPreamble and such.
 
+\PassOptionsToPackage{svgnames}{xcolor} % Option [svgnames] may cause option clash ↦  before first potential load 
+
 \ifJHPreamble@Presentation
 
 %%% FILE src\PresentationMainSetup.tex  %%%
-\LoadClass{beamer}
+\LoadClass[
+    notheorems  % doesn't create theorems (removes compilation errors)
+]{beamer}
 
 % \MakeCharactersAlwaysUseFallbackFont{⦃,⦄}
 \ifJHPreamble@simpleTitle
@@ -358,8 +362,8 @@
     \RequirePackage{float} % Um \begin{figure}[H] zu machen
 \fi
 
-\RequirePackage{color}
-% \RequirePackage[dvipsnames]{xcolor}
+% \RequirePackage{color}
+\RequirePackage{xcolor} % Option [svgnames] may cause option clash ↦ \PassOptionsToPackage before first potential load 
 
 \ifdef{\mathcolor}{
 
@@ -422,6 +426,7 @@
 \definecolor{lila}{rgb}{0.5,0,0.5}
 \definecolor{dunkelgrün}{rgb}{0,0.5,0}
 \definecolor{dunkelrot}{rgb}{0.5,0.05,0.05}
+\definecolor{dunkeltürkis}{HTML}{2A7B88}
 %%% END OF INSERTED FILE src\Colors.tex %%%
 
 

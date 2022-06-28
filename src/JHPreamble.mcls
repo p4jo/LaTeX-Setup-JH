@@ -48,6 +48,8 @@
 %%%%%%%%%%%%%% 
 \RequirePackage{etoolbox} % For \AfterEndPreamble and such.
 
+\PassOptionsToPackage{svgnames}{xcolor} % Option [svgnames] may cause option clash ↦  before first potential load 
+
 \ifJHPreamble@Presentation
 % !TeX input PresentationMainSetup
 \else
