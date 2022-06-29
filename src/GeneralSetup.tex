@@ -97,20 +97,25 @@
     headpunct={:},
 ]{JHRemark}
 
+\cs_if_exist:NTF\chapter{
+    \newcommand\__numberwithin{chapter}
+}{
+    \newcommand\__numberwithin{section}
+}
 
 \declaretheorem[
     style=JHDefinition,
     shaded={
         bgcolor=blasshellblau
     },
-    numberwithin=chapter
+    numberwithin=\__numberwithin
 ]{definition}
 \declaretheorem[
     style=JHDefinition,
     shaded={
         bgcolor=hellgrün
     },
-    numberwithin=chapter
+    numberwithin=\__numberwithin
 ]{Satz}
 \declaretheorem[
     style=JHDefinition,
