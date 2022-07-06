@@ -71,6 +71,8 @@
 % !TeX input ArticleFormatSettings
 \fi
 
+% !TeX input AutomationSetup
+
 \RequirePackageByPath{JHGeneralCommands}
 \RequirePackageByPath{JHMathCommands}
 \RequirePackageByPath{JHPhysicsCommands}

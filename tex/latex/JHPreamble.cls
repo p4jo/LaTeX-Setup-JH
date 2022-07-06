@@ -108,7 +108,7 @@
 	toc=bibliography,
 	cleardoublepage=empty,
 	open=right
-	]{scrreprt} % Lädt KOMA-Script-Pakete (insb. typearea)
+]{scrreprt} % Lädt KOMA-Script-Pakete (insb. typearea)
 
 \RequirePackage[automark]{scrlayer-scrpage} %gehört zum KOMA-Script
 
@@ -676,6 +676,43 @@
 %%% END OF INSERTED FILE src\ArticleFormatSettings.tex %%%
 
 \fi
+
+
+%%% FILE src\AutomationSetup.tex  %%%
+\usepackage{iftex}
+\IfLuaTeX
+    \NewDocumentCommand{\getenv}{m}{
+        \directlua{ tex.sprint(os.getenv('#2')) }
+    }    
+\else
+    % Uses sys_get_shell, but we would have to know the system. this is powershell specific
+    \NewDocumentCommand{\getenv}{m}
+    {
+        \sys_get_shell:nnN { $Env:#2 } { } \getenv_result 
+        \tl_trim_spaces:N \getenv_result
+        \tl_use:N \getenv_result
+    }
+\fi
+
+
+\newcommand\LATEX_ALLOW_PAUSE_EXECUTION{\getenv{LATEX_ALLOW_PAUSE_EXECUTION}}
+\newcommand\true_string{true}
+
+\newcommand\pauseExecution{
+    \str_if_eq:NNTF\LATEX_ALLOW_PAUSE_EXECUTION\true_string{
+        \chardef\previous_interactionmode=\interactionmode
+        \errorstopmode % stopping at \show
+        \typeout{PAUSED~EXECUTION!}
+        \show\show
+        \interactionmode=\previous_interactionmode
+    }
+    {
+        \typeout{DID~NOT~PAUSE~EXECUTION~BECAUSE~THE~ENVIRONMENT~VARIABLE~LATEX_ALLOW_PAUSE_EXECUTION~IS~"\LATEX_ALLOW_PAUSE_EXECUTION",~NOT~"true"}
+    }
+}
+\AfterEndPreamble{\pauseExecution}
+%%% END OF INSERTED FILE src\AutomationSetup.tex %%%
+
 
 \RequirePackageByPath{JHGeneralCommands}
 \RequirePackageByPath{JHMathCommands}
