@@ -1,18 +1,18 @@
+
 \usepackage{iftex}
-\IfLuaTeX
+\ifLuaTeX
     \NewDocumentCommand{\getenv}{m}{
-        \directlua{ tex.sprint(os.getenv('#2')) }
+        \directlua{ tex.sprint(os.getenv('#1')) }
     }    
 \else
     % Uses sys_get_shell, but we would have to know the system. this is powershell specific
     \NewDocumentCommand{\getenv}{m}
     {
-        \sys_get_shell:nnN { $Env:#2 } { } \getenv_result 
+        \sys_get_shell:nnN { $Env:#1 } { } \getenv_result 
         \tl_trim_spaces:N \getenv_result
         \tl_use:N \getenv_result
     }
 \fi
-
 
 \newcommand\LATEX_ALLOW_PAUSE_EXECUTION{\getenv{LATEX_ALLOW_PAUSE_EXECUTION}}
 \newcommand\true_string{true}
