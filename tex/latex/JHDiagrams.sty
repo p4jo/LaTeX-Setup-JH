@@ -1,0 +1,58 @@
+\ProvidesExplPackage{JHDiagrams}{2022/06/03}{1.0.0}{Mathematical Diagrams using tikz-cd}
+
+
+\RequirePackage{tikz-cd}
+% \@ifpackageloaded{tikz-cd}{
+    \DeclareDocumentCommand\VierDiagramm{
+    m % a        #1
+    O{} % ab   #2
+    m % b       #3
+    O{} % bd   #4
+    m % d        #5
+    D(){} % ac  #6
+    m % c         #7
+    D(){} % cd  #8
+    }{
+        \ensuredisplaymath{
+            \begin{tikzcd}[ampersand~replacement=\&]
+                #1 \arrow{r}{#2} 
+                \arrow[swap]{d}{#6} \&
+                #3 \arrow{d}{#4} \\
+                #7 \arrow{r}{#8} \&
+                #5
+            \end{tikzcd}
+        }
+    }
+
+    \tikzset{close/.style={outer~sep=-2pt}}
+    \DeclareDocumentCommand\HomSatzDiagramm{
+    s % 
+    m % a        #2
+    O{} % ab   #3
+    m % b       #4
+    D(){} % ac  #5
+    m % c         #6
+    D(){} % cb  #7
+    }{
+        \ensuredisplaymath{
+            \begin{tikzcd}[ampersand~replacement=\&]
+                \IfBooleanTF{#1}{
+                #2 \arrow[r, two~heads, "#3"] 
+                        \arrow[d, two~heads, "#5"'] \&
+                #4  \\
+                #6 \arrow[ru, hook, "#7"', "\cong" close] 
+                }{ 
+                #2 \arrow[r, "#3"] 
+                        \arrow[d, two~heads, "#5"'] \&
+                #4  \\
+                #6 \arrow[ru, hook, "#7"'] 
+                }
+            \end{tikzcd}
+        }
+    }
+% }{
+%     \newcommand\HomSatzDiagramm{\typeout{Warning: \ HomSatzDiagramm not defined because it uses tikz. 
+%     \RequirePackage{tikz-cd}} to use it.}
+%     \newcommand\VierDiagramm{\typeout{Warning: \ VierDiagramm not defined because it uses tikz. 
+%     \RequirePackage{tikz-cd}} to use it.}
+% }
