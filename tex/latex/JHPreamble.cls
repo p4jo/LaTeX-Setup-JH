@@ -1,4 +1,4 @@
-% Auto generated file, created from B:\LaTeX Setup\src\JHPreamble.mcls. Will be overwritten. Change the source files instead.
+% Auto generated file, created from src\JHPreamble.mcls. Will be overwritten. Change the source files instead.
 \ProvidesExplClass{JHPreamble}{2022/04/08}{0.2.1}{Preamble of Johannes H. Needs LuaLaTeX or XeLaTeX}
 
 %%% Base Path for inserts with % !TeX input set to src %%%
@@ -321,6 +321,12 @@
     UprightFont = *-Regular.ttf,
     BoldFont = *-Bold.ttf
 ]
+
+
+\newfontfamily\JHSymbolFont[Path=\__FontPath]{divides_multipleOf.ttf}
+\newcommand\teilt{\mathbin{\text{\JHSymbolFont{d}}}}
+\newcommand\assoz{\mathbin{\text{\JHSymbolFont{a}}}}
+\newcommand\vielf{\mathbin{\text{\JHSymbolFont{m}}}}
 
 %%%% FallbackFont
 % Mit Kp-Math notwendig, weil die das nicht hatten.

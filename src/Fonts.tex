@@ -133,6 +133,12 @@
     BoldFont = *-Bold.ttf
 ]
 
+
+\newfontfamily\JHSymbolFont[Path=\__FontPath]{divides_multipleOf.ttf}
+\newcommand\teilt{\mathbin{\text{\JHSymbolFont{d}}}}
+\newcommand\assoz{\mathbin{\text{\JHSymbolFont{a}}}}
+\newcommand\vielf{\mathbin{\text{\JHSymbolFont{m}}}}
+
 %%%% FallbackFont
 % Mit Kp-Math notwendig, weil die das nicht hatten.
 % Diese Kommandos könnte man wahrscheinlich auch durch \setmathfont{STIXMath2}[Unicode-range] irgendwie weglassen.

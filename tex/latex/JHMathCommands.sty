@@ -5,6 +5,10 @@
 \RequirePackage[normalem]{ulem} % underline and double underline
 \RequirePackage{physics}
 
+\renewcommand\Re{\operatorname{Re}}
+\renewcommand\Im{\operatorname{Im}}
+\providecommand\cotan{\operatorname{cotan}}
+
 %%% Grundlagen Mathematik
 \newcommand{\fa}[1]{\underset{{#1}}{\forall} \ }
 \newcommand{\ex}[1]{\underset{{#1}}{\exists} \ }
@@ -12,14 +16,14 @@
 \newcommand{\Prod}[1]{\underset{{#1}}{\prod{}} \ }
 \newcommand{\Sum}[1]{\underset{{#1}}{\sum{}} \ }
 
-\newcommand{\und}{\mathbin{\wedge}}
-\newcommand{\oder}{\mathbin{\vee}}
+\newcommand{\und}{\mathrel{\wedge}}
+\newcommand{\oder}{\mathrel{\vee}}
 \newcommand{\nicht}{\neg}
 \newcommand{\gdw}{\ensuremath{\Leftrightarrow}}
 \newcommand{\dgdw}{\ensuremath{:\!\Leftrightarrow}}
 \newcommand{\falsch}{\perp}
 \newcommand{\wahr}{\top}
-\newcommand{\xoder}{\mathbin{\dot\vee}}
+\newcommand{\xoder}{\mathrel{\dot\vee}}
 \newcommand{\dann}{\Rightarrow}
 \newcommand{\wenn}{\Leftarrow}
 \newcommand{\unklar}[1]{\text{?`}#1\text{?}}
@@ -204,9 +208,9 @@
 \newcommand\1{\varNum 1}
 \newcommand\+{\varNum{+}} % bringt in vielen Schriften nichts
 
-\newcommand\teilt{\dashv} % gehört noch überarbeitet % TODO
-\newcommand\vielf{\vdash}
-\newcommand\assoz{\parallel}
+\providecommand\teilt{\dashv} % gehört noch überarbeitet % TODO
+\providecommand\vielf{\vdash}
+\providecommand\assoz{\parallel}
 
 
 %%%%%%% TUPEL
@@ -227,15 +231,15 @@
 % \DeclareDocumentCommand{\tuptup}{m}{\underline{\underline{#1}}} % Doppeltes Tupel
 \newcommand\etwas{{\vern{\boxdot}}}
 
+% in physics besser: \mqty(), \mqty[]
 \DeclareDocumentCommand\matr{sm}{
     \IfBooleanTF{#1}{
         \ensuremath{\begin{bmatrix}#2\end{bmatrix}}
-    }
-    {
+    }    {
         \ensuremath{\begin{pmatrix}#2\end{pmatrix}}
     }
-} % Spaltenvektoren, Matrizen etc. Mit Stern in eckigen Klammern, ohne mit runden Klammern
-
+} % Spaltenvektoren, Matrizen etc. Mit Stern in eckigen Klammern ohne mit runden Klammern
+% in physics besser: \smqty(), \smqty[]
 \DeclareDocumentCommand\smallmatr{sm}{
     \IfBooleanTF{#1}{
         \ensuremath{\left\lbrack\begin{smallmatrix}#2\end{smallmatrix}\right\rbrack }
@@ -251,22 +255,22 @@
 
 % \renewcommand\underbrace[1]{\LaTeXunderbrace{#1}}
 % \renewcommand\overbrace[1]{\LaTeXoverbrace{#1}}
-
+% Matrixversion mit runden klammern als \paulimatrix bzw \pmat in physics
 \NewDocumentCommand\sigmaMat{s m}{
     \IfBooleanTF{#1}{
         \sigma\sb{#2}
     }{
         \str_if_eq:eeTF{#2}{0}{
-            \smallmatr*{1 & \\&1}
+            \smqty[1 & \\&1]
         }{
             \str_if_eq:eeTF{#2}{1}{
-                \smallmatr*{0 & 1\\1&0}
+                \smqty[0 & 1\\1&0]
             }{
                 \str_if_eq:eeTF{#2}{2}{
-                    \smallmatr*{0 & -i \\ i & 0}
+                    \smqty[0 & -i \\ i & 0]
                 }{
                         \str_if_eq:eeTF{#2}{3}{
-                            \smallmatr*{1&\\ &-1}
+                            \smqty[1&\\ &-1]
                         }
                         {
                             \sigmaMat*{#2}
