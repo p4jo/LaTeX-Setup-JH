@@ -14,19 +14,30 @@
 \DeclareStringOption{SetupPath}
 \let\JHPreamble@SetupPath\relax 
 % undefine the default value for easy check below. Not equivalent to [\relax]{SetupPath}
+\DeclareBoolOption{PackagesByPath}
 
 \DeclareBoolOption{Presentation}
-\DeclareBoolOption{useAccents}
-\DeclareBoolOption{useGreekLetterCommands}
-\DeclareBoolOption{useSilence}
+
+\DeclareBoolOption{simpleTitle}
+
 \DeclareBoolOption{KpMath}
 \DeclareBoolOption{STIX}
 \DeclareBoolOption{StandardMathFonts}
 \DeclareBoolOption{StandardTextFonts}
-\DeclareBoolOption{simpleTitle}
-\DeclareBoolOption{omitFloat}
+
+\DeclareBoolOption{useAccents}
+\DeclareBoolOption{useGreekLetterCommands}
+\DeclareBoolOption{useSilence}
 \DeclareBoolOption{useIdealSymbols}
-\DeclareBoolOption{PackagesByPath}
+\DeclareBoolOption{useIndex}
+\DeclareBoolOption{omitFloat}
+\DeclareBoolOption{omitOwnPackages}
+\DeclareBoolOption{omitExternalPackages}
+\DeclareBoolOption{omitUnicodeMath}
+\DeclareBoolOption{omitFonts}
+\DeclareBoolOption{omitAutoIndex}
+\DeclareBoolOption{omitGreekLetterNames}
+\DeclareBoolOption{omitAll}
 
 
 \DeclareDefaultOption{ %Jede weitere Option
@@ -35,6 +46,16 @@
 }
 
 \ProcessKeyvalOptions* %
+
+\ifJHPreamble@omitAll
+    \JHPreamble@omitOwnPackagestrue
+    \JHPreamble@omitExternalPackagestrue
+    % \JHPreamble@omitUnicodeMathtrue
+    \JHPreamble@omitFontstrue
+    % \JHPreamble@omitFloattrue
+    % \JHPreamble@StandardMathFontstrue
+    % \JHPreamble@StandardTextFontstrue
+\fi
 
 %%% Stuff
 
@@ -130,9 +151,11 @@
 }
 
 \AtEndDocument{
-    \cleardoublepage 
-    \raggedright 
-    \printbibliography%
+	\@ifpackageloaded{biblatex}{
+		\cleardoublepage 
+		\raggedright 
+		\printbibliography%
+	}{}
 }
 
 \newcommand\Inhaltsverzeichnis{
@@ -147,8 +170,87 @@
 
 \fi
 
+%%% FILE src\Index.tex  %%%
+
+\ifJHPreamble@useIndex
+    \RequirePackage[imakeidx]{xindex}
+    % \AtBeginDocument{\makeindex}
+    \makeindex
+    \AtEndDocument{\printindex}
+
+    
+    \ifJHPreamble@omitAutoIndex
+    \else
+        \tl_new:N\autoindex_current_tl
+        \newcommand\autoindex_add_superindex:n{
+            \tl_if_empty:NTF\autoindex_current_tl{
+                \tl_gput_left:Nx\autoindex_current_tl
+            }{
+                \tl_gput_left:Nx\autoindex_current_tl!
+                \tl_gput_left:Nx\autoindex_current_tl
+            }
+        }
+        \NewDocumentCommand\autoindex_process_index:n{
+            > { \SplitList{ ? } } m
+            }{
+                \tl_clear:N\autoindex_current_tl
+                \ProcessList{#1}{\autoindex_add_superindex:n}
+            }
+
+        % \tl_new:N\autoindex_separator:
+        % \newcommand\autoindex_append:n[1]{
+        %     \tl_gput_right:Nx\autoindex_current_tl\autoindex_separator:
+        %     \tl_gput_right:Nx\autoindex_current_tl{#1}
+            
+        %     \tl_if_empty:NTF\autoindex_separator:{
+        %         \tl_set:Nx\autoindex_separator:{!}
+        %     }{
+        %         \tl_set:Nx\autoindex_separator:{~}
+        %     }
+        % }
+        % \RenewDocumentCommand\autoindex{
+        %     s % for future use
+        %     o % same
+        %     >{ \SplitList{ ~ } } >{\TrimSpaces} m 
+        % }{
+        %     \tl_clear:N\autoindex_separator:
+        %     \tl_clear:N\autoindex_current_tl
+        %     \ProcessList{#3}{\autoindex_append:n}
+        %     \index{\autoindex_current_tl}
+        % }
+        %% \index{ the argument where ? is interpreted as a reverse ! (having the broader keyword behind) }
+        %% \autoindex*{LaTeX3?programmer} prints "LaTeX3 programmer" and executes \index{programmer!LaTeX3} which gets grouped with \index{programmer!Python}.
+        \NewDocumentCommand\autoindex{
+            s % also print the text (with ? and ! replaced by a space)
+            o % for future use
+            m
+            }{
+                \autoindex_process_index:n{#3}
+                \index{\autoindex_current_tl}
+                \IfBooleanT{#1}{
+                    \tl_set:Nn\autoindex_current_tl{#3}
+                    \regex_replace_all:nnN{[!\? ]}{\~}\autoindex_current_tl
+                    \tl_use:N\autoindex_current_tl
+                }
+        }
+
+    \fi
+\else
+    \AtBeginDocument{\providecommand\index[1]{\typeout{Warning! No index package is loaded! You can provide the class option useIndex}}}
+\fi
+\AtBeginDocument{
+    \ProvideDocumentCommand\autoindex{som}{
+        \index{#1}
+        \IfBooleanT{#1}{#3}
+}}
+%%% END OF INSERTED FILE src\Index.tex %%%
+
+\ifJHPreamble@omitExternalPackages
+\else
+
 %%% FILE src\Packages1.tex  %%%
 %before unicode-math and fonts
+% non-essential
 
 \RequirePackage[
 	greek,
@@ -184,16 +286,22 @@
 \RequirePackage{mathtools} % überschreibt underbrace in unicode-math, was dann nicht mehr funktioniert, muss deshalb vor unicode-math geladen werden.
 %%% END OF INSERTED FILE src\Packages1.tex %%%
 
+\fi
 
+\ifJHPreamble@omitFonts
+\else
 
 %%% FILE src\Fonts.tex  %%%
 % \RequirePackage{fontspec} % in unicode-math
+\ifJHPreamble@omitUnicodeMath
+    \RequirePackage{fontspec}
+\else
+    \RequirePackage[
+        math-style=ISO, % Macht gr. Großbuchstaben kursiv
+        bold-style=ISO 
+        ]{unicode-math} 
+\fi
 
-\RequirePackage[
-    math-style=ISO, % Macht gr. Großbuchstaben kursiv
-    bold-style=ISO 
-    ]{unicode-math} 
-    
 \ifJHPreamble@PackagesByPath
     \newcommand{\__FontPath}{\JHPreamble@SetupPath/../../fonts/opentype/}
 \else
@@ -323,6 +431,7 @@
 ]
 
 
+% icomoon.io, boxy-svg.com
 \newfontfamily\JHSymbolFont[Path=\__FontPath]{divides_multipleOf.ttf}
 \newcommand\teilt{\mathbin{\text{\JHSymbolFont{d}}}}
 \newcommand\assoz{\mathbin{\text{\JHSymbolFont{a}}}}
@@ -347,10 +456,14 @@
 % \MakeCharactersAlwaysUseFallbackFontAndTextMode{⥎,⥋,⥊,⥐}
 %%% END OF INSERTED FILE src\Fonts.tex %%%
 
+\fi
 
+\ifJHPreamble@omitExternalPackages
+\else
 
 %%% FILE src\Packages2.tex  %%%
 % After unicode-math and fonts
+% non-essential
 %     \RequirePackage{microtype} % sorgt für besseres Schriftbild, indem es micro-Anpassungen macht. 
 \RequirePackage[autostyle=true]{csquotes} % \enquote{...} statt "...". Lokalisierbare Anführungszeichen 
 
@@ -368,21 +481,6 @@
     \RequirePackage{float} % Um \begin{figure}[H] zu machen
 \fi
 
-% \RequirePackage{color}
-\RequirePackage{xcolor} % Option [svgnames] may cause option clash ↦ \PassOptionsToPackage before first potential load 
-
-\ifdef{\mathcolor}{
-
-}{
-
-    \def\mathcolor#1#{\@mathcolor{#1}}
-    \def\@mathcolor#1#2#3{%
-        \protect\leavevmode
-        \begingroup
-           \color#1{#2}#3%
-        \endgroup
-    }
-}
 
 \RequirePackage{amsmath} % in kpfonts
 
@@ -417,26 +515,9 @@
 %%% END OF INSERTED FILE src\Packages2.tex %%%
 
 
-
-%%% FILE src\Colors.tex  %%%
-\definecolor{dunkelblau}{rgb}{0, 0, 0.5}
-\definecolor{dunkelgrau}{rgb}{0.4, 0.4, 0.4}
-\definecolor{grau}{rgb}{0.5, 0.5, 0.5}
-\definecolor{hellgrau}{rgb}{0.9, 0.9, 0.9}
-\definecolor{türkis}{rgb}{0, 0.5, 0.5}
-\definecolor{blasstürkis}{rgb}{0.5, 0.9., 0.9}
-\definecolor{blassblau}{rgb}{0.9,0.9,1}
-\definecolor{blasshellblau}{rgb}{0.76,0.97,1}
-\definecolor{hellblau}{rgb}{0.31,0.87,1}
-\definecolor{hellgrün}{rgb}{0.9,1,0.9}
-\definecolor{lila}{rgb}{0.5,0,0.5}
-\definecolor{dunkelgrün}{rgb}{0,0.5,0}
-\definecolor{dunkelrot}{rgb}{0.5,0.05,0.05}
-\definecolor{dunkeltürkis}{HTML}{2A7B88}
-%%% END OF INSERTED FILE src\Colors.tex %%%
-
-
 %%% FILE src\GeneralSetup.tex  %%%
+% ignored on option omitExternalPackages
+
 % xspace
 \xspaceaddexceptions{“ "-}
 
@@ -626,6 +707,43 @@
 
 %%% END OF INSERTED FILE src\BibliographySettings.tex %%%
 
+\fi
+
+
+%%% FILE src\Colors.tex  %%%
+
+% \RequirePackage{color}
+\RequirePackage{xcolor} % Option [svgnames] may cause option clash ↦ \PassOptionsToPackage before first potential load 
+
+\ifdef{\mathcolor}{
+
+}{
+
+    \def\mathcolor#1#{\@mathcolor{#1}}
+    \def\@mathcolor#1#2#3{%
+        \protect\leavevmode
+        \begingroup
+           \color#1{#2}#3%
+        \endgroup
+    }
+}
+
+\definecolor{dunkelblau}{rgb}{0, 0, 0.5}
+\definecolor{dunkelgrau}{rgb}{0.4, 0.4, 0.4}
+\definecolor{grau}{rgb}{0.5, 0.5, 0.5}
+\definecolor{hellgrau}{rgb}{0.9, 0.9, 0.9}
+\definecolor{türkis}{rgb}{0, 0.5, 0.5}
+\definecolor{blasstürkis}{rgb}{0.5, 0.9., 0.9}
+\definecolor{blassblau}{rgb}{0.9,0.9,1}
+\definecolor{blasshellblau}{rgb}{0.76,0.97,1}
+\definecolor{hellblau}{rgb}{0.31,0.87,1}
+\definecolor{hellgrün}{rgb}{0.9,1,0.9}
+\definecolor{lila}{rgb}{0.5,0,0.5}
+\definecolor{dunkelgrün}{rgb}{0,0.5,0}
+\definecolor{dunkelrot}{rgb}{0.5,0.05,0.05}
+\definecolor{dunkeltürkis}{HTML}{2A7B88}
+%%% END OF INSERTED FILE src\Colors.tex %%%
+
 
 \ifJHPreamble@Presentation
 
@@ -654,9 +772,13 @@
 %\addtokomafont{pagenumber}{\sffamily}
 \setkomafont{pagenumber}{\normalfont}
 
-\renewcaptionname{ngerman}{\figurename}{Abb.}
-\renewcaptionname{ngerman}{\figureautorefname}{Abb.}
-\renewcaptionname{ngerman}{\tableautorefname}{Tabelle} %War auf 'Abschnitt' ?
+\@ifpackageloaded{babel}{
+    \renewcaptionname{ngerman}{\figurename}{Abb.}
+    \@ifpackageloaded{hyperref}{
+        \renewcaptionname{ngerman}{\figureautorefname}{Abb.}
+        \renewcaptionname{ngerman}{\tableautorefname}{Tabelle} %War auf 'Abschnitt' ?
+    }{}
+}{}
 
 
 % \linespread{1.3}
@@ -689,22 +811,39 @@
 \usepackage{iftex}
 \ifLuaTeX
     \NewDocumentCommand{\getenv}{m}{
-        \directlua{ tex.sprint(os.getenv('#1')) }
-    }    
+        \directlua{
+            result = os.getenv('#1')~
+            if~result == nil~then~result = "UNDEFINED"~end~
+            tex.sprint(
+                string.char(92) .. "tl_set:cn" .. string.char(123) .. "#1" .. string.char(125) .. string.char(123) .. result .. string.char(125))
+         }
+    }     % 92 = \, 123 = {, 125 = }
 \else
-    % Uses sys_get_shell, but we would have to know the system. this is powershell specific
+    % \NewDocumentCommand{\getenv}{m}
+    % {
+    %     \tl_set:cv{#1}{\@@input"|~echo~$Env:#1"}
+    % }
+
+    % % Uses sys_get_shell, but we would have to know the system. this is powershell specific
+    % \NewDocumentCommand{\getenv}{m}
+    % {
+    %     \sys_get_shell:nnN{echo~$Env:#1 } { } \getenv_result 
+    %     \tl_trim_spaces:N \getenv_result
+    %     \tl_set:cN {#1} \getenv_result
+    % }
+
     \NewDocumentCommand{\getenv}{m}
-    {
-        \sys_get_shell:nnN { $Env:#1 } { } \getenv_result 
-        \tl_trim_spaces:N \getenv_result
-        \tl_use:N \getenv_result
-    }
+    {\tl_set:cn{#1}{USE_LUALATEX}}
 \fi
 
-\newcommand\LATEX_ALLOW_PAUSE_EXECUTION{\getenv{LATEX_ALLOW_PAUSE_EXECUTION}}
+% \cs_new:cx{LATEX_ALLOW_PAUSE_EXECUTION:}{\getenv{LATEX_ALLOW_PAUSE_EXECUTION}}
+% \exp_args:NNe
+% \newcommand\LATEX_ALLOW_PAUSE_EXECUTION{
+\getenv{LATEX_ALLOW_PAUSE_EXECUTION}%}
 \newcommand\true_string{true}
 
 \newcommand\pauseExecution{
+    % \exp_after:wN
     \str_if_eq:NNTF\LATEX_ALLOW_PAUSE_EXECUTION\true_string{
         \chardef\previous_interactionmode=\interactionmode
         \errorstopmode % stopping at \show
@@ -720,10 +859,16 @@
 %%% END OF INSERTED FILE src\AutomationSetup.tex %%%
 
 
-\RequirePackageByPath{JHGeneralCommands}
-\RequirePackageByPath{JHMathCommands}
-\RequirePackageByPath{JHPhysicsCommands}
 
+\ifJHPreamble@omitOwnPackages
+\else
+    \RequirePackageByPath{JHGeneralCommands}
+    \RequirePackageByPath{JHMathCommands}
+    \RequirePackageByPath{JHPhysicsCommands}
+\fi
+
+\ifJHPreamble@omitGreekLetterNames
+\else
 
 %%% FILE src\GreekLetterNames.tex  %%%
 
@@ -752,6 +897,7 @@
 \fi
 %%% END OF INSERTED FILE src\GreekLetterNames.tex %%%
 
+\fi
 
 \ifJHPreamble@useAccents
     \RequirePackageByPath{JHTensors}

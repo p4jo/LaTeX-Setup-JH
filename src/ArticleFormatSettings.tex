@@ -7,9 +7,13 @@
 %\addtokomafont{pagenumber}{\sffamily}
 \setkomafont{pagenumber}{\normalfont}
 
-\renewcaptionname{ngerman}{\figurename}{Abb.}
-\renewcaptionname{ngerman}{\figureautorefname}{Abb.}
-\renewcaptionname{ngerman}{\tableautorefname}{Tabelle} %War auf 'Abschnitt' ?
+\@ifpackageloaded{babel}{
+    \renewcaptionname{ngerman}{\figurename}{Abb.}
+    \@ifpackageloaded{hyperref}{
+        \renewcaptionname{ngerman}{\figureautorefname}{Abb.}
+        \renewcaptionname{ngerman}{\tableautorefname}{Tabelle} %War auf 'Abschnitt' ?
+    }{}
+}{}
 
 
 % \linespread{1.3}

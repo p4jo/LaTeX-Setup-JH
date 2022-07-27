@@ -208,7 +208,7 @@
 \newcommand\1{\varNum 1}
 \newcommand\+{\varNum{+}} % bringt in vielen Schriften nichts
 
-\providecommand\teilt{\dashv} % gehört noch überarbeitet % TODO
+\providecommand\teilt{\dashv} 
 \providecommand\vielf{\vdash}
 \providecommand\assoz{\parallel}
 
@@ -217,14 +217,24 @@
 
 \DeclareDocumentCommand{\vek}{m}{\rightharpoonaccent{#1}} % ⇀
 \DeclareDocumentCommand{\kovek}{m}{\leftharpoonaccent{#1}} % ↼
-\DeclareDocumentCommand\tup{m}{
+\DeclareDocumentCommand\tup{sm}{
     \uline{
-        \smash{#1}
+        \IfBooleanTF{#1}
+        {
+            #2
+        }{
+            \smash{#2}
+        }
     }
 }
-\DeclareDocumentCommand\tuptup{m}{
+\DeclareDocumentCommand\tuptup{sm}{
     \uuline{
-        \smash{#1}
+        \IfBooleanTF{#1}
+        {
+            #2
+        }{
+            \smash{#2}
+        }
     }
 }
 % \DeclareDocumentCommand{\tup}{m}{\underline{#1}} % Tupel

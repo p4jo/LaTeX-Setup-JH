@@ -15,19 +15,30 @@
 \DeclareStringOption{SetupPath}
 \let\JHPreamble@SetupPath\relax 
 % undefine the default value for easy check below. Not equivalent to [\relax]{SetupPath}
+\DeclareBoolOption{PackagesByPath}
 
 \DeclareBoolOption{Presentation}
-\DeclareBoolOption{useAccents}
-\DeclareBoolOption{useGreekLetterCommands}
-\DeclareBoolOption{useSilence}
+
+\DeclareBoolOption{simpleTitle}
+
 \DeclareBoolOption{KpMath}
 \DeclareBoolOption{STIX}
 \DeclareBoolOption{StandardMathFonts}
 \DeclareBoolOption{StandardTextFonts}
-\DeclareBoolOption{simpleTitle}
-\DeclareBoolOption{omitFloat}
+
+\DeclareBoolOption{useAccents}
+\DeclareBoolOption{useGreekLetterCommands}
+\DeclareBoolOption{useSilence}
 \DeclareBoolOption{useIdealSymbols}
-\DeclareBoolOption{PackagesByPath}
+\DeclareBoolOption{useIndex}
+\DeclareBoolOption{omitFloat}
+\DeclareBoolOption{omitOwnPackages}
+\DeclareBoolOption{omitExternalPackages}
+\DeclareBoolOption{omitUnicodeMath}
+\DeclareBoolOption{omitFonts}
+\DeclareBoolOption{omitAutoIndex}
+\DeclareBoolOption{omitGreekLetterNames}
+\DeclareBoolOption{omitAll}
 
 
 \DeclareDefaultOption{ %Jede weitere Option
@@ -36,6 +47,16 @@
 }
 
 \ProcessKeyvalOptions* %
+
+\ifJHPreamble@omitAll
+    \JHPreamble@omitOwnPackagestrue
+    \JHPreamble@omitExternalPackagestrue
+    % \JHPreamble@omitUnicodeMathtrue
+    \JHPreamble@omitFontstrue
+    % \JHPreamble@omitFloattrue
+    % \JHPreamble@StandardMathFontstrue
+    % \JHPreamble@StandardTextFontstrue
+\fi
 
 %%% Stuff
 % !TeX input PackagesByPath
@@ -55,15 +76,25 @@
 \else
 % !TeX input ArticleMainSetup
 \fi
+% !TeX input Index
+\ifJHPreamble@omitExternalPackages
+\else
 % !TeX input Packages1
+\fi
 
+\ifJHPreamble@omitFonts
+\else
 % !TeX input Fonts 
+\fi
 
+\ifJHPreamble@omitExternalPackages
+\else
 % !TeX input Packages2
-
-% !TeX input Colors
 % !TeX input GeneralSetup
 % !TeX input BibliographySettings
+\fi
+
+% !TeX input Colors
 
 \ifJHPreamble@Presentation
 % !TeX input PresentationFormatSettings
@@ -73,11 +104,18 @@
 
 % !TeX input AutomationSetup
 
-\RequirePackageByPath{JHGeneralCommands}
-\RequirePackageByPath{JHMathCommands}
-\RequirePackageByPath{JHPhysicsCommands}
 
+\ifJHPreamble@omitOwnPackages
+\else
+    \RequirePackageByPath{JHGeneralCommands}
+    \RequirePackageByPath{JHMathCommands}
+    \RequirePackageByPath{JHPhysicsCommands}
+\fi
+
+\ifJHPreamble@omitGreekLetterNames
+\else
 % !TeX input GreekLetterNames
+\fi
 
 \ifJHPreamble@useAccents
     \RequirePackageByPath{JHTensors}

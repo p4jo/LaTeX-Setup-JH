@@ -32,9 +32,11 @@
 }
 
 \AtEndDocument{
-    \cleardoublepage 
-    \raggedright 
-    \printbibliography%
+	\@ifpackageloaded{biblatex}{
+		\cleardoublepage 
+		\raggedright 
+		\printbibliography%
+	}{}
 }
 
 \newcommand\Inhaltsverzeichnis{

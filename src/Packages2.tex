@@ -1,4 +1,5 @@
 % After unicode-math and fonts
+% non-essential
 %     \RequirePackage{microtype} % sorgt für besseres Schriftbild, indem es micro-Anpassungen macht. 
 \RequirePackage[autostyle=true]{csquotes} % \enquote{...} statt "...". Lokalisierbare Anführungszeichen 
 
@@ -16,21 +17,6 @@
     \RequirePackage{float} % Um \begin{figure}[H] zu machen
 \fi
 
-% \RequirePackage{color}
-\RequirePackage{xcolor} % Option [svgnames] may cause option clash ↦ \PassOptionsToPackage before first potential load 
-
-\ifdef{\mathcolor}{
-
-}{
-
-    \def\mathcolor#1#{\@mathcolor{#1}}
-    \def\@mathcolor#1#2#3{%
-        \protect\leavevmode
-        \begingroup
-           \color#1{#2}#3%
-        \endgroup
-    }
-}
 
 \RequirePackage{amsmath} % in kpfonts
 

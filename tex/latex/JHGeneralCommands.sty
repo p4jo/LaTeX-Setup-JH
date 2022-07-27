@@ -1,17 +1,34 @@
 \ProvidesExplPackage{JHGeneralCommands}{2022/04/07}{1.0.1}{General Commands by Johannes H}
 
 %%%%%%% META COMMANDS
+\RequirePackage{xspace} % Ein Leerzeichen, das man ans Ende von Befehlen bauen kann, das keines wird, wenn da ein Satzzeichen steht
+\RequirePackage{xparse} % in modern kernels already loaded
+
 \NewDocumentCommand\mathname{mm}{\NewDocumentCommand{#1}{}{\ensuremath{#2}\xspace}}
 
 
 \newcommand\currentPath\CurrentFilePath % this is relative to the main file
 % gets overwritten in <project>/<project>_generated.tex files when using JHAutomate
 
+\ProvideDocumentCommand\autoindex{som}{
+    \index{#1}
+    \IfBooleanT{#1}{#3}
+}
 %%%%%%% Grundlagen 
-
-\newcommand{\Def}[1]{\textbf{#1}}
-\newcommand{\ger}[1]{\mathrm{#1}} % gerade, d.h. aufrecht
-
+\NewDocumentCommand\Def{som}{
+    \textbf{
+        \IfBooleanTF{#1}{
+            #3
+        }{
+            \IfValueTF{#2}{
+                \autoindex{#2}
+                #3
+            }{
+                \autoindex*{#3}
+            }
+        }
+    }
+}
 
 \renewcommand\|{\,\middle|\,} % Für z.B. \qty{x \in A \| x \text{ dumm}}.
 
@@ -28,6 +45,8 @@
         }
     }
 }
+\newcommand{\ger}[1]{\mathrm{#1}} % gerade, d.h. aufrecht
+
 \NewDocumentCommand{\sub}{o m o}{
     \TextOrMath{
         \textsubscript{
@@ -84,26 +103,29 @@
 \NewDocumentCommand\Ivao{> { \SplitArgument{1} {,} } D[[{0,1} }{
     \ivao#1
 }
-\NewDocumentCommand\Ivoa{>{ \SplitArgument{1} {,} }d]] >{ \SplitArgument{1}{,} }D(]{0,1} }{
+\NewDocumentCommand\Ivoa{
+    >{ \SplitArgument{1} {,} }d]] 
+    >{ \SplitArgument{1}{,} }D(]{0,1} 
+}{
     \IfValueTF{#1}{
         \ivoa#1
-    }
-    {
+    }{
         \ivoa#2
     }
 }
-\NewDocumentCommand\Ivoo{>{ \SplitArgument{1} {,} }d][ >{ \SplitArgument{1}{,} }D(){0,1} }{
+\NewDocumentCommand\Ivoo{
+    >{ \SplitArgument{1} {,} }d][ 
+    >{ \SplitArgument{1}{,} }D(){0,1} 
+}{
     \IfValueTF{#1}{
         \ivoo#1
-    }
-    {
+    }{
         \ivoo#2
     }
 }
 \@ifpackageloaded{unicode-math}{
     \newcommand\numberset[1]{{\symbb{#1}}} % Zahlmengen (natürliche, ganze, reelle, etc.)
-}
-{
+}{
     \newcommand\numberset[1]{{\mathbb{#1}}} 
 }
 \mathname\nN{\numberset{N}}
@@ -214,7 +236,6 @@
 \newcommand{\glei}[2]{\begin{equation}\tag{#1}\label{G.#1}
     #2
 \end{equation}} % obsolete
-
 
 % equation environment. You can prepend \Gleichung* before inline-math with $...$ to allow multi-line equations.
 \NewDocumentCommand\Gleichung{

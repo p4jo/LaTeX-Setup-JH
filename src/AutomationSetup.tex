@@ -2,22 +2,39 @@
 \usepackage{iftex}
 \ifLuaTeX
     \NewDocumentCommand{\getenv}{m}{
-        \directlua{ tex.sprint(os.getenv('#1')) }
-    }    
+        \directlua{
+            result = os.getenv('#1')~
+            if~result == nil~then~result = "UNDEFINED"~end~
+            tex.sprint(
+                string.char(92) .. "tl_set:cn" .. string.char(123) .. "#1" .. string.char(125) .. string.char(123) .. result .. string.char(125))
+         }
+    }     % 92 = \, 123 = {, 125 = }
 \else
-    % Uses sys_get_shell, but we would have to know the system. this is powershell specific
+    % \NewDocumentCommand{\getenv}{m}
+    % {
+    %     \tl_set:cv{#1}{\@@input"|~echo~$Env:#1"}
+    % }
+
+    % % Uses sys_get_shell, but we would have to know the system. this is powershell specific
+    % \NewDocumentCommand{\getenv}{m}
+    % {
+    %     \sys_get_shell:nnN{echo~$Env:#1 } { } \getenv_result 
+    %     \tl_trim_spaces:N \getenv_result
+    %     \tl_set:cN {#1} \getenv_result
+    % }
+
     \NewDocumentCommand{\getenv}{m}
-    {
-        \sys_get_shell:nnN { $Env:#1 } { } \getenv_result 
-        \tl_trim_spaces:N \getenv_result
-        \tl_use:N \getenv_result
-    }
+    {\tl_set:cn{#1}{USE_LUALATEX}}
 \fi
 
-\newcommand\LATEX_ALLOW_PAUSE_EXECUTION{\getenv{LATEX_ALLOW_PAUSE_EXECUTION}}
+% \cs_new:cx{LATEX_ALLOW_PAUSE_EXECUTION:}{\getenv{LATEX_ALLOW_PAUSE_EXECUTION}}
+% \exp_args:NNe
+% \newcommand\LATEX_ALLOW_PAUSE_EXECUTION{
+\getenv{LATEX_ALLOW_PAUSE_EXECUTION}%}
 \newcommand\true_string{true}
 
 \newcommand\pauseExecution{
+    % \exp_after:wN
     \str_if_eq:NNTF\LATEX_ALLOW_PAUSE_EXECUTION\true_string{
         \chardef\previous_interactionmode=\interactionmode
         \errorstopmode % stopping at \show

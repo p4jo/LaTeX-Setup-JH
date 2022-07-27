@@ -1,3 +1,20 @@
+
+% \RequirePackage{color}
+\RequirePackage{xcolor} % Option [svgnames] may cause option clash ↦ \PassOptionsToPackage before first potential load 
+
+\ifdef{\mathcolor}{
+
+}{
+
+    \def\mathcolor#1#{\@mathcolor{#1}}
+    \def\@mathcolor#1#2#3{%
+        \protect\leavevmode
+        \begingroup
+           \color#1{#2}#3%
+        \endgroup
+    }
+}
+
 \definecolor{dunkelblau}{rgb}{0, 0, 0.5}
 \definecolor{dunkelgrau}{rgb}{0.4, 0.4, 0.4}
 \definecolor{grau}{rgb}{0.5, 0.5, 0.5}

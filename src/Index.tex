@@ -1,0 +1,72 @@
+
+\ifJHPreamble@useIndex
+    \RequirePackage[imakeidx]{xindex}
+    % \AtBeginDocument{\makeindex}
+    \makeindex
+    \AtEndDocument{\printindex}
+
+    
+    \ifJHPreamble@omitAutoIndex
+    \else
+        \tl_new:N\autoindex_current_tl
+        \newcommand\autoindex_add_superindex:n{
+            \tl_if_empty:NTF\autoindex_current_tl{
+                \tl_gput_left:Nx\autoindex_current_tl
+            }{
+                \tl_gput_left:Nx\autoindex_current_tl!
+                \tl_gput_left:Nx\autoindex_current_tl
+            }
+        }
+        \NewDocumentCommand\autoindex_process_index:n{
+            > { \SplitList{ ? } } m
+            }{
+                \tl_clear:N\autoindex_current_tl
+                \ProcessList{#1}{\autoindex_add_superindex:n}
+            }
+
+        % \tl_new:N\autoindex_separator:
+        % \newcommand\autoindex_append:n[1]{
+        %     \tl_gput_right:Nx\autoindex_current_tl\autoindex_separator:
+        %     \tl_gput_right:Nx\autoindex_current_tl{#1}
+            
+        %     \tl_if_empty:NTF\autoindex_separator:{
+        %         \tl_set:Nx\autoindex_separator:{!}
+        %     }{
+        %         \tl_set:Nx\autoindex_separator:{~}
+        %     }
+        % }
+        % \RenewDocumentCommand\autoindex{
+        %     s % for future use
+        %     o % same
+        %     >{ \SplitList{ ~ } } >{\TrimSpaces} m 
+        % }{
+        %     \tl_clear:N\autoindex_separator:
+        %     \tl_clear:N\autoindex_current_tl
+        %     \ProcessList{#3}{\autoindex_append:n}
+        %     \index{\autoindex_current_tl}
+        % }
+        %% \index{ the argument where ? is interpreted as a reverse ! (having the broader keyword behind) }
+        %% \autoindex*{LaTeX3?programmer} prints "LaTeX3 programmer" and executes \index{programmer!LaTeX3} which gets grouped with \index{programmer!Python}.
+        \NewDocumentCommand\autoindex{
+            s % also print the text (with ? and ! replaced by a space)
+            o % for future use
+            m
+            }{
+                \autoindex_process_index:n{#3}
+                \index{\autoindex_current_tl}
+                \IfBooleanT{#1}{
+                    \tl_set:Nn\autoindex_current_tl{#3}
+                    \regex_replace_all:nnN{[!\? ]}{\~}\autoindex_current_tl
+                    \tl_use:N\autoindex_current_tl
+                }
+        }
+
+    \fi
+\else
+    \AtBeginDocument{\providecommand\index[1]{\typeout{Warning! No index package is loaded! You can provide the class option useIndex}}}
+\fi
+\AtBeginDocument{
+    \ProvideDocumentCommand\autoindex{som}{
+        \index{#1}
+        \IfBooleanT{#1}{#3}
+}}
