@@ -238,32 +238,38 @@
 \end{equation}} % obsolete
 
 % equation environment. You can prepend \Gleichung* before inline-math with $...$ to allow multi-line equations.
-\NewDocumentCommand\Gleichung{
+\NewDocumentCommand\Gleichung {
     t' % #1: Optional ' for alignat environment
     s % #2: Optional * for no name and number
     g % #3: Optional {<Name>} for (<Name>) instead of (1.1.1) and label G.<Name>
     +D$${\text{\textcolor{red}{Gleichung fehlt.}}} % #4: Content of the equation in $...$
     t. % #5: If you have a dot after the closing $, it will be pulled inside (instead of it being on the beginning of the next line)
     t, % #6: Same for commas
-}{ 
-    \def\Gleichung_content{
+    }{ 
+    % \typeout{\#1=#1,\#2=#2,\#3=#3,\#4=#4,\#5=#5,\#6=#6}
+    \def\Gleichung_content:{
+        #4
+        \IfBooleanT{#5}{.}
+        \IfBooleanT{#6}{,}
+    }
+    \def\Gleichung_complete:{
         \IfValueT{#3}{
             \IfBooleanF{#2}{ \tag{#3} }
             \label{G.#3}
         }
-        \IfBooleanTF{#1}{ \begin{alignedat}{-1} }{ \begin{split} }
-            #4
-            \IfBooleanT{#5}{.}
-            \IfBooleanT{#6}{,}
-        \IfBooleanTF{#1}{ \end{alignedat} }{ \end{split} }
+        \IfBooleanTF{#1}{
+            \begin{alignedat}{-1}                    
+                \Gleichung_content:
+            \end{alignedat} 
+        }{
+            \begin{split}
+                \Gleichung_content:
+            \end{split} 
+        }
     }
-    \IfBooleanTF{#2}{
-        \begin{equation*}
-            \Gleichung_content      
-        \end{equation*}
+    \IfBooleanTF{#2}{ 
+        \begin{equation*} \Gleichung_complete: \end{equation*} 
     }{
-        \begin{equation}
-            \Gleichung_content      
-        \end{equation}
-    }
+        \begin{equation} \Gleichung_complete: \end{equation}
+    } 
 }
