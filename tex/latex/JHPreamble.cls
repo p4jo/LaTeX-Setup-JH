@@ -39,6 +39,7 @@
 \DeclareBoolOption{omitGreekLetterNames}
 \DeclareBoolOption{omitAll}
 
+\DeclareBoolOption{NumberDefLikeSatz}
 
 \DeclareDefaultOption{ %Jede weitere Option
     \PassOptionsToClass{\CurrentOption}{scrreport}
@@ -151,6 +152,7 @@
 }
 
 \AtEndDocument{
+	\pagenumbering{gobble}
 	\@ifpackageloaded{biblatex}{
 		\cleardoublepage 
 		\raggedright 
@@ -159,11 +161,14 @@
 }
 
 \newcommand\Inhaltsverzeichnis{
-    \clearpage
-    \pagenumbering{roman}
-    \tableofcontents
-    \clearpage
-    \pagenumbering{arabic}
+	\clearpage
+	\pagenumbering{roman}
+	{
+		\hypersetup{ hidelinks }
+		\tableofcontents
+	}
+	\clearpage
+	\pagenumbering{arabic}
 }
 
 %%% END OF INSERTED FILE src\ArticleMainSetup.tex %%%
@@ -544,16 +549,19 @@
 	% literal-superscript-as-power=true % Option nicht mehr notwendig
 }
 
-\shorthandoff{"} % Würde normalerweise "a zu ä machen.
+% \shorthandoff{"} % Würde normalerweise "a zu ä machen.
+\AfterEndPreamble{
+    \shorthandoff{"}
+}
 
 % hyperref
 \hypersetup
 {
 	colorlinks	= true,
-	linkcolor   = dunkelblau, 
-	citecolor   = dunkelblau,
-	bookmarksnumbered = true,
-	urlcolor    = dunkelblau,
+	linkcolor   = Links, 
+	citecolor   = Links,
+	% bookmarksnumbered = true,
+	urlcolor    = Links,
 	pdfauthor   = {\JHPreamble@author},
 	pdftitle    = {\JHPreamble@title}%,
 	% pdfsubject  = {<set this yourself using \hypersetup>},
@@ -606,15 +614,18 @@
 ]{JHDefinition}
 
 \declaretheoremstyle[
-    bodyfont={\color{dunkelgrau}}
+    bodyfont={\color{dunkelgrau}},
+    headpunct={:},
+    headfont={\itshape},
+    notefont={\itshape}
 ]{JHProof}
 
+% Bemerkung mit Rahmen
 \declaretheoremstyle[
-    bodyfont={\upshape%\color{dunkelgrau}
-        },
-    headfont=\itshape,
+    bodyfont={\upshape},
+    headfont={\hspace{-11pt} \itshape}, %\itshape
     notefont=\itshape,
-    headpunct={:},
+    headpunct={:}
 ]{JHRemark}
 
 \cs_if_exist:NTF\chapter{
@@ -622,14 +633,6 @@
 }{
     \newcommand\__numberwithin{section}
 }
-
-\declaretheorem[
-    style=JHDefinition,
-    shaded={
-        bgcolor=blasshellblau
-    },
-    numberwithin=\__numberwithin
-]{definition}
 \declaretheorem[
     style=JHDefinition,
     shaded={
@@ -647,24 +650,45 @@
 \declaretheorem[
     style=JHDefinition,
     shaded={
-        bgcolor=blasstürkis
-    },
-    name=Definierendes\ Lemma,
-    numberlike=Satz
-]{DefLemma}
-\declaretheorem[
-    style=JHDefinition,
-    shaded={
         bgcolor=hellgrau
     },
     numberlike=Satz
 ]{Korollar}
+
+% numbered like Definition
+\ifJHPreamble@NumberDefLikeSatz
+    \declaretheorem[
+        style=JHDefinition,
+        shaded={
+            bgcolor=blasshellblau
+        },
+        numberlike=Satz
+    ]{Definition}
+\else
+    \declaretheorem[
+        style=JHDefinition,
+        shaded={
+            bgcolor=blasshellblau
+        },
+        numberwithin=\__numberwithin
+    ]{Definition}
+\fi
 \declaretheorem[
     style=JHDefinition,
+    shaded={
+        bgcolor=blasstürkis
+    },
+    name=Definierendes\ Lemma,
+    refname=definierenden\ Lemma,
+    numberlike=Definition
+]{DefLemma}
+
+% not numbered
+\declaretheorem[
+    style=JHRemark,
     numbered=no,
     name=Beispiel
-]{Beispiel}
-
+]{beispiel}
 \declaretheorem[
     style=JHProof,
     numbered=no
@@ -674,18 +698,77 @@
     style=JHRemark,
     name=Bemerkung,
     numbered=no
-]{remark}
-\declaretheorem[
-    style=JHRemark,
-    name=Bemerkung,
-    numbered=no
-]{bem}
-\declaretheorem[
-    style=JHRemark,
-    name=Bemerkung,
-    numbered=no
-]{Bemerkung}
+]{bemerkung}
 
+% \usepackage{mdframed}
+% \surroundwithmdframed[
+%     linewidth=1pt,
+%     linecolor= dunkelgrau,
+%     % roundcorner=1pt,
+%     topline = false,
+%     rightline = false,
+%     bottomline = false,
+%     rightmargin=0pt,
+%     skipabove=0.1cm,
+%     skipbelow=0pt,
+%     leftmargin=1pt,
+%     innerleftmargin=10pt,
+%     innerrightmargin=0pt,
+%     innertopmargin=-20pt,
+%     innerbottommargin=0pt,
+% ]{Bemerkung}
+
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{skins}
+\tcbuselibrary{breakable}
+\newcommand\drawLeftLine[2][-8pt]{ % #2=the color
+    \draw[line~width = 2pt, #2, opacity = 0.7]
+        ([ shift = { (1pt, #1) } ] interior.north~west )
+    -- ([ shift = { (1pt, 8pt) } ] interior.south~west );
+}
+\newtcolorbox{leftLineBox}[2][]{
+    enhanced,
+    empty,
+    breakable=true,
+    left=7pt,
+    overlay={ \drawLeftLine[-25pt]{#2} },
+    % code for the first part of a break sequence:
+    skin~first~is~subskin~of = { emptyfirst }{ 
+        overlay = {\drawLeftLine[-25pt]{#2} }
+    },
+    % code for the middle part of a break sequence:
+    skin~middle~is~subskin~of = { emptymiddle }{
+        overlay = { \drawLeftLine{#2} }
+    },
+    % code for the last part of a break sequence:
+    skin~last~is~subskin~of = { emptylast }{
+        overlay = { \drawLeftLine{#2} }
+    },
+    #1
+}
+\NewDocumentEnvironment{Bemerkung}{o D(){dunkelgrün}}{ 
+    \begin{leftLineBox}{#2}
+        \IfValueTF{#1}{
+            \begin{bemerkung}[#1]
+        }{
+            \begin{bemerkung}            
+        }
+}{ 
+    \end{bemerkung}
+    \end{leftLineBox}
+}
+
+\NewDocumentEnvironment{Beispiel}{o D(){dunkelblau}}{ 
+    \begin{leftLineBox}{#2}
+        \IfValueTF{#1}{
+            \begin{beispiel}[#1]
+        }{
+            \begin{beispiel}            
+        }
+}{ 
+    \end{beispiel}
+    \end{leftLineBox}
+}
 %%% END OF INSERTED FILE src\GeneralSetup.tex %%%
 
 
@@ -729,6 +812,7 @@
 }
 
 \definecolor{dunkelblau}{rgb}{0, 0, 0.5}
+\definecolor{mittelblau}{rgb}{0,0,0.7}
 \definecolor{dunkelgrau}{rgb}{0.4, 0.4, 0.4}
 \definecolor{grau}{rgb}{0.5, 0.5, 0.5}
 \definecolor{hellgrau}{rgb}{0.9, 0.9, 0.9}
@@ -742,6 +826,9 @@
 \definecolor{dunkelgrün}{rgb}{0,0.5,0}
 \definecolor{dunkelrot}{rgb}{0.5,0.05,0.05}
 \definecolor{dunkeltürkis}{HTML}{2A7B88}
+
+\definecolor{Überschrift}{rgb}{0,0,0.6}
+\definecolor{Links}{named}{Überschrift}
 %%% END OF INSERTED FILE src\Colors.tex %%%
 
 
@@ -763,7 +850,7 @@
 \else
 
 %%% FILE src\ArticleFormatSettings.tex  %%%
-\addtokomafont{sectioning}{\rmfamily\boldmath\color{dunkelblau}}
+\addtokomafont{sectioning}{\rmfamily\boldmath\color{Überschrift}}
 %\addtokomafont{sectioning}{\mathversion{sansbold}}
 \addtokomafont{pagehead}{\normalfont\color{dunkelgrau}}
 \addtokomafont{caption}{\sffamily\mathversion{sans}\footnotesize}

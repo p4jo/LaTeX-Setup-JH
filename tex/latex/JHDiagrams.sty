@@ -1,7 +1,11 @@
 \ProvidesExplPackage{JHDiagrams}{2022/06/03}{1.0.0}{Mathematical Diagrams using tikz-cd}
 
 
-\RequirePackage{tikz-cd}
+\RequirePackage{quiver}
+\ExplSyntaxOff
+    \usetikzlibrary{babel}
+\ExplSyntaxOn
+
 % \@ifpackageloaded{tikz-cd}{
     \DeclareDocumentCommand\VierDiagramm{
     m % a        #1

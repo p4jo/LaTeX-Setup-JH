@@ -21,6 +21,7 @@
 \newcommand{\nicht}{\neg}
 \newcommand{\gdw}{\ensuremath{\Leftrightarrow}}
 \newcommand{\dgdw}{\ensuremath{:\!\Leftrightarrow}}
+\newcommand{\gdwd}{\ensuremath{\Leftrightarrow\!:}}
 \newcommand{\falsch}{\perp}
 \newcommand{\wahr}{\top}
 \newcommand{\xoder}{\mathrel{\dot\vee}}
@@ -175,8 +176,9 @@
 
 \newcommand\dars{\doteq} % wird dargestellt (in Koordinaten) durch
 \newcommand\sheq{\overset!=} % should equal (um eine Forderung hervorzuheben, oder was in der Äquivalenzkette bei mehreren Gleichheitszeichen als äquivalent gemeint ist)
-\newcommand\XM[1][M]{\mathcal{X}(#1)} % Vektorfelder auf M
-\newcommand\FM[1][M]{\mathcal{F}(#1)} % Skalarfelder auf M
+\newcommand\XM[1][M]{\mathcal{X}\qty(#1)} % Vektorfelder auf M
+\newcommand\FM[1][M]{\mathcal{F}\qty(#1)} % Skalarfelder auf M
+\newcommand\FCM[1][M]{\mathcal{F}\sb{\mathbb{C}}\qty(#1)} % komplexee Skalarfelder auf M
 
 \NewDocumentCommand\Cr{O{r}}{\ensuremath{\mathnormal{C^{#1}}}} % r-mal stetig differenzierbar
 \NewDocumentCommand\Cinfty{O{\infty}}{\ensuremath{\mathnormal{C^{#1}}}} % glatt

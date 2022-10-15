@@ -37,3 +37,11 @@
 }{
     \newcommand\dalem{\Box}
 }
+
+\NewDocumentCommand\Qty{d<>}{
+    \IfValueTF{#1}{
+        \left\langle #1 \right\rangle
+    }{
+        \typeout{\msg_warning_text:n{JHPhysicsCommands}:~Missing~argument~for~\Qty.~Usage:~\Qty<...> }
+    }
+}

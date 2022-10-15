@@ -32,6 +32,7 @@
 }
 
 \AtEndDocument{
+	\pagenumbering{gobble}
 	\@ifpackageloaded{biblatex}{
 		\cleardoublepage 
 		\raggedright 
@@ -40,9 +41,12 @@
 }
 
 \newcommand\Inhaltsverzeichnis{
-    \clearpage
-    \pagenumbering{roman}
-    \tableofcontents
-    \clearpage
-    \pagenumbering{arabic}
+	\clearpage
+	\pagenumbering{roman}
+	{
+		\hypersetup{ hidelinks }
+		\tableofcontents
+	}
+	\clearpage
+	\pagenumbering{arabic}
 }

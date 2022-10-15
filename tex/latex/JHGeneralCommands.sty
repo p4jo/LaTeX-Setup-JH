@@ -149,7 +149,7 @@
 \newcommand\__Grafik_END{}
 \newcommand\__Grafik_PRE{}
 \newcommand\__Grafik_PATH{}
-\NewDocumentCommand\Grafik{O{} m m g D(){} d<> d|| s O{12}}{
+\NewDocumentCommand\Grafik{O{} m +m g +D(){} d<> d|| s O{12}}{
     \IfValueTF{#6}{
         \renewcommand\__Grafik_END{#6}
     }{
