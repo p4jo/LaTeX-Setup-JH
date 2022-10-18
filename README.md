@@ -9,10 +9,10 @@ Es besteht aus folgenden Teilen:
  
 ## Befehle
 Die Befehle befinden sich in `./tex/latex`. Sie sind dort zum Teil dokumentiert oder sind selbsterklärend.
-=> Siehe auch `./tex/latex/Dokumentation.md`
+=> Siehe auch `Dokumentation.md`
 
 
-Sie sind zum Teil in Form von Paketen, zum Teil in Form von tex-Dateien, die von der Dokumentenklasse geladen werden sollten.
+Sie befinden sich zum Teil in Paketen, zum Teil in der Dokumentenklasse.
 
 
 
@@ -22,12 +22,11 @@ Um alles zusammenzufassen, gibt es eine Dokumentenklasse, `JHPreamble.cls`.
 Man bindet sie einfach mit `\documentclass[Optionen]{JHPreamble}` ein.
 
 Für die Optionen, siehe Dokumentation.
+## Pakete
 
-Es werden recht viele Pakete geladen, weshalb die Kompilierzeit leider recht hoch ist (~30s für mittelgroße Dokumente).
+Es werden recht viele Pakete geladen, weshalb die Kompilierzeit leider recht hoch ist (~30s für mittelgroße Dokumente). Siehe dazu das Skript `processPool.py`, das im Submodul [LaTeX-Automate](https://github.com/p4jo/LaTeX-Automate.git) liegt.
 
 Ein gutes Paket, das geladen wird, ist `unicode-math`, welches die Eingabe von Unicode erlaubt, wie es immer schon gewesen sein sollte! Es erfordert `lualatex` (oder `xelatex`, habe ich aber nicht getestet für mein Setup) als Compiler.
-
-## Pakete
 
 
 ## Schriftarten
