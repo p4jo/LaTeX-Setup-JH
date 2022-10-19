@@ -126,12 +126,12 @@
 	% headheight=18.86pt, %temporär. Hat sich beschwert, ich glaube seit 1.3 der linespread ist. Beschwert sich auch bei lokal größerem Linespread
 	% footheight=18.86pt, % ebenso
 	% twoside=true,
-	% BCOR=10mm, Buchinneres Correction
+	% BCOR=10mm, % Buchinneres Correction
 	toc=bibliography,
 	cleardoublepage=empty,
 	open=right
 ]{scrreprt} % Lädt KOMA-Script-Pakete (insb. typearea)
-
+\raggedbottom
 \RequirePackage[automark]{scrlayer-scrpage} %gehört zum KOMA-Script
 
 \RequirePackage[onehalfspacing]{setspace}
@@ -780,7 +780,7 @@
     articletitle = true,
     autocite  = inline, %superscript,
     autopunct = false,
-    sorting   = none,
+    sorting   = nyvt,
     url=true
 }  
 \renewbibmacro*{journal+issuetitle}{%
