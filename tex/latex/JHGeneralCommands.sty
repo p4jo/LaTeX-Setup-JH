@@ -242,34 +242,54 @@
     t' % #1: Optional ' for alignat environment
     s % #2: Optional * for no name and number
     g % #3: Optional {<Name>} for (<Name>) instead of (1.1.1) and label G.<Name>
-    +D$${\text{\textcolor{red}{Gleichung~fehlt.}}} % #4: Content of the equation in $...$
-    t. % #5: If you have a dot after the closing $, it will be pulled inside (instead of it being on the beginning of the next line)
-    t, % #6: Same for commas
+    o % #4: Optional [<Label>]
+    +D$${\text{\textcolor{red}{Gleichung~fehlt.}}} % #5: Content of the equation in $...$
+    t. % #6: If you have a dot after the closing $, it will be pulled inside (instead of it being on the beginning of the next line)
+    t, % #7: Same for commas
     }{ 
-    % \typeout{\#1=#1,\#2=#2,\#3=#3,\#4=#4,\#5=#5,\#6=#6}
+    % \typeout{\#1=#1,\#2=#2,\#3=#3,\#5=#5,\#6=#6,\#7=#7}
     \def\Gleichung_content:{
-        #4
-        \IfBooleanT{#5}{.}
-        \IfBooleanT{#6}{,}
+        #5
+        \IfBooleanT{#6}{.}
+        \IfBooleanT{#7}{,}
     }
-    \def\Gleichung_complete:{
+    \def\Gleichung_label:{
         \IfValueT{#3}{
             \IfBooleanF{#2}{ \tag{#3} }
             \label{G.#3}
         }
-        \IfBooleanTF{#1}{
-            \begin{alignedat}{-1}                    
-                \Gleichung_content:
-            \end{alignedat} 
-        }{
-            \begin{split}
-                \Gleichung_content:
-            \end{split} 
+        \IfValueT{#4}{
+            \label{#4}
         }
     }
-    \IfBooleanTF{#2}{ 
-        \begin{equation*} \Gleichung_complete: \end{equation*} 
+    \IfBooleanTF{#1}{ % \Gleichung' : multiple '&' allowed and multiple '\tag'.
+        \IfBooleanTF{#2}{
+            % Earlier: \begin{equation(*)}\begin{alignedat}{-1} ... -- but no \tag allowed inside equation*, but inside \alignat*
+            \begin{alignat*}{-1} 
+                \Gleichung_label:
+                \Gleichung_content:
+            \end{alignat*} 
+        }{
+            \begin{alignat}{-1}                    
+                \Gleichung_label:                
+                \Gleichung_content:
+            \end{alignat} 
+        }
     }{
-        \begin{equation} \Gleichung_complete: \end{equation}
-    } 
+        \IfBooleanTF{#2}{ 
+            \begin{equation*} 
+                \Gleichung_label:
+                \begin{split}
+                    \Gleichung_content:
+                \end{split} 
+            \end{equation*} 
+        }{
+            \begin{equation} 
+                \Gleichung_label:
+                \begin{split}
+                    \Gleichung_content:
+                \end{split} 
+            \end{equation}
+        } 
+    }
 }

@@ -40,7 +40,6 @@
 \DeclareBoolOption{omitAll}
 
 \DeclareBoolOption{NumberDefLikeSatz}
-
 \DeclareDefaultOption{ %Jede weitere Option
     \PassOptionsToClass{\CurrentOption}{scrreport}
     \PassOptionsToClass{\CurrentOption}{beamer}
@@ -621,38 +620,66 @@
 ]{JHProof}
 
 % Bemerkung mit Rahmen
-\declaretheoremstyle[
-    bodyfont={\upshape},
-    headfont={\hspace{-11pt} \itshape}, %\itshape
-    notefont=\itshape,
-    headpunct={:}
-]{JHRemark}
+% \declaretheoremstyle[
+%     bodyfont={\upshape},
+%     headfont={\hspace{-11pt} \itshape}, %\itshape
+%     notefont=\itshape,
+%     headpunct={:}
+% ]{JHRemark}
 
 \cs_if_exist:NTF\chapter{
     \newcommand\__numberwithin{chapter}
 }{
     \newcommand\__numberwithin{section}
 }
+
+\addto\captionsenglish{
+    \str_set:cx{ theorem_name_theorem } { Theorem }
+    \str_set:cx{ theorem_name_lemma } { Lemma }
+    \str_set:cx{ theorem_name_corollary } { Corollary }
+    \str_set:cx{ theorem_name_definition } { Definition }
+    \str_set:cx{ theorem_name_defLemma } { Defining~Lemma }
+    \str_set:cx{ theorem_refname_defLemma } { Defining~Lemma }
+    \str_set:cx{ theorem_name_proof } { Proof }
+    \str_set:cx{ theorem_name_question } { Question }
+    \str_set:cx{ theorem_name_remark } { Remark }
+    \str_set:cx{ theorem_name_example } { Example }
+}
+\addto\captionsngerman{
+    \str_set:cx{ theorem_name_theorem } { Satz }
+    \str_set:cx{ theorem_name_lemma } { Lemma }
+    \str_set:cx{ theorem_name_corollary } { Korollar }
+    \str_set:cx{ theorem_name_definition } { Definition }
+    \str_set:cx{ theorem_name_defLemma } { Definierendes~Lemma }
+    \str_set:cx{ theorem_refname_defLemma } { Definierenden~Lemma }
+    \str_set:cx{ theorem_name_proof } { Beweis }
+    \str_set:cx{ theorem_name_question } { Frage }
+    \str_set:cx{ theorem_name_remark } { Bemerkung }
+    \str_set:cx{ theorem_name_example } { Beispiel }
+}
 \declaretheorem[
     style=JHDefinition,
     shaded={
         bgcolor=hellgrün
     },
-    numberwithin=\__numberwithin
+    numberwithin=\__numberwithin,
+    name=\protect\theorem_name_theorem
 ]{Satz}
 \declaretheorem[
     style=JHDefinition,
     shaded={
         bgcolor=hellgrün
     },
-    numberlike=Satz
+    numberlike=Satz,
+    name=\protect\theorem_name_lemma
 ]{Lemma}
 \declaretheorem[
     style=JHDefinition,
     shaded={
         bgcolor=hellgrau
     },
-    numberlike=Satz
+    numberlike=Satz,
+    name=\protect\theorem_name_corollary
 ]{Korollar}
 
 % numbered like Definition
@@ -662,7 +689,8 @@
         shaded={
             bgcolor=blasshellblau
         },
-        numberlike=Satz
+        numberlike=Satz,
+        name=\protect\theorem_name_definition
     ]{Definition}
 \else
     \declaretheorem[
@@ -670,7 +698,8 @@
         shaded={
             bgcolor=blasshellblau
         },
-        numberwithin=\__numberwithin
+        numberwithin=\__numberwithin,
+        name=\protect\theorem_name_definition
     ]{Definition}
 \fi
 \declaretheorem[
@@ -678,27 +707,36 @@
     shaded={
         bgcolor=blasstürkis
     },
-    name=Definierendes\ Lemma,
-    refname=definierenden\ Lemma,
+    name=\protect\theorem_name_defLemma,
+    refname=\protect\theorem_refname_defLemma,
     numberlike=Definition
 ]{DefLemma}
 
 % not numbered
-\declaretheorem[
-    style=JHRemark,
-    numbered=no,
-    name=Beispiel
-]{beispiel}
+% \declaretheorem[
+%     style=JHRemark,
+%     numbered=no,
+%     name=Beispiel
+% ]{beispiel}
 \declaretheorem[
     style=JHProof,
-    numbered=no
+    numbered=no,
+    name=\protect\theorem_name_proof
 ]{Beweis}
 
 \declaretheorem[
-    style=JHRemark,
-    name=Bemerkung,
-    numbered=no
-]{bemerkung}
+    style=JHDefinition,
+    shaded={
+        bgcolor=Orange
+    },
+    numbered=no,
+    name=\protect\theorem_name_question
+]{Frage}
+% \declaretheorem[
+%     style=JHRemark,
+%     name=Bemerkung,
+%     numbered=no
+% ]{bemerkung}
 
 % \usepackage{mdframed}
 % \surroundwithmdframed[
@@ -746,28 +784,30 @@
     },
     #1
 }
-\NewDocumentEnvironment{Bemerkung}{o D(){dunkelgrün}}{ 
+
+\NewDocumentEnvironment{leftLined}{m D(){dunkelgrün}}{ 
     \begin{leftLineBox}{#2}
-        \IfValueTF{#1}{
-            \begin{bemerkung}[#1]
-        }{
-            \begin{bemerkung}            
-        }
+            \hspace { -11pt }
+            \itshape 
+            #1 :
+            \upshape
 }{ 
-    \end{bemerkung}
     \end{leftLineBox}
 }
 
-\NewDocumentEnvironment{Beispiel}{o D(){dunkelblau}}{ 
-    \begin{leftLineBox}{#2}
-        \IfValueTF{#1}{
-            \begin{beispiel}[#1]
-        }{
-            \begin{beispiel}            
-        }
-}{ 
-    \end{beispiel}
-    \end{leftLineBox}
+\NewDocumentEnvironment{Bemerkung}{o D(){dunkelgrün}}{
+    \begin{leftLined}{
+        \theorem_name_remark \IfValueT { #1 } { ~ ( #1 ) } 
+    }(#2)
+}{
+    \end{leftLined}
+}
+\NewDocumentEnvironment{Beispiel}{o D(){dunkelblau}}{
+    \begin{leftLined}{
+         \theorem_name_example \IfValueT { #1 } { ~ ( #1 ) } 
+    }(#2)
+}{
+    \end{leftLined}
 }
 %%% END OF INSERTED FILE src\GeneralSetup.tex %%%
 

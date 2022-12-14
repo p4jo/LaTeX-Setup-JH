@@ -10,23 +10,36 @@
 \providecommand\cotan{\operatorname{cotan}}
 
 %%% Grundlagen Mathematik
-\newcommand{\fa}[1]{\underset{{#1}}{\forall} \ }
-\newcommand{\ex}[1]{\underset{{#1}}{\exists} \ }
-\newcommand{\Ex}[1]{\underset{{#1}}{\exists!} \ }
-\newcommand{\Prod}[1]{\underset{{#1}}{\prod{}} \ }
-\newcommand{\Sum}[1]{\underset{{#1}}{\sum{}} \ }
 
+\ExplSyntaxOff
+\NewDocumentCommand\fa { t_ m } {
+    \underset{ { #2 } } { \forall } \ 
+}\NewDocumentCommand\ex { t! t_ m } {
+    \underset{ { #3 } } { \exists \IfBooleanT{ #1 }{ ! } } \ 
+}\NewDocumentCommand\Ex { t_ m } { % you can now use \ex!
+    \underset{ { #2 } } { \exists ! } \ 
+}\NewDocumentCommand\Prod { t_ m } { % just use prod
+    \underset{ { #2 } } { \prod } \ 
+}\NewDocumentCommand\Sum { t_ m } { % just use sum
+    \underset{ { #2 } } { \sum } \ 
+}
+\ExplSyntaxOn
 \newcommand{\und}{\mathrel{\wedge}}
 \newcommand{\oder}{\mathrel{\vee}}
 \newcommand{\nicht}{\neg}
 \newcommand{\gdw}{\ensuremath{\Leftrightarrow}}
+\newcommand{\Gdw}{\ensuremath{\Longleftrightarrow}}
 \newcommand{\dgdw}{\ensuremath{:\!\Leftrightarrow}}
+\newcommand{\dGdw}{\ensuremath{:\!\Longleftrightarrow}}
 \newcommand{\gdwd}{\ensuremath{\Leftrightarrow\!:}}
+\newcommand{\Gdwd}{\ensuremath{\Longleftrightarrow\!:}}
+\newcommand{\dann}{\Rightarrow}
+\newcommand{\Dann}{\Longrightarrow}
+\newcommand{\wenn}{\Leftarrow}
+\newcommand\Wenn{\Longleftarrow}
 \newcommand{\falsch}{\perp}
 \newcommand{\wahr}{\top}
 \newcommand{\xoder}{\mathrel{\dot\vee}}
-\newcommand{\dann}{\Rightarrow}
-\newcommand{\wenn}{\Leftarrow}
 \newcommand{\unklar}[1]{\text{?`}#1\text{?}}
 
 \newcommand{\comp}[1]{#1^\textrm{c}}
@@ -49,6 +62,7 @@
 \newcommand{\Kat}[1]{{\ensuremath{\mathtt{#1}}}} % Kategorien
 \newcommand{\Cat}{{\Kat{C}}}
 
+\NewDocumentCommand\Nach{}{\longrightarrow}
 \NewDocumentCommand\nach{ssoo}{
     \mathrel{
         \IfValueT{#3}{\overset{#3}} {
@@ -75,6 +89,7 @@
         }
     }
 } % Abbildung von A nach B
+\NewDocumentCommand\Von{}{\longleftarrow}
 \NewDocumentCommand\von{ssoo}{
     \mathrel{
         \IfValueT{#3}{\overset{#3}} {
@@ -160,6 +175,7 @@
 \newcommand\Umg[1][]{\overset{\symcal U}\ni\sb{#1}}
 \newcommand\off[1]{\overset{\symcal O}#1}
 \NewDocumentCommand\gegen{smmo}{
+    \;
     \IfValueT{#4}{
             \underset{#4}
         }
@@ -171,6 +187,7 @@
         }
         \longrightarrow
     }
+    \;
 }
 
 
