@@ -40,6 +40,7 @@
 \DeclareBoolOption{omitAll}
 
 \DeclareBoolOption{NumberDefLikeSatz}
+
 \DeclareDefaultOption{ %Jede weitere Option
     \PassOptionsToClass{\CurrentOption}{scrreport}
     \PassOptionsToClass{\CurrentOption}{beamer}
@@ -597,6 +598,7 @@
 % tensind
 % \tensordelimiter{§} % Funktioniert nicht, da unicode-math so normale Zeichen überschreibt, auf eine Art und Weise, die tensind nicht überschreibt
 \tensordelimiter{￭}
+\tensordelimiter{▞}
 \tensorformat{}
 
 % \hyphenation{Hoch-tem-pera-tur-su-pra-lei-tern Ku-pfer-atomen}
