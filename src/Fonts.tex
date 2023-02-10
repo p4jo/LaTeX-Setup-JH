@@ -15,6 +15,9 @@
 \fi
 
 \ifJHPreamble@StandardMathFonts
+    % \setmathfont[
+    %     version=sans
+    % ]{} % There is no real standard sans math font compatible with unicode math
 \else
     \ifJHPreamble@KpMath
         %%% kpfonts haben einige Zeichen nicht, deshalb zu STIX2Math gewechselt. Passen beide nicht wirklich zu MinionPro
@@ -128,21 +131,21 @@
     % 	lf,
     % 	sansmath]{MyriadPro}
 
+    
+    \newfontfamily\codeFont{CascadiaCode}[
+        Path=\__FontPath, 
+        UprightFont = *-Regular.ttf,
+        BoldFont = *-Bold.ttf
+    ]
+    
+    
+    % icomoon.io, boxy-svg.com
+    \newfontfamily\JHSymbolFont[Path=\__FontPath]{divides_multipleOf.ttf}
+    \newcommand\teilt{\mathbin{\text{\JHSymbolFont{d}}}}
+    \newcommand\assoz{\mathbin{\text{\JHSymbolFont{a}}}}
+    \newcommand\vielf{\mathbin{\text{\JHSymbolFont{m}}}}
 \fi
-
-\newfontfamily\codeFont{CascadiaCode}[
-    Path=\__FontPath, 
-    UprightFont = *-Regular.ttf,
-    BoldFont = *-Bold.ttf
-]
-
-
-% icomoon.io, boxy-svg.com
-\newfontfamily\JHSymbolFont[Path=\__FontPath]{divides_multipleOf.ttf}
-\newcommand\teilt{\mathbin{\text{\JHSymbolFont{d}}}}
-\newcommand\assoz{\mathbin{\text{\JHSymbolFont{a}}}}
-\newcommand\vielf{\mathbin{\text{\JHSymbolFont{m}}}}
-
+        
 %%%% FallbackFont
 % Mit Kp-Math notwendig, weil die das nicht hatten.
 % Diese Kommandos könnte man wahrscheinlich auch durch \setmathfont{STIXMath2}[Unicode-range] irgendwie weglassen.

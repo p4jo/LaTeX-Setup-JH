@@ -1,7 +1,7 @@
 \ProvidesExplClass{JHPreamble}{2022/04/08}{0.2.1}{Preamble of Johannes H. Needs LuaLaTeX or XeLaTeX}
 
 %** This file is incomplete. Input the files from /src using 
-%** py /src/inlineMagicInputs.py /scr/JHPreamble.mcls -o /tex/latex/JHPreamble.cls
+%** py /src/inlineMagicInputs.py /src/JHPreamble.mcls -o /tex/latex/JHPreamble.cls
 % !TeX input ~ ./src
 
 %%% PrePreamble
@@ -14,7 +14,7 @@
 
 \DeclareStringOption{SetupPath}
 \let\JHPreamble@SetupPath\relax 
-% undefine the default value for easy check below. Not equivalent to [\relax]{SetupPath}
+% undefine the default value for easy check below. Not equivalent to \DeclareStringOption[\relax]{SetupPath}
 \DeclareBoolOption{PackagesByPath}
 
 \DeclareBoolOption{Presentation}
@@ -38,11 +38,15 @@
 \DeclareBoolOption{omitFonts}
 \DeclareBoolOption{omitAutoIndex}
 \DeclareBoolOption{omitGreekLetterNames}
+\DeclareBoolOption{omitRedefinitions}
+\DeclareBoolOption{omitTheorems}
 \DeclareBoolOption{omitAll}
+
+\DeclareBoolOption{removeProofs}
 
 \DeclareBoolOption{NumberDefLikeSatz}
 
-\DeclareDefaultOption{ %Jede weitere Option
+\DeclareDefaultOption{ % Jede weitere Option
     \PassOptionsToClass{\CurrentOption}{scrreport}
     \PassOptionsToClass{\CurrentOption}{beamer}
 }
@@ -52,11 +56,18 @@
 \ifJHPreamble@omitAll
     \JHPreamble@omitOwnPackagestrue
     \JHPreamble@omitExternalPackagestrue
-    % \JHPreamble@omitUnicodeMathtrue
+    \JHPreamble@omitUnicodeMathtrue
     \JHPreamble@omitFontstrue
+    \JHPreamble@omitTheoremstrue
     % \JHPreamble@omitFloattrue
     % \JHPreamble@StandardMathFontstrue
     % \JHPreamble@StandardTextFontstrue
+    \JHPreamble@omitRedefinitionstrue
+\fi
+
+\ifJHPreamble@omitFonts
+    \JHPreamble@StandardMathFontstrue
+    \JHPreamble@StandardTextFontstrue
 \fi
 
 %%% Stuff
@@ -80,19 +91,21 @@
 % !TeX input Index
 \ifJHPreamble@omitExternalPackages
 \else
-% !TeX input Packages1
+% !TeX input Packages1 
 \fi
 
-\ifJHPreamble@omitFonts
-\else
 % !TeX input Fonts 
-\fi
 
 \ifJHPreamble@omitExternalPackages
 \else
+% !TeX input BibliographySettings
 % !TeX input Packages2
 % !TeX input GeneralSetup
-% !TeX input BibliographySettings
+\fi
+
+\ifJHPreamble@omitTheorems
+\else
+% !TeX input Theorems
 \fi
 
 % !TeX input Colors

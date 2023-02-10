@@ -1,7 +1,13 @@
 \addtokomafont{sectioning}{\rmfamily\boldmath\color{Überschrift}}
 %\addtokomafont{sectioning}{\mathversion{sansbold}}
 \addtokomafont{pagehead}{\normalfont\color{dunkelgrau}}
-\addtokomafont{caption}{\sffamily\mathversion{sans}\footnotesize}
+
+\newcommand\math_version_sans:{
+    \ifcsname mv@sans\endcsname
+        \mathversion{sans}
+    \fi
+}
+\addtokomafont{caption}{\sffamily\math_version_sans:\footnotesize}
 \addtokomafont{captionlabel}{\sffamily\bfseries\footnotesize}
 \setcapindent{0cm}
 %\addtokomafont{pagenumber}{\sffamily}
@@ -31,8 +37,8 @@
 
 
 \apptocmd\normalsize{%
- \abovedisplayskip=9pt plus 3pt minus 7pt
- \abovedisplayshortskip=0pt plus 3pt
- \belowdisplayskip=4pt plus 3pt minus 2pt
- \belowdisplayshortskip=6pt plus 3pt minus 3pt
+    \abovedisplayskip=9pt plus 3pt minus 7pt
+    \abovedisplayshortskip=0pt plus 3pt
+    \belowdisplayskip=4pt plus 3pt minus 2pt
+    \belowdisplayshortskip=6pt plus 3pt minus 3pt
 }{}{}

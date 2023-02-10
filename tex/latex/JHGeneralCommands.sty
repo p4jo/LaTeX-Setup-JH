@@ -11,9 +11,9 @@
 % gets overwritten in <project>/<project>_generated.tex files when using JHAutomate
 
 \ProvideDocumentCommand\autoindex{som}{
-    \index{#1}
+    \index{#3}
     \IfBooleanT{#1}{#3}
-}
+} % better version in Index.tex (documentclass option useIndex)
 %%%%%%% Grundlagen 
 \NewDocumentCommand\Def{som}{
     \textbf{
@@ -29,8 +29,6 @@
         }
     }
 }
-
-\renewcommand\|{\,\middle|\,} % Für z.B. \qty{x \in A \| x \text{ dumm}}.
 
 \newcommand{\de}{\partial}
 
@@ -70,8 +68,28 @@
         }
     }
 }
-\newcommand{\supt}[1]{
-    \TextOrMath{\textsuperscript{#1}}{\sp{\text{#1}}} % \sp = ^ (for consistency)
+\NewDocumentCommand{\supt}{o m o}{
+    \TextOrMath{
+        \textsuperscript{
+            \IfValueT{#1}{
+                $#1$,~
+            }
+            #2
+            \IfValueT{#3}{
+                ,~$#3$
+            }
+        }
+    }{
+        \sp{ % \sp = ^
+            \IfValueT{#1}{
+                #1\text{,~}
+            }
+            \text{#2}
+            \IfValueT{#3}{
+                \text{,~}#3
+            }
+        }
+    }
 }
 \newcommand{\inv}{^{-1}}
 \newcommand{\konst}{\text{konst.}}
@@ -100,7 +118,7 @@
 \NewDocumentCommand\Ivaa{> { \SplitArgument{1} {,} } O{0,1} }{
     \ivaa#1
 }
-\NewDocumentCommand\Ivao{> { \SplitArgument{1} {,} } D[[{0,1} }{
+\NewDocumentCommand\Ivao{> { \SplitArgument{1} {,} } D[){0,1} }{
     \ivao#1
 }
 \NewDocumentCommand\Ivoa{
@@ -148,21 +166,42 @@
 %%%%% Komplexe Commands
 \newcommand\__Grafik_END{}
 \newcommand\__Grafik_PRE{}
-\newcommand\__Grafik_PATH{}
-\NewDocumentCommand\Grafik{O{} m +m g +D(){} d<> d|| s O{12}}{
-    \IfValueTF{#6}{
-        \renewcommand\__Grafik_END{#6}
-    }{
-        \renewcommand\__Grafik_END{}
+\newcommand\__Grafik_INCLUDE{}
+\NewDocumentCommand\Grafik{
+    O{} % #1: Width (multiple of \textwidth)
+    m % #2: Label (if #4 is missing: the path inside the project folder (relative to the project_generated.tex), and the label will be prefixed with F.) (*)
+    +m % #3: The caption text (*)
+    > { \SplitList{,} } g % #4: The path(s) (relative to the main file)
+    +D(){} % #5: "footnote" (smaller text directly below the picture)
+    d<> % #6: page if referencing a pdf file
+    d|| % #7: Last frame: Will add a video player. Video must be saved as a lot of images named <path>1.jpg, ... ,<path><lastFrame>.jpg
+    s % #8: Place here! (H placement option). Needs `float`
+    O{12} % #9: Framerate if using #7
+}{
+    \renewcommand\__Grafik_INCLUDE[1]{
+        \IfValueTF{#6} { % <Seite>
+            \includegraphics[
+                width=#1\textwidth,
+                page=#6
+            ]{##1}
+        }{ 
+            \IfValueTF{#7}{ % |Letzter Frame|
+                \animategraphics[
+                    width=#1\textwidth,
+                    autoplay,
+                    loop,
+                    controls={play,stop,step}
+                ]{#9}
+                {##1}
+                {0}
+                {#7}
+            }{
+                \includegraphics[
+                    width=#1\textwidth
+                ]{##1}
+            }
+        }
     }
-    \IfValueTF{#4}{
-        \renewcommand\__Grafik_PRE{}
-        \renewcommand\__Grafik_PATH{#4}
-    }{
-        \renewcommand\__Grafik_PRE{F.}
-        \renewcommand\__Grafik_PATH{\currentPath/#2}
-    }
-    
     \IfBooleanTF#8{
         \begin{figure}[H]
     }
@@ -170,18 +209,23 @@
         \begin{figure}[htb]
     }
         \begin{center}
+        % 
         \caption{#3} % #3 ist zweites m {Text}
-        \label{\__Grafik_PRE#2\__Grafik_END} % #2 ist erstes m {Label} bzw. {Name}
-            
-        \IfValueTF{#6} { % <Seite>
-            \includegraphics[width=#1\textwidth,page=#6]{\__Grafik_PATH}
-        }{ 
-            \IfValueTF{#7}{ % |Letzter Frame|
-                \animategraphics[width=#1\textwidth,autoplay,loop,controls={play,stop,step}]{#9}{\__Grafik_PATH}{0}{#7}
-            }{
-                \includegraphics[width=#1\textwidth]{\__Grafik_PATH}
-            }
+        \IfValueTF{#4}{
+            \renewcommand\__Grafik_PRE{}
+            \ProcessList{#4}{\__Grafik_INCLUDE}
+        }{
+            \renewcommand\__Grafik_PRE{F.}
+            \__Grafik_INCLUDE{\currentPath/#2}
         }
+        % 
+        \IfValueTF{#6}{
+            \renewcommand\__Grafik_END{#6}
+        }{
+            \renewcommand\__Grafik_END{}
+        }
+        \label{\__Grafik_PRE#2\__Grafik_END} % #2 ist erstes m {Label} bzw. {Name}
+        % 
         \IfValueT{#5}{\\
             {\scriptsize
             % \sffamily

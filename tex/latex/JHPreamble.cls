@@ -13,7 +13,7 @@
 
 \DeclareStringOption{SetupPath}
 \let\JHPreamble@SetupPath\relax 
-% undefine the default value for easy check below. Not equivalent to [\relax]{SetupPath}
+% undefine the default value for easy check below. Not equivalent to \DeclareStringOption[\relax]{SetupPath}
 \DeclareBoolOption{PackagesByPath}
 
 \DeclareBoolOption{Presentation}
@@ -37,11 +37,15 @@
 \DeclareBoolOption{omitFonts}
 \DeclareBoolOption{omitAutoIndex}
 \DeclareBoolOption{omitGreekLetterNames}
+\DeclareBoolOption{omitRedefinitions}
+\DeclareBoolOption{omitTheorems}
 \DeclareBoolOption{omitAll}
+
+\DeclareBoolOption{removeProofs}
 
 \DeclareBoolOption{NumberDefLikeSatz}
 
-\DeclareDefaultOption{ %Jede weitere Option
+\DeclareDefaultOption{ % Jede weitere Option
     \PassOptionsToClass{\CurrentOption}{scrreport}
     \PassOptionsToClass{\CurrentOption}{beamer}
 }
@@ -51,11 +55,18 @@
 \ifJHPreamble@omitAll
     \JHPreamble@omitOwnPackagestrue
     \JHPreamble@omitExternalPackagestrue
-    % \JHPreamble@omitUnicodeMathtrue
+    \JHPreamble@omitUnicodeMathtrue
     \JHPreamble@omitFontstrue
+    \JHPreamble@omitTheoremstrue
     % \JHPreamble@omitFloattrue
     % \JHPreamble@StandardMathFontstrue
     % \JHPreamble@StandardTextFontstrue
+    \JHPreamble@omitRedefinitionstrue
+\fi
+
+\ifJHPreamble@omitFonts
+    \JHPreamble@StandardMathFontstrue
+    \JHPreamble@StandardTextFontstrue
 \fi
 
 %%% Stuff
@@ -241,11 +252,11 @@
 
     \fi
 \else
-    \AtBeginDocument{\providecommand\index[1]{\typeout{Warning! No index package is loaded! You can provide the class option useIndex}}}
+    \AtBeginDocument{\providecommand\index[1]{\typeout{Warning! No index package is loaded! You can provide the class option useIndex to JHPreamble}}}
 \fi
 \AtBeginDocument{
     \ProvideDocumentCommand\autoindex{som}{
-        \index{#1}
+        \index{#3}
         \IfBooleanT{#1}{#3}
 }}
 %%% END OF INSERTED FILE src\Index.tex %%%
@@ -293,8 +304,6 @@
 
 \fi
 
-\ifJHPreamble@omitFonts
-\else
 
 %%% FILE src\Fonts.tex  %%%
 % \RequirePackage{fontspec} % in unicode-math
@@ -314,6 +323,9 @@
 \fi
 
 \ifJHPreamble@StandardMathFonts
+    % \setmathfont[
+    %     version=sans
+    % ]{} % There is no real standard sans math font compatible with unicode math
 \else
     \ifJHPreamble@KpMath
         %%% kpfonts haben einige Zeichen nicht, deshalb zu STIX2Math gewechselt. Passen beide nicht wirklich zu MinionPro
@@ -427,21 +439,21 @@
     % 	lf,
     % 	sansmath]{MyriadPro}
 
+    
+    \newfontfamily\codeFont{CascadiaCode}[
+        Path=\__FontPath, 
+        UprightFont = *-Regular.ttf,
+        BoldFont = *-Bold.ttf
+    ]
+    
+    
+    % icomoon.io, boxy-svg.com
+    \newfontfamily\JHSymbolFont[Path=\__FontPath]{divides_multipleOf.ttf}
+    \newcommand\teilt{\mathbin{\text{\JHSymbolFont{d}}}}
+    \newcommand\assoz{\mathbin{\text{\JHSymbolFont{a}}}}
+    \newcommand\vielf{\mathbin{\text{\JHSymbolFont{m}}}}
 \fi
-
-\newfontfamily\codeFont{CascadiaCode}[
-    Path=\__FontPath, 
-    UprightFont = *-Regular.ttf,
-    BoldFont = *-Bold.ttf
-]
-
-
-% icomoon.io, boxy-svg.com
-\newfontfamily\JHSymbolFont[Path=\__FontPath]{divides_multipleOf.ttf}
-\newcommand\teilt{\mathbin{\text{\JHSymbolFont{d}}}}
-\newcommand\assoz{\mathbin{\text{\JHSymbolFont{a}}}}
-\newcommand\vielf{\mathbin{\text{\JHSymbolFont{m}}}}
-
+        
 %%%% FallbackFont
 % Mit Kp-Math notwendig, weil die das nicht hatten.
 % Diese Kommandos könnte man wahrscheinlich auch durch \setmathfont{STIXMath2}[Unicode-range] irgendwie weglassen.
@@ -461,10 +473,28 @@
 % \MakeCharactersAlwaysUseFallbackFontAndTextMode{⥎,⥋,⥊,⥐}
 %%% END OF INSERTED FILE src\Fonts.tex %%%
 
-\fi
 
 \ifJHPreamble@omitExternalPackages
 \else
+
+%%% FILE src\BibliographySettings.tex  %%%
+\DeclareFieldFormat{journaltitle}{\textsl{#1}\isdot} 
+\DeclareFieldFormat{titlecase}{{#1}}
+\ExecuteBibliographyOptions
+{
+    articletitle = true,
+    autocite  = inline, %superscript,
+    autopunct = false,
+    sorting   = nyvt,
+    url=true
+}  
+\renewbibmacro*{journal+issuetitle}{%
+\mbox{\printfield{journaltitle}~\usebibmacro{volume+number+eid}}%
+\setunit*{\addnbspace}%
+}
+
+%%% END OF INSERTED FILE src\BibliographySettings.tex %%%
+
 
 %%% FILE src\Packages2.tex  %%%
 % After unicode-math and fonts
@@ -549,10 +579,15 @@
 	% literal-superscript-as-power=true % Option nicht mehr notwendig
 }
 
-% \shorthandoff{"} % Würde normalerweise "a zu ä machen.
-\AfterEndPreamble{
-    \shorthandoff{"}
-}
+\ifJHPreamble@omitRedefinitions
+\else
+    % \shorthandoff{"} % Würde normalerweise "a zu ä machen.
+    \AfterEndPreamble{
+        \shorthandoff{"}
+    }
+    
+    \renewcommand\|{\,\middle|\,} % Für z.B. \qty{x \in A \| x \text{ dumm}}.
+\fi
 
 % hyperref
 \hypersetup
@@ -569,7 +604,7 @@
 }
 
 % lstlisting
-
+\providecommand\codeFont{\ttfamily}
 \lstset{
     basicstyle=\scriptsize\codeFont,
     keywordstyle=\bfseries\color{lila},
@@ -597,12 +632,21 @@
 
 % tensind
 % \tensordelimiter{§} % Funktioniert nicht, da unicode-math so normale Zeichen überschreibt, auf eine Art und Weise, die tensind nicht überschreibt
-\tensordelimiter{￭}
+\tensordelimiter{￭} % Looks like some zero-width strange character on fonts that support it (deprecated)
 \tensordelimiter{▞}
 \tensorformat{}
 
 % \hyphenation{Hoch-tem-pera-tur-su-pra-lei-tern Ku-pfer-atomen}
 
+
+%%% END OF INSERTED FILE src\GeneralSetup.tex %%%
+
+\fi
+
+\ifJHPreamble@omitTheorems
+\else
+
+%%% FILE src\Theorems.tex  %%%
 
 \usepackage{amsthm}
 \usepackage{thmtools}
@@ -634,20 +678,7 @@
 }{
     \newcommand\__numberwithin{section}
 }
-
-\addto\captionsenglish{
-    \str_set:cx{ theorem_name_theorem } { Theorem }
-    \str_set:cx{ theorem_name_lemma } { Lemma }
-    \str_set:cx{ theorem_name_corollary } { Corollary }
-    \str_set:cx{ theorem_name_definition } { Definition }
-    \str_set:cx{ theorem_name_defLemma } { Defining~Lemma }
-    \str_set:cx{ theorem_refname_defLemma } { Defining~Lemma }
-    \str_set:cx{ theorem_name_proof } { Proof }
-    \str_set:cx{ theorem_name_question } { Question }
-    \str_set:cx{ theorem_name_remark } { Remark }
-    \str_set:cx{ theorem_name_example } { Example }
-}
-\addto\captionsngerman{
+\newcommand\theorem_language_set_ngerman:{
     \str_set:cx{ theorem_name_theorem } { Satz }
     \str_set:cx{ theorem_name_lemma } { Lemma }
     \str_set:cx{ theorem_name_corollary } { Korollar }
@@ -659,9 +690,31 @@
     \str_set:cx{ theorem_name_remark } { Bemerkung }
     \str_set:cx{ theorem_name_example } { Beispiel }
 }
+\newcommand\theorem_language_set_english:{
+    \str_set:cx{ theorem_name_theorem } { Theorem }
+    \str_set:cx{ theorem_name_lemma } { Lemma }
+    \str_set:cx{ theorem_name_corollary } { Corollary }
+    \str_set:cx{ theorem_name_definition } { Definition }
+    \str_set:cx{ theorem_name_defLemma } { Defining~Lemma }
+    \str_set:cx{ theorem_refname_defLemma } { Defining~Lemma }
+    \str_set:cx{ theorem_name_proof } { Proof }
+    \str_set:cx{ theorem_name_question } { Question }
+    \str_set:cx{ theorem_name_remark } { Remark }
+    \str_set:cx{ theorem_name_example } { Example }
+}
+\cs_if_exist:NTF\captionsenglish{
+    \addto\captionsenglish{\theorem_language_set_english:}
+}{
+    \theorem_language_set_english:
+}
+\cs_if_exist:NT\captionsngerman{
+    \addto\captionsngerman{\theorem_language_set_ngerman:}
+}
+
 \declaretheorem[
     style=JHDefinition,
     shaded={
+        rulecolor=white, % xcolor throws error 'undefined color shaderulecolor', when omitExternalPackages, even though Packages1, Packages2, BibliographySettings and GeneralSetup don't seem to do anything regarding this.
         bgcolor=hellgrün
     },
     numberwithin=\__numberwithin,
@@ -670,6 +723,7 @@
 \declaretheorem[
     style=JHDefinition,
     shaded={
+        rulecolor=white,
         bgcolor=hellgrün
     },
     numberlike=Satz,
@@ -678,6 +732,7 @@
 \declaretheorem[
     style=JHDefinition,
     shaded={
+        rulecolor=white,
         bgcolor=hellgrau
     },
     numberlike=Satz,
@@ -689,6 +744,7 @@
     \declaretheorem[
         style=JHDefinition,
         shaded={
+            rulecolor=white,
             bgcolor=blasshellblau
         },
         numberlike=Satz,
@@ -698,6 +754,7 @@
     \declaretheorem[
         style=JHDefinition,
         shaded={
+            rulecolor=white,
             bgcolor=blasshellblau
         },
         numberwithin=\__numberwithin,
@@ -707,6 +764,7 @@
 \declaretheorem[
     style=JHDefinition,
     shaded={
+        rulecolor=white,
         bgcolor=blasstürkis
     },
     name=\protect\theorem_name_defLemma,
@@ -720,15 +778,20 @@
 %     numbered=no,
 %     name=Beispiel
 % ]{beispiel}
-\declaretheorem[
-    style=JHProof,
-    numbered=no,
-    name=\protect\theorem_name_proof
-]{Beweis}
+\ifJHPreamble@removeProofs
+    \NewDocumentEnvironment{Beweis}{o +b}{}{} % b collects the body of the environment :) 
+\else
+    \declaretheorem[
+        style=JHProof,
+        numbered=no,
+        name=\protect\theorem_name_proof
+    ]{Beweis}
+\fi
 
 \declaretheorem[
     style=JHDefinition,
     shaded={
+        rulecolor=white,
         bgcolor=Orange
     },
     numbered=no,
@@ -811,26 +874,7 @@
 }{
     \end{leftLined}
 }
-%%% END OF INSERTED FILE src\GeneralSetup.tex %%%
-
-
-%%% FILE src\BibliographySettings.tex  %%%
-\DeclareFieldFormat{journaltitle}{\textsl{#1}\isdot} 
-\DeclareFieldFormat{titlecase}{{#1}}
-\ExecuteBibliographyOptions
-{
-    articletitle = true,
-    autocite  = inline, %superscript,
-    autopunct = false,
-    sorting   = nyvt,
-    url=true
-}  
-\renewbibmacro*{journal+issuetitle}{%
-\mbox{\printfield{journaltitle}~\usebibmacro{volume+number+eid}}%
-\setunit*{\addnbspace}%
-}
-
-%%% END OF INSERTED FILE src\BibliographySettings.tex %%%
+%%% END OF INSERTED FILE src\Theorems.tex %%%
 
 \fi
 
@@ -895,7 +939,13 @@
 \addtokomafont{sectioning}{\rmfamily\boldmath\color{Überschrift}}
 %\addtokomafont{sectioning}{\mathversion{sansbold}}
 \addtokomafont{pagehead}{\normalfont\color{dunkelgrau}}
-\addtokomafont{caption}{\sffamily\mathversion{sans}\footnotesize}
+
+\newcommand\math_version_sans:{
+    \ifcsname mv@sans\endcsname
+        \mathversion{sans}
+    \fi
+}
+\addtokomafont{caption}{\sffamily\math_version_sans:\footnotesize}
 \addtokomafont{captionlabel}{\sffamily\bfseries\footnotesize}
 \setcapindent{0cm}
 %\addtokomafont{pagenumber}{\sffamily}
@@ -925,10 +975,10 @@
 
 
 \apptocmd\normalsize{%
- \abovedisplayskip=9pt plus 3pt minus 7pt
- \abovedisplayshortskip=0pt plus 3pt
- \belowdisplayskip=4pt plus 3pt minus 2pt
- \belowdisplayshortskip=6pt plus 3pt minus 3pt
+    \abovedisplayskip=9pt plus 3pt minus 7pt
+    \abovedisplayshortskip=0pt plus 3pt
+    \belowdisplayskip=4pt plus 3pt minus 2pt
+    \belowdisplayshortskip=6pt plus 3pt minus 3pt
 }{}{}
 %%% END OF INSERTED FILE src\ArticleFormatSettings.tex %%%
 

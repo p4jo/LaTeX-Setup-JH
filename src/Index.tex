@@ -63,10 +63,10 @@
 
     \fi
 \else
-    \AtBeginDocument{\providecommand\index[1]{\typeout{Warning! No index package is loaded! You can provide the class option useIndex}}}
+    \AtBeginDocument{\providecommand\index[1]{\typeout{Warning! No index package is loaded! You can provide the class option useIndex to JHPreamble}}}
 \fi
 \AtBeginDocument{
     \ProvideDocumentCommand\autoindex{som}{
-        \index{#1}
+        \index{#3}
         \IfBooleanT{#1}{#3}
 }}
