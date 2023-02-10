@@ -8,12 +8,12 @@
             "name": "Generate full cls",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceRoot}\\src\\inlineMagicInputs.py",
+            "program": "${workspaceRoot}/src/inlineMagicInputs.py",
             "console": "integratedTerminal",
             "args": [
-                "${workspaceRoot}\\src\\JHPreamble.mcls",
+                "${workspaceRoot}/src/JHPreamble.mcls",
                 "-o",
-                "${workspaceRoot}\\tex\\latex\\JHPreamble.cls"
+                "${workspaceRoot}/tex/latex/JHPreamble.cls"
             ]
         }
     ]
