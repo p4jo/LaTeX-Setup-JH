@@ -108,5 +108,6 @@ Es werden weitere Pakete mitgeliefert:
 * `JHUnderlines`, das eigentlich nicht von mir ist, das eine interessante Unterstreichung definiert.
 
 ## TODO 
-* Definition-, Satz-, Lemma-, ... Umgebungen fehlen noch.
+* Definition-, Satz-, Lemma-, ... Umgebungen  dokumentieren
+* Namen übersetzen - zur Zeit fast ausschließlich auf deutsch
 * Vielleicht diese Dokumentation noch weiter schreiben (vielleicht TeXen)

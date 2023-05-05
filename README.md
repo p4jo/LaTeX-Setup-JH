@@ -1,85 +1,85 @@
 # LaTeX
 
-In diesem Repo speichere ich mein LaTeX Setup, das mittlerweile recht komplex ist. 
+In this repo I store my LaTeX setup, which is now quite complex.
 
-Die Dokumentation findet sich in diesem Repository.
+The documentation can be found in this repository.
 
-Es besteht aus folgenden Teilen:
+It consists of the following parts:
 
  
-## Befehle
-Die Befehle befinden sich in `./tex/latex`. Sie sind dort zum Teil dokumentiert oder sind selbsterklärend.
-=> Siehe auch `Dokumentation.md`
+## Commands
+The commands are in `./tex/latex`. Some of them are documented there or are self-explanatory.
+=> See also `Documentation.md`
 
 
-Sie befinden sich zum Teil in Paketen, zum Teil in der Dokumentenklasse.
+They are partly in packages, partly in the document class.
 
 
 
-## Dokumentenklasse
-Um alles zusammenzufassen, gibt es eine Dokumentenklasse, `JHPreamble.cls`. 
+## Document class
+To wrap it all up, there is a document class, `JHPreamble.cls`.
 
-Man bindet sie einfach mit `\documentclass[Optionen]{JHPreamble}` ein.
+You just include them with `\documentclass[options]{JHPreamble}`.
 
-Für die Optionen, siehe Dokumentation.
-## Pakete
+For the options, see the documentation.
+## Packages
 
-Es werden recht viele Pakete geladen, weshalb die Kompilierzeit leider recht hoch ist (~30s für mittelgroße Dokumente). Siehe dazu das Skript `processPool.py`, das im Submodul [LaTeX-Automate](https://github.com/p4jo/LaTeX-Automate.git) liegt.
+Quite a lot of packages are loaded, which is why the compilation time is unfortunately quite high (~30s for medium-sized documents). See the script `processPool.py` located in the submodule [LaTeX-Automate](https://github.com/p4jo/LaTeX-Automate.git).
 
-Ein gutes Paket, das geladen wird, ist `unicode-math`, welches die Eingabe von Unicode erlaubt, wie es immer schon gewesen sein sollte! Es erfordert `lualatex` (oder `xelatex`, habe ich aber nicht getestet für mein Setup) als Compiler.
+A good package that gets loaded is `unicode-math`, which allows unicode input as it always should have been! It requires `lualatex` (or `xelatex`, but I haven't tested it for my setup) as a compiler.
 
 
-## Schriftarten
-Da es leider nicht viele gute vollständige Mathe-Fonts für unicode-math gibt, habe ich diese schon da, man kann ein paar mit Optionen der Dokumentenklasse auswählen. 
-Für den Text verwende ich die Adobe Schriftarten Minion Pro (Serifen) und Myriad Pro (sans serif). Diese gibt es zwar als gute Mathe-Fonts, die sind aber teuer!
+## Fonts
+Unfortunately, since there aren't many good full math fonts for unicode-math, I already have them with you, you can choose a few with document class options.
+For the text I use the Adobe fonts Minion Pro (serif) and Myriad Pro (sans serif). These are available as good math fonts, but they are expensive!
 
-# Installation/Verwendung
+# Installation/Use
 
-Klone dieses Repo (vgl. auch andere Tools unten) mit `git clone` irgendwohin.
+Clone this repo (also see other tools below) somewhere using `git clone`.
 
-Wenn du es in den Hauptordner einbinden willst:
+If you want to include it in the main folder:
 ```
-git clone https://github.com/p4jo/LaTeX-Setup-JH <Hauptordner>/Setup
-    oder
-git submodule add https://github.com/p4jo/LaTeX-Setup-JH <Hauptordner>/Setup
+git clone https://github.com/p4jo/LaTeX-Setup-JH <main folder>/Setup
+     or
+git submodule add https://github.com/p4jo/LaTeX-Setup-JH <main folder>/Setup
 ```
-(je nachdem, ob dein Hauptordner schon ein Repository ist)
+(depending on whether your main folder is already a repository)
 
-## Bester Weg
+## Best way
 
-Füge den Ordner dieses Repositorys (wo auch diese Datei liegt) als Suchpfad in deiner LaTeX-Installation hinzu.
+Add the folder of this repository (where this file is located) as a search path in your LaTeX installation.
 
-* In `MiKTeX` geht das ganz einfach: MiKTeX-Konsole öffnen ↦ Einstellungen ↦ Verzeichnisse ↦ mit `+` `<diesen Pfad>` hinzufügen. 
+* It's very easy in `MiKTeX`: Open the MiKTeX console ↦ Settings ↦ Directories ↦ add `+` `<this path>`.
 
-* In `livetex` kenne ich mich nicht aus, da könnte das schwieriger sein! (Verwende Google)
+* I'm not familiar with `livetex`, it could be more difficult! (Use Google)
 
-## Alternative
-Gebe die Dokumentenklasse mit `\documentclass[PackagesByPath, ...]{<dieser Pfad>/tex/latex/JHPreamble}` an und entweder 
-* auch noch die Klassen-Option `SetupPath=<dieser Pfad>` (wenn er Leerzeichen enthält muss er warhscheinlich in einem Befehl gekapselt werden, vgl. Dokumentation zu `author` und `title`),
-* tue nichts. Es sollte mittlerweile gehen. Im Zweifelsfall schaue, dass `<dieser Pfad>` absolut ist.
+## Alternate
+Specify the document class with `\documentclass[PackagesByPath, ...]{<this path>/tex/latex/JHPreamble}` and either
+* also the class option `SetupPath=<this path>` (if it contains spaces it probably needs to be wrapped in a command, see the `author` and `title` documentation),
+* do nothing. It should work now. If in doubt, make sure `<this path>` is absolute.
 
-Der Pfad zu diesem Repository sollte hierfür keine LaTeX-aktiven Zeichen enthalten (`$`,`%`,`&`, ...), am besten keine doppelten Leerzeichen und was weiß ich sonst noch für Einschränkungen. 
+The path to this repository should not contain any LaTeX-active characters (`$`,`%`,`&`, ...), preferably no double spaces and whatever other restrictions.
 
-# Weitere Teile meines Setups
+# More parts of my setup
 
-## Einstellungen für Visual Studio Code als LaTeX-Editor (mit `LaTeX-Workshop`)
+## Settings for Visual Studio Code as LaTeX Editor (with `LaTeX-Workshop`)
 
-In [LaTeX-.vscode](https://github.com/p4jo/LaTeX-.vscode) befinden sich die entsprechenden Einstellungen. 
+The corresponding settings can be found in [LaTeX-.vscode](https://github.com/p4jo/LaTeX-.vscode).
 
-Einbinden in den Hauptordner mit 
+Include in the main folder with
 ```
-git clone https://github.com/p4jo/LaTeX-.vscode <Hauptordner>/.vscode
-    oder
-git submodule add https://github.com/p4jo/LaTeX-.vscode <Hauptordner>/.vscode
+git clone https://github.com/p4jo/LaTeX-.vscode <main folder>/.vscode
+     or
+git submodule add https://github.com/p4jo/LaTeX-.vscode <main folder>/.vscode
 ```
 
-In VSCode verwende ich die Extension [LaTeX-Workshop](https://github.com/James-Yu/LaTeX-Workshop) - siehe da für eine Einführung. Erwäht sei nur der SyncTex-Support (Strg+Klick im pdf bzw. Strg+Alt+j im Quellcode springt zum jeweiligen Punkt).
+In VSCode I use the extension [LaTeX-Workshop](https://github.com/James-Yu/LaTeX-Workshop) - lo and behold for an introduction. Only the SyncTex support should be mentioned (Ctrl+click in the pdf or Ctrl+Alt+j in the source code jumps to the respective point).
  
 ## Automation
-In meinem Repository [LaTeX-Automate](https://github.com/p4jo/LaTeX-Automate.git) befindet sich ein Powershell-Skript zur Automation von \input{}.
+In my repository [LaTeX-Automate](https://github.com/p4jo/LaTeX-Automate.git) there is a Powershell script for automating \input{}. (highly optional)
 
-Wenn man das Skript Automate/automate.ps1 ausführt, wird jede Datei in einem Unterordner (rekursiv) einer entsprechenden <Unterordnername>_generated.tex als import hinzugefügt und eine <Unterordnername>.tex in dem Unterordner erstellt, die als Hauptdatei verwendet werden sollte. 
+Running the Automate/automate.ps1 script will add each file in a subfolder (recursively) to a corresponding <subfoldername>_generated.tex as import and create a <subfoldername>.tex in the subfolder that should be used as the main file.
 
-Wenn man das Skript in seinen Buildvorgang mit einbaut (vorher) wird so immer der ganze Ordner (in lexikografischer Ordnung) in das Hauptdokument eingebunden, ohne, dass man sich da Gedanken machen muss. Das ist für VSCode mit Tex Workshop schon in der .vscode Config eingestellt.
+If you include the script in your build process (before), the whole folder (in lexicographical order) is always included in the main document without you having to worry about it. This is already set for VSCode with Tex Workshop in the .vscode config.
 
-Man kann Unter-Unterordner mit einer Datei namens .texignore ausnehmen (z.B. beim Erstellen von mehreren Versionen sinnvoll, oder um beim Rebuild nur das aktuelle Kapitel zu rendern).
+You can exclude sub-subfolders with a file called .texignore (e.g. useful when creating multiple versions, or to only render the current chapter when rebuilding).
