@@ -15,6 +15,14 @@
                 "-o",
                 "${workspaceRoot}/tex/latex/JHPreamble.cls"
             ]
+        },
+        {
+            "name": "Lua: Launch",
+            "type": "lua",
+            "request": "launch",
+            "program": "${file}",
+            "cwd": "${workspaceFolder}"
         }
+
     ]
 }
