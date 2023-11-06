@@ -71,7 +71,8 @@ end
 local function cartesian_product(sets) -- assume sets to be indexed 1, 2, ...
     local result = {}
     local set_count = #sets
-    if set_count == 0 then return {} end
+    if set_count == 0 then return  coroutine.wrap(function() yield {} end)
+end
     local yield = coroutine.yield 
 
     local function descend(depth)
