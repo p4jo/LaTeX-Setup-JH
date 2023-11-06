@@ -1,4 +1,4 @@
-% Auto generated file, created from src\JHPreamble.mcls. Will be overwritten. Change the source files instead.
+% Auto generated file, created from /home/johannesh/repos/LaTeX-Setup-JH/src/JHPreamble.mcls. Will be overwritten. Change the source files instead.
 \ProvidesExplClass{JHPreamble}{2022/04/08}{0.2.1}{Preamble of Johannes H. Needs LuaLaTeX or XeLaTeX}
 
 %%% Base Path for inserts with % !TeX input set to src %%%
@@ -71,7 +71,7 @@
 
 %%% Stuff
 
-%%% FILE src\PackagesByPath.tex  %%%
+%%% FILE src/PackagesByPath.tex  %%%
 \ifJHPreamble@PackagesByPath
     \typeout{PackagesByPath~provided}
     
@@ -96,7 +96,7 @@
 \else
     \newcommand\RequirePackageByPath\RequirePackage
 \fi
-%%% END OF INSERTED FILE src\PackagesByPath.tex %%%
+%%% END OF INSERTED FILE src/PackagesByPath.tex %%%
 
 
 \author{\JHPreamble@author}
@@ -111,7 +111,7 @@
 
 \ifJHPreamble@Presentation
 
-%%% FILE src\PresentationMainSetup.tex  %%%
+%%% FILE src/PresentationMainSetup.tex  %%%
 \LoadClass[
     notheorems  % doesn't create theorems (removes compilation errors)
 ]{beamer}
@@ -124,11 +124,11 @@
         \end{frame}
     }
 \fi
-%%% END OF INSERTED FILE src\PresentationMainSetup.tex %%%
+%%% END OF INSERTED FILE src/PresentationMainSetup.tex %%%
 
 \else
 
-%%% FILE src\ArticleMainSetup.tex  %%%
+%%% FILE src/ArticleMainSetup.tex  %%%
 \PassOptionsToPackage{ footinclude=false }{typearea}
 
 \LoadClass[
@@ -182,11 +182,11 @@
 	\pagenumbering{arabic}
 }
 
-%%% END OF INSERTED FILE src\ArticleMainSetup.tex %%%
+%%% END OF INSERTED FILE src/ArticleMainSetup.tex %%%
 
 \fi
 
-%%% FILE src\Index.tex  %%%
+%%% FILE src/Index.tex  %%%
 
 \ifJHPreamble@useIndex
     \RequirePackage[imakeidx]{xindex}
@@ -259,12 +259,12 @@
         \index{#3}
         \IfBooleanT{#1}{#3}
 }}
-%%% END OF INSERTED FILE src\Index.tex %%%
+%%% END OF INSERTED FILE src/Index.tex %%%
 
 \ifJHPreamble@omitExternalPackages
 \else
 
-%%% FILE src\Packages1.tex  %%%
+%%% FILE src/Packages1.tex  %%%
 %before unicode-math and fonts
 % non-essential
 
@@ -300,12 +300,12 @@
 \fi
 
 \RequirePackage{mathtools} % überschreibt underbrace in unicode-math, was dann nicht mehr funktioniert, muss deshalb vor unicode-math geladen werden.
-%%% END OF INSERTED FILE src\Packages1.tex %%%
+%%% END OF INSERTED FILE src/Packages1.tex %%%
 
 \fi
 
 
-%%% FILE src\Fonts.tex  %%%
+%%% FILE src/Fonts.tex  %%%
 % \RequirePackage{fontspec} % in unicode-math
 \ifJHPreamble@omitUnicodeMath
     \RequirePackage{fontspec}
@@ -471,32 +471,13 @@
 % \MakeCharactersAlwaysUseFallbackFontAndTextMode{𝟙}
 
 % \MakeCharactersAlwaysUseFallbackFontAndTextMode{⥎,⥋,⥊,⥐}
-%%% END OF INSERTED FILE src\Fonts.tex %%%
+%%% END OF INSERTED FILE src/Fonts.tex %%%
 
 
 \ifJHPreamble@omitExternalPackages
 \else
 
-%%% FILE src\BibliographySettings.tex  %%%
-\DeclareFieldFormat{journaltitle}{\textsl{#1}\isdot} 
-\DeclareFieldFormat{titlecase}{{#1}}
-\ExecuteBibliographyOptions
-{
-    articletitle = true,
-    autocite  = inline, %superscript,
-    autopunct = false,
-    sorting   = nyvt,
-    url=true
-}  
-\renewbibmacro*{journal+issuetitle}{%
-\mbox{\printfield{journaltitle}~\usebibmacro{volume+number+eid}}%
-\setunit*{\addnbspace}%
-}
-
-%%% END OF INSERTED FILE src\BibliographySettings.tex %%%
-
-
-%%% FILE src\Packages2.tex  %%%
+%%% FILE src/Packages2.tex  %%%
 % After unicode-math and fonts
 % non-essential
 %     \RequirePackage{microtype} % sorgt für besseres Schriftbild, indem es micro-Anpassungen macht. 
@@ -547,10 +528,10 @@
 %\RequirePackage{upgreek} % braucht's mit unicode-math natürlich auch nicht
 
 \RequirePackage{tensind} 
-%%% END OF INSERTED FILE src\Packages2.tex %%%
+%%% END OF INSERTED FILE src/Packages2.tex %%%
 
 
-%%% FILE src\GeneralSetup.tex  %%%
+%%% FILE src/GeneralSetup.tex  %%%
 % ignored on option omitExternalPackages
 
 % xspace
@@ -874,12 +855,31 @@
 }{
     \end{leftLined}
 }
-%%% END OF INSERTED FILE src\Theorems.tex %%%
+%%% END OF INSERTED FILE src/GeneralSetup.tex %%%
+
+
+%%% FILE src/BibliographySettings.tex  %%%
+\DeclareFieldFormat{journaltitle}{\textsl{#1}\isdot} 
+\DeclareFieldFormat{titlecase}{{#1}}
+\ExecuteBibliographyOptions
+{
+    articletitle = true,
+    autocite  = inline, %superscript,
+    autopunct = false,
+    sorting   = nyvt,
+    url=true
+}  
+\renewbibmacro*{journal+issuetitle}{%
+\mbox{\printfield{journaltitle}~\usebibmacro{volume+number+eid}}%
+\setunit*{\addnbspace}%
+}
+
+%%% END OF INSERTED FILE src/BibliographySettings.tex %%%
 
 \fi
 
 
-%%% FILE src\Colors.tex  %%%
+%%% FILE src/Colors.tex  %%%
 
 % \RequirePackage{color}
 \RequirePackage{xcolor} % Option [svgnames] may cause option clash ↦ \PassOptionsToPackage before first potential load 
@@ -915,12 +915,12 @@
 
 \definecolor{Überschrift}{rgb}{0,0,0.6}
 \definecolor{Links}{named}{Überschrift}
-%%% END OF INSERTED FILE src\Colors.tex %%%
+%%% END OF INSERTED FILE src/Colors.tex %%%
 
 
 \ifJHPreamble@Presentation
 
-%%% FILE src\PresentationFormatSettings.tex  %%%
+%%% FILE src/PresentationFormatSettings.tex  %%%
 \usetheme{Madrid}
 % \usetheme{Warsaw}
 \mathversion{sans}
@@ -931,11 +931,11 @@
         \tableofcontents[currentsection]
     \end{frame}
 }
-%%% END OF INSERTED FILE src\PresentationFormatSettings.tex %%%
+%%% END OF INSERTED FILE src/PresentationFormatSettings.tex %%%
 
 \else
 
-%%% FILE src\ArticleFormatSettings.tex  %%%
+%%% FILE src/ArticleFormatSettings.tex  %%%
 \addtokomafont{sectioning}{\rmfamily\boldmath\color{Überschrift}}
 %\addtokomafont{sectioning}{\mathversion{sansbold}}
 \addtokomafont{pagehead}{\normalfont\color{dunkelgrau}}
@@ -980,12 +980,12 @@
     \belowdisplayskip=4pt plus 3pt minus 2pt
     \belowdisplayshortskip=6pt plus 3pt minus 3pt
 }{}{}
-%%% END OF INSERTED FILE src\ArticleFormatSettings.tex %%%
+%%% END OF INSERTED FILE src/ArticleFormatSettings.tex %%%
 
 \fi
 
 
-%%% FILE src\AutomationSetup.tex  %%%
+%%% FILE src/AutomationSetup.tex  %%%
 
 \usepackage{iftex}
 \ifLuaTeX
@@ -1027,7 +1027,7 @@
         \chardef\previous_interactionmode=\interactionmode
         \errorstopmode % stopping at \show
         \typeout{PAUSED~EXECUTION!}
-        \show\show
+        \show\LATEX_ALLOW_PAUSE_EXECUTION
         \interactionmode=\previous_interactionmode
     }
     {
@@ -1035,7 +1035,7 @@
     }
 }
 \AfterEndPreamble{\pauseExecution}
-%%% END OF INSERTED FILE src\AutomationSetup.tex %%%
+%%% END OF INSERTED FILE src/AutomationSetup.tex %%%
 
 
 
@@ -1049,7 +1049,7 @@
 \ifJHPreamble@omitGreekLetterNames
 \else
 
-%%% FILE src\GreekLetterNames.tex  %%%
+%%% FILE src/GreekLetterNames.tex  %%%
 
 
 \ifJHPreamble@useGreekLetterCommands
@@ -1074,7 +1074,7 @@
     \newcommand\my μ
     \newcommand\teta ϑ
 \fi
-%%% END OF INSERTED FILE src\GreekLetterNames.tex %%%
+%%% END OF INSERTED FILE src/GreekLetterNames.tex %%%
 
 \fi
 
