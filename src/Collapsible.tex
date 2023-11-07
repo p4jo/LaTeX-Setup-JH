@@ -5,12 +5,15 @@
     \directlua{DeclareCollapsible("#1","#2")}
 }
 \NewDocumentEnvironment{collapsible}{m +b}{ 
-    \tl_set:Nx\l_envBody_tl{#2}
-\directlua{collapsibleEnvironment("#1")}}{}
+    \tl_set:Nn\collapsibleCurrentEnvironmentContent{#2}
+    \directlua{collapsibleEnvironment("#1")}
+}{}
 
-\NewDocumentCommand\collapseButton{m}{\includegraphics[width=1cm]{src/#1}}
+\NewDocumentCommand\collapseButton{m}{toggle~#1\includegraphics[width=0.3cm]{src/#1}}
 
 \NewDocumentEnvironment{CollapsibleDocument}{+b}{
-    \tl_set:Nn\l_entireDocument_tl{#2}
-    \directlua{produceDocument()}
-}{}
+    #1
+}{
+    \tl_set:Nn\collapsibleCurrentDocumentContent{#1}
+    \directlua{produceExtraDocuments()}
+}

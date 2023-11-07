@@ -3,7 +3,7 @@ types = {}
 
 function DeclareCollapsible(name, color)
     types[name] = {
-        isCollapsed = true,
+        isCollapsed = false,
         isUsed = false,
         color = color,
         counter = 0
@@ -14,7 +14,7 @@ end
 function labelV(name, otherState)
     local r = "E." .. name .. "-" .. types[name].counter
     for k, v in pairs(types) do
-        r = r .. ", " .. k .. "=" .. tostring(v.isCollapsed ~= ((k == name) and otherState))
+        r = r .. ", " .. k .. "=" .. ((v.isCollapsed ~= ((k == name) and otherState)) and "coll" or "exp")
     end
     return r 
 end
@@ -47,13 +47,28 @@ function collapsibleEnvironment(name)
     typ.isUsed = true
     typ.counter = typ.counter + 1
     
-    tex.sprint("here: label=" .. label(name))
+    tex.sprint(
+        "\\label{" .. 
+            label(name) .. 
+        "}"
+    )
+    
     if not typ.isCollapsed then
-        tex.sprint("\\l_envBody_tl")
-        -- print('not collapsed')
+        tex.sprint("\\collapsibleCurrentEnvironmentContent")
     end
 
-    tex.sprint("{\\hypersetup{allcolors=" .. typ.color .. "}\\hyperref[" .. labelR(name) .. "]{\\collapseButton{" .. typ.color ..  "}}}")
+    tex.sprint(
+        "{"..
+            "\\hypersetup{allcolors=" ..
+                typ.color ..
+            "}" ..
+            "\\hyperref[" ..
+                labelR(name) ..
+            "]{\\collapseButton{" ..
+                typ.color .. 
+            "}}" ..
+        "}"
+    )
 end
 
 local function activeTypes()
@@ -71,9 +86,11 @@ end
 local function cartesian_product(sets) -- assume sets to be indexed 1, 2, ...
     local result = {}
     local set_count = #sets
-    if set_count == 0 then return  coroutine.wrap(function() yield {} end)
-end
     local yield = coroutine.yield 
+    LaTeX_print("Number of sets: " .. set_count)
+    if set_count == 0 then 
+        return coroutine.wrap(function() yield({}) end)
+    end
 
     local function descend(depth)
       if depth == set_count then
@@ -91,26 +108,45 @@ end
     return coroutine.wrap(function() descend(1) end)
 end
 
+function BuildArray(...)
+    local arr = {}
+    for v in ... do
+      arr[#arr + 1] = v
+    end
+    return arr
+  end
+
 
 separator = "\\cleardoublepage"
 
-function produceDocument()
+documentList = nil
+function nextDocument()
+    local tuple = table.remove(documentList, 1)
+    for i, b in pairs(tuple) do
+        typ = types[activeTypes()[i]]
+        typ.isCollapsed = b
+        typ.counter = 0
+    end
+end
+
+function produceExtraDocuments()
     local lists = {}
     local _types = activeTypes()
-
     for k, _ in pairs(_types) do
         lists[k] = { [0] = false, [1] = true}
     end
 
-    for tuple in cartesian_product(lists) do
-        for i, b in pairs(tuple) do
-            types[_types[i]].isCollapsed = b
-        end
-
-        tex.sprint("\\l_entireDocument_tl " .. separator)
+    documentList = BuildArray(cartesian_product(lists))
+    LaTeX_print("Number of documents: " .. #documentList)
+    table.remove(documentList, 1) -- this is the (false, false, ...) tuple, i.e. the default document
+    for i, _ in pairs(documentList) do
+        tex.sprint(
+            separator ..
+            "\\directlua{nextDocument()}" ..
+            "\\collapsibleCurrentDocumentContent " 
+        )
     end
 end
-
 
 
 if tex == nil then
