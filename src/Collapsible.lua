@@ -1,25 +1,75 @@
+dofile("src/Helpers.lua")
+
+-- CONDITIONS
+
+conditions = {
+    [0] = function (states) -- not the default document
+        for name, state in pairs(states) do
+            if state then
+                return true
+            end
+        end
+    end
+}
+function fulfilConditions(states)
+    for i, condition in pairs(conditions) do
+        if not condition(states) then
+            return false
+        end
+    end
+    return true
+end
+
+-- TYPES
 
 types = {}
 
-function DeclareCollapsible(name, color)
+function DeclareCollapsible(name, color, parent)
+    if parent == nil then
+        parent = ""
+    end
     types[name] = {
         isCollapsed = false,
         isUsed = false,
         color = color,
-        counter = 0
+        counter = 0,
+        parent = parent
     }
-    LaTeX_print(label(name))
+    if parent ~= "" then
+        conditions[#conditions] = function(states)
+            return (not states[name] or states[parent])
+        end
+    end
 end
 
-function labelV(name, otherState)
+function labelV(name, remoteState)
+    states = {}
+    for k, type in pairs(types) do
+        states[k] = type.isCollapsed
+    end
+    if not remoteState then
+        return labelFromList(name, states)
+    end
+
+    local type = types[name]
+    c = type.isCollapsed
+    type.isCollapsed = not c
+    local parent = type.parent
+
+    if c and parent ~= "" and types[parent].isCollapsed then
+        types[parent].isCollapsed = false
+    end
+    -- assert list ∈ documentList
+    -- later, we might allow arbitrary conditions, thus we need to find the "closest" element in documentList with typ.isCollapsed = not c
+    return labelFromList(name, states)
+end
+function labelFromList(name, states)
     local r = "E." .. name .. "-" .. types[name].counter
-    for k, v in pairs(types) do
-        r = r .. ", " .. k .. "=" .. ((v.isCollapsed ~= ((k == name) and otherState)) and "coll" or "exp")
+    for k, state in pairs(states) do
+        r = r .. ", " .. (state and string.upper(k) or string.lower(k))
     end
     return r 
 end
-
-
 function label(name)
     return labelV(name, false)
 end
@@ -27,13 +77,20 @@ function labelR(name)
     return labelV(name, true)
 end
 
-function LaTeX_Error(msg, msg2)
-    tex.sprint("\\PackageError{Collapsible}{" .. msg .. "}{".. msg2  .."}")
+function activeTypes()
+    -- return toarray(pairs(types), function(k, v) return v.isUsed end)
+    local r = {}
+    local i = 1
+    for k, v in pairs(types) do
+        if v.isUsed then
+            r[i] = k
+            i = i+1
+        end
+    end
+    return r
 end
 
-function LaTeX_print(msg)
-    tex.sprint("\\typeout{" .. tostring(msg) .. "}")
-end
+-- LATEX FUNCTIONS
 
 function collapsibleEnvironment(name)
     -- check if name is in types
@@ -54,7 +111,9 @@ function collapsibleEnvironment(name)
     )
     
     if not typ.isCollapsed then
-        tex.sprint("\\collapsibleCurrentEnvironmentContent")
+        tex.sprint(
+            "\\collapsibleCurrentEnvironmentContent"
+        )
     end
 
     tex.sprint(
@@ -71,61 +130,19 @@ function collapsibleEnvironment(name)
     )
 end
 
-local function activeTypes()
-    local r = {}
-    local i = 1
-    for k, v in pairs(types) do
-        if v.isUsed then
-            r[i] = k
-            i = i+1
-        end
-    end
-    return r
-end
-
-local function cartesian_product(sets) -- assume sets to be indexed 1, 2, ...
-    local result = {}
-    local set_count = #sets
-    local yield = coroutine.yield 
-    LaTeX_print("Number of sets: " .. set_count)
-    if set_count == 0 then 
-        return coroutine.wrap(function() yield({}) end)
-    end
-
-    local function descend(depth)
-      if depth == set_count then
-        for k,v in pairs(sets[depth]) do
-          result[depth] = v
-          yield(result)
-        end
-      else
-        for k,v in pairs(sets[depth]) do
-          result[depth] = v
-          descend(depth + 1)
-        end
-      end
-    end
-    return coroutine.wrap(function() descend(1) end)
-end
-
-function BuildArray(...)
-    local arr = {}
-    for v in ... do
-      arr[#arr + 1] = v
-    end
-    return arr
-  end
 
 
 separator = "\\cleardoublepage"
 
 documentList = nil
 function nextDocument()
+
     local tuple = table.remove(documentList, 1)
     for i, b in pairs(tuple) do
         typ = types[activeTypes()[i]]
         typ.isCollapsed = b
         typ.counter = 0
+        -- todo: reset all counters: chapters, theorems, even pages.
     end
 end
 
@@ -135,10 +152,13 @@ function produceExtraDocuments()
     for k, _ in pairs(_types) do
         lists[k] = { [0] = false, [1] = true}
     end
+    documentList = toarray(
+        cartesian_product(lists), 
+        fulfilConditions
+    )
+    
+    LaTeX_print("Number of documents: " .. (#documentList + 1))
 
-    documentList = BuildArray(cartesian_product(lists))
-    LaTeX_print("Number of documents: " .. #documentList)
-    table.remove(documentList, 1) -- this is the (false, false, ...) tuple, i.e. the default document
     for i, _ in pairs(documentList) do
         tex.sprint(
             separator ..
@@ -148,10 +168,11 @@ function produceExtraDocuments()
     end
 end
 
+-- debugging
 
 if tex == nil then
     tex = {sprint=print}
     DeclareCollapsible("Ex", "blue")
     collapsibleEnvironment("Ex")
-    produceDocument()
+    produceExtraDocuments()
 end
