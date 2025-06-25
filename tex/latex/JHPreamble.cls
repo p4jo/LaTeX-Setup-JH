@@ -865,10 +865,11 @@
     \end{leftLineBox}
 }
 
-\NewDocumentCommand{DeclareLinedTheorem}{m m}{ 
-    \NewDocumentEnvironment{#1}{o D(){#2}}{
+\NewDocumentCommand{DeclareLinedTheorem}{o m m}{ 
+    \declaretheorem[#1]{#2}
+    \NewDocumentEnvironment{#2}{o D(){#3}}{
         \begin{leftLined}{
-            #1 \IfValueT { ##1 } { ~ ( ##1 ) } 
+            #2 \IfValueT { ##1 } { ~ ( ##1 ) } 
         }(##2)
     }{
         \end{leftLined}
