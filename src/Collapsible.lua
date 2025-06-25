@@ -3,7 +3,7 @@ dofile("src/Helpers.lua")
 -- CONDITIONS
 
 conditions = {
-    [0] = function (states) -- not the default document
+    [0] = function (states) -- do not print the default document, as it will be printed first by LaTeX, so that the isUsed flags are set correctly
         for name, state in pairs(states) do
             if state then
                 return true
@@ -25,12 +25,10 @@ end
 types = {}
 
 function DeclareCollapsible(name, color, parent)
-    if parent == nil then
-        parent = ""
-    end
+    parent = parent or ""
     types[name] = {
-        isCollapsed = false,
-        isUsed = false,
+        isCollapsed = false, 
+        isUsed = false, -- during the first run through, isUsed will be set to true when the environment is used
         color = color,
         counter = 0,
         parent = parent
@@ -38,43 +36,48 @@ function DeclareCollapsible(name, color, parent)
     if parent ~= "" then
         conditions[#conditions] = function(states)
             return (not states[name] or states[parent])
+            -- omit the documents where the parent is collapsed but this is open. Leave the documents where the parent is open and this may be collapsed or not
         end
     end
 end
 
-function labelV(name, remoteState)
-    states = {}
-    for k, type in pairs(types) do
-        states[k] = type.isCollapsed
+function stateListToString(states)
+    local r = ""
+    for k, isCollapsed in pairs(states) do
+        r = r .. ", " .. (isCollapsed and string.lower(k) or string.upper(k))
     end
-    if not remoteState then
-        return labelFromList(name, states)
-    end
-
-    local type = types[name]
-    c = type.isCollapsed
-    type.isCollapsed = not c
-    local parent = type.parent
-
-    if c and parent ~= "" and types[parent].isCollapsed then
-        types[parent].isCollapsed = false
-    end
-    -- assert list ∈ documentList
-    -- later, we might allow arbitrary conditions, thus we need to find the "closest" element in documentList with typ.isCollapsed = not c
-    return labelFromList(name, states)
+    return r:sub(3) -- remove the first ", "
 end
-function labelFromList(name, states)
-    local r = "E." .. name .. "-" .. types[name].counter
-    for k, state in pairs(states) do
-        r = r .. ", " .. (state and string.upper(k) or string.lower(k))
-    end
-    return r 
+function labelFromStateList(name, states)
+    return "E." .. name .. "-" .. types[name].counter .. "." .. stateListToString(states)
 end
+
 function label(name)
     return labelV(name, false)
 end
 function labelR(name)
     return labelV(name, true)
+end
+function labelV(name, remoteState)
+    local states = {}
+    for k, type in pairs(types) do
+        states[k] = type.isCollapsed
+    end
+    if remoteState then
+        local type = types[name]
+        local parent = type.parent
+        
+        -- remote state is opposite
+        local c = type.isCollapsed
+        states[name] = not c
+
+        if c and parent ~= "" and states[parent] then
+            states[parent] = false
+        end
+        -- assert states ∈ documentList
+        -- later, we might allow arbitrary conditions, thus we need to find the "closest" element in documentList with typ.isCollapsed = not c
+    end
+    return labelFromStateList(name, states)
 end
 
 function activeTypes()
@@ -103,7 +106,7 @@ function collapsibleEnvironment(name)
     local typ = types[name]
     typ.isUsed = true
     typ.counter = typ.counter + 1
-    
+    LaTeX_print("Printing label for " .. name .. " with state " .. tostring(typ.isCollapsed) .. ": ".. label(name))
     tex.sprint(
         "\\label{" .. 
             label(name) .. 
@@ -115,56 +118,63 @@ function collapsibleEnvironment(name)
             "\\collapsibleCurrentEnvironmentContent"
         )
     end
-
+    LaTeX_print("Printing reference for " .. name .. " with state " .. tostring(typ.isCollapsed) .. ": ".. labelR(name))
     tex.sprint(
         "{"..
             "\\hypersetup{allcolors=" ..
                 typ.color ..
             "}" ..
             "\\hyperref[" ..
-                labelR(name) ..
-            "]{\\collapseButton{" ..
-                typ.color .. 
-            "}}" ..
+                labelR(name) .. -- this uses the counter and the opposite state
+            "]{"..
+            -- name
+            -- ..
+            (typ.isCollapsed and "\\expandButton{" or "\\collapseButton{") ..
+            typ.color .. 
+            "}" ..
+            "}" ..
         "}"
     )
 end
 
 
 
-separator = "\\cleardoublepage"
+separator = "\\collapsibleResetForNextDocument\\collapsibleResetForNextDocumentTwo"
 
 documentList = nil
-function nextDocument()
-
+_types = nil
+function setVariablesForNextDocument()
     local tuple = table.remove(documentList, 1)
     for i, b in pairs(tuple) do
-        typ = types[activeTypes()[i]]
+        typ = types[_types[i]]
         typ.isCollapsed = b
         typ.counter = 0
-        -- todo: reset all counters: chapters, theorems, even pages.
     end
 end
 
 function produceExtraDocuments()
     local lists = {}
-    local _types = activeTypes()
+    _types = activeTypes()
     for k, _ in pairs(_types) do
         lists[k] = { [0] = false, [1] = true}
     end
-    documentList = toarray(
-        cartesian_product(lists), 
-        fulfilConditions
+    documentList = filterToArray(
+        fulfilConditions,
+        cartesian_product(lists)
     )
     
     LaTeX_print("Number of documents: " .. (#documentList + 1))
 
     for i, _ in pairs(documentList) do
         tex.sprint(
-            separator ..
-            "\\directlua{nextDocument()}" ..
-            "\\collapsibleCurrentDocumentContent " 
+            "\\directlua{setVariablesForNextDocument()}" ..
+            "\\typeout{Now parsing the CollapsibleDocument with parameters " ..
+            stateListToString(documentList[i]) ..
+            "}" ..
+            "\\collapsibleCurrentDocumentContent " ..
+            separator
         )
+        -- while latex parses the content of \collapsibleCurrentDocumentContent, whenever an collapsible environment is encountered, it will call collapsibleEnvironment(name) which then operates with a different state, which was set when setVariablesForNextDocument() was called
     end
 end
 
@@ -173,6 +183,6 @@ end
 if tex == nil then
     tex = {sprint=print}
     DeclareCollapsible("Ex", "blue")
-    collapsibleEnvironment("Ex")
+    -- collapsibleEnvironment("Ex")
     produceExtraDocuments()
 end

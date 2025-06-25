@@ -32,6 +32,7 @@
 \DeclareBoolOption{useIdealSymbols}
 \DeclareBoolOption{useIndex}
 \DeclareBoolOption{omitFloat}
+\DeclareBoolOption{omitAnimate}
 \DeclareBoolOption{omitOwnPackages}
 \DeclareBoolOption{omitExternalPackages}
 \DeclareBoolOption{omitUnicodeMath}

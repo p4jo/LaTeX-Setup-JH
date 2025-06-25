@@ -187,15 +187,19 @@
             ]{##1}
         }{ 
             \IfValueTF{#7}{ % |Letzter Frame|
-                \animategraphics[
-                    width=#1\textwidth,
-                    autoplay,
-                    loop,
-                    controls={play,stop,step}
-                ]{#9}
-                {##1}
-                {0}
-                {#7}
+                \ifJHPreamble@omitAnimate
+                    \write{No animate package loaded.}
+                \else
+                    \animategraphics[
+                        width=#1\textwidth,
+                        autoplay,
+                        loop,
+                        controls={play,stop,step}
+                    ]{#9}
+                    {##1}
+                    {0}
+                    {#7}
+                \fi
             }{
                 \includegraphics[
                     width=#1\textwidth

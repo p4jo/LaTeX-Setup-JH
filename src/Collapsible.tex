@@ -1,36 +1,51 @@
+\RequirePackage{etoolbox}
+
 \directlua{dofile("src/Collapsible.lua")}
+
+\def\collapsibleResetForNextDocument{\cleardoublepage}
+
 \NewDocumentCommand\DeclareCollapsible{mmO{}}{
     \directlua{DeclareCollapsible("#1","#2","#3")}
 }
-\ExplSyntaxOn
+
 \NewDocumentEnvironment{collapsible}{m +b}{ 
-    \tl_set:Nn\collapsibleCurrentEnvironmentContent{#2}
+    \def\collapsibleCurrentEnvironmentContent{#2}
     \directlua{collapsibleEnvironment("#1")}
+    % the lua code then either prints out the content of the environment, #2, or not, plus links to the document that contains/doesn't contain the content.
 }{}
 
-\NewDocumentEnvironment{CollapsibleDocument}{+b}{
-    #1
-}{
+\NewDocumentEnvironment{CollapsibleDocument}{O{} +b}{
+    \def\collapsibleResetForNextDocumentTwo{#1}
+    \def\collapsibleCurrentDocumentContent{\protecting{#2}}
+    \typeout{Now parsing the CollapsibleDocument with no environments collapsed.}
+    #2 
+    \collapsibleResetForNextDocument
+    \collapsibleResetForNextDocumentTwo
     % \tl_set:Ne
-    \def\collapsibleCurrentDocumentContent{#1}
     \directlua{produceExtraDocuments()}
-}
-\ExplSyntaxOff
+}{}
 
 \RequirePackage{graphicx, hyperref, tikz}
+
 % \usetikzlibrary{fadings}
 % \usetikzlibrary{patterns}
 % \usetikzlibrary{shadows.blur}
 \usetikzlibrary{shapes,arrows,positioning,fit,calc}
 
 % \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt     
-
+% \NewDocumentCommand\collapseButton{m}{
+%     \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%         % Rounded Rect 
+%         \draw[draw opacity=0, fill=#1] (50,54) .. controls (50,49.58) and (53.58,46) .. (58,46) -- (242,46) .. controls (246.42,46) and (250,49.58) .. (250,54) -- (250,78) .. controls (250,82.42) and (246.42,86) .. (242,86) -- (58,86) .. controls (53.58,86) and (50,82.42) .. (50,78) -- cycle ;
+%         % Pentagon Arrow
+%         \draw[fill={rgb, 255:red, 128; green, 128; blue, 128 }] (170,53) -- (170,62.92) -- (150,83) -- (130,62.92) -- (130,53) -- cycle ;
+%     \end{tikzpicture}
+% }
+    
 \NewDocumentCommand\collapseButton{m}{
-    \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
-        % Rounded Rect 
-        \draw[draw opacity=0, fill=#1] (50,54) .. controls (50,49.58) and (53.58,46) .. (58,46) -- (242,46) .. controls (246.42,46) and (250,49.58) .. (250,54) -- (250,78) .. controls (250,82.42) and (246.42,86) .. (242,86) -- (58,86) .. controls (53.58,86) and (50,82.42) .. (50,78) -- cycle ;
-        % Pentagon Arrow
-        \draw[fill={rgb, 255:red, 128; green, 128; blue, 128 }] (170,53) -- (170,62.92) -- (150,83) -- (130,62.92) -- (130,53) -- cycle ;
-    \end{tikzpicture}
+    \includegraphics[height=1em]{src/collapse-vertical-solid-svgrepo-com.pdf}
+}
 
+\NewDocumentCommand\expandButton{m}{
+    \includegraphics[height=1em]{src/expand-vertical-solid-svgrepo-com.pdf}
 }

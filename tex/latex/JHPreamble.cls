@@ -31,6 +31,7 @@
 \DeclareBoolOption{useIdealSymbols}
 \DeclareBoolOption{useIndex}
 \DeclareBoolOption{omitFloat}
+\DeclareBoolOption{omitAnimate}
 \DeclareBoolOption{omitOwnPackages}
 \DeclareBoolOption{omitExternalPackages}
 \DeclareBoolOption{omitUnicodeMath}
@@ -504,7 +505,10 @@
 \RequirePackage[autostyle=true]{csquotes} % \enquote{...} statt "...". Lokalisierbare Anführungszeichen 
 
 \RequirePackage{graphicx} % für \Grafik
-\RequirePackage{animate} % für gif-\Grafik 
+\ifJHPreamble@omitAnimate
+\else
+    \RequirePackage{animate} % für gif-\Grafik 
+\fi
 
 \RequirePackage{pdfpages} %Um pdfs anzuhängen 
 \RequirePackage[export]{adjustbox} %Um Bilder nur eingeschränkt anzuhängen
@@ -666,13 +670,13 @@
     notefont={\itshape}
 ]{JHProof}
 
-% Bemerkung mit Rahmen
-% \declaretheoremstyle[
-%     bodyfont={\upshape},
-%     headfont={\hspace{-11pt} \itshape}, %\itshape
-%     notefont=\itshape,
-%     headpunct={:}
-% ]{JHRemark}
+% Bemerkung mit Rahmen (man muss die Umgebung noch in leftLined setzen)
+\declaretheoremstyle[
+    bodyfont={\upshape},
+    headpunct={:},
+    headfont={\itshape}, %\itshape
+    notefont={\itshape}
+]{JHRemark}
 
 \cs_if_exist:NTF\chapter{
     \newcommand\__numberwithin{chapter}
@@ -859,6 +863,17 @@
             \upshape
 }{ 
     \end{leftLineBox}
+}
+
+\NewDocumentCommand{DeclareLinedTheorem}{m m}{ 
+    \NewDocumentEnvironment{#1}{o D(){#2}}{
+        \begin{leftLined}{
+            #1 \IfValueT { ##1 } { ~ ( ##1 ) } 
+        }(##2)
+    }{
+        \end{leftLined}
+    }
+
 }
 
 \NewDocumentEnvironment{Bemerkung}{o D(){dunkelgrün}}{

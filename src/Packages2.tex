@@ -4,7 +4,10 @@
 \RequirePackage[autostyle=true]{csquotes} % \enquote{...} statt "...". Lokalisierbare Anführungszeichen 
 
 \RequirePackage{graphicx} % für \Grafik
-\RequirePackage{animate} % für gif-\Grafik 
+\ifJHPreamble@omitAnimate
+\else
+    \RequirePackage{animate} % für gif-\Grafik 
+\fi
 
 \RequirePackage{pdfpages} %Um pdfs anzuhängen 
 \RequirePackage[export]{adjustbox} %Um Bilder nur eingeschränkt anzuhängen
