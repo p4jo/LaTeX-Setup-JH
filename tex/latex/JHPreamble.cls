@@ -1,4 +1,4 @@
-% Auto generated file, created from src\JHPreamble.mcls. Will be overwritten. Change the source files instead.
+% Auto generated file, created from C:\Users\p4jo\source\repos\LaTeX Setup\src\JHPreamble.mcls. Will be overwritten. Change the source files instead.
 \ProvidesExplClass{JHPreamble}{2022/04/08}{0.2.1}{Preamble of Johannes H. Needs LuaLaTeX or XeLaTeX}
 
 %%% Base Path for inserts with % !TeX input set to src %%%
@@ -674,7 +674,7 @@
 \declaretheoremstyle[
     bodyfont={\upshape},
     headpunct={:},
-    headfont={\itshape}, %\itshape
+    headfont={\hspace{-11pt}\itshape}, %\itshape
     notefont={\itshape}
 ]{JHRemark}
 
@@ -865,32 +865,37 @@
     \end{leftLineBox}
 }
 
-\NewDocumentCommand{DeclareLinedTheorem}{o m m}{ 
-    \declaretheorem[#1]{#2}
-    \NewDocumentEnvironment{#2}{o D(){#3}}{
-        \begin{leftLined}{
-            #2 \IfValueT { ##1 } { ~ ( ##1 ) } 
-        }(##2)
+\NewDocumentCommand{\DeclareLinedTheorem}{o m m}{ 
+    \declaretheorem[#1]{internal_#2}
+    \NewDocumentEnvironment{#2}{o d()}{
+        \IfValueTF{##2}{
+            \begin{leftLineBox}{##2}
+        }{
+            \begin{leftLineBox}{#3}
+        }
+        \IfValueTF{##1}{
+            \begin{internal_#2}[##1]
+        }{
+            \begin{internal_#2}
+        }
     }{
-        \end{leftLined}
+        \end{internal_#2}
+        \end{leftLineBox}
     }
-
 }
 
-\NewDocumentEnvironment{Bemerkung}{o D(){dunkelgrün}}{
-    \begin{leftLined}{
-        \theorem_name_remark \IfValueT { #1 } { ~ ( #1 ) } 
-    }(#2)
-}{
-    \end{leftLined}
-}
-\NewDocumentEnvironment{Beispiel}{o D(){dunkelblau}}{
-    \begin{leftLined}{
-         \theorem_name_example \IfValueT { #1 } { ~ ( #1 ) } 
-    }(#2)
-}{
-    \end{leftLined}
-}
+\DeclareLinedTheorem[
+    style=JHRemark,
+    numbered=no,
+    name=\protect\theorem_name_remark
+]{Bemerkung}{dunkelgrün}
+
+
+\DeclareLinedTheorem[
+    style=JHRemark,
+    numbered=no,
+    name=\protect\theorem_name_example
+]{Beispiel}{dunkelblau}
 %%% END OF INSERTED FILE src\Theorems.tex %%%
 
 \fi
