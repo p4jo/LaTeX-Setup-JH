@@ -182,31 +182,23 @@
 }
 \newtcolorbox{leftLineBox}[2][]{
     enhanced,
+    use~color~stack, % This fixes the coloring problem (i.e. that the page breaks reverted color changes), see https://github.com/T-F-S/tcolorbox/issues/110
     empty,
     breakable=true,
     left=7pt,
-    overlay={ \drawLeftLine[-25pt]{#2} },
-    % code for the first part of a break sequence:
-    skin~first~is~subskin~of = { emptyfirst }{ 
-        overlay = {\drawLeftLine[-25pt]{#2} }
-    },
-    % code for the middle part of a break sequence:
-    skin~middle~is~subskin~of = { emptymiddle }{
-        overlay = { \drawLeftLine{#2} }
-    },
-    % code for the last part of a break sequence:
-    skin~last~is~subskin~of = { emptylast }{
-        overlay = { \drawLeftLine{#2} }
-    },
+    parbox=false, % this fixes the indentation of paragraphs
+    overlay~unbroken~and~first={ \drawLeftLine[-25pt]{#2} },
+    overlay~middle~and~last={ \drawLeftLine{#2} },
     #1
 }
 
-\NewDocumentEnvironment{leftLined}{m D(){dunkelgrün}}{ 
+
+\NewDocumentEnvironment{leftLined}{m D(){dunkelgrün}}{     
     \begin{leftLineBox}{#2}
-            \hspace { -11pt }
-            \itshape 
-            #1 :
-            \upshape
+    \hspace { -11pt }
+    \itshape 
+    #1 :
+    \upshape
 }{ 
     \end{leftLineBox}
 }

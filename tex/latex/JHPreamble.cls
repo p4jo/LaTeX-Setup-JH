@@ -1,4 +1,4 @@
-% Auto generated file, created from C:\Users\p4jo\source\repos\LaTeX Setup\src\JHPreamble.mcls. Will be overwritten. Change the source files instead.
+% Auto generated file, created from src\JHPreamble.mcls. Will be overwritten. Change the source files instead.
 \ProvidesExplClass{JHPreamble}{2022/04/08}{0.2.1}{Preamble of Johannes H. Needs LuaLaTeX or XeLaTeX}
 
 %%% Base Path for inserts with % !TeX input set to src %%%
@@ -30,6 +30,7 @@
 \DeclareBoolOption{useSilence}
 \DeclareBoolOption{useIdealSymbols}
 \DeclareBoolOption{useIndex}
+\DeclareBoolOption{useCollapsible}
 \DeclareBoolOption{omitFloat}
 \DeclareBoolOption{omitAnimate}
 \DeclareBoolOption{omitOwnPackages}
@@ -648,6 +649,46 @@
 
 \fi
 
+
+%%% FILE src\Colors.tex  %%%
+
+% \RequirePackage{color}
+\RequirePackage{xcolor} % Option [svgnames] may cause option clash ↦ \PassOptionsToPackage before first potential load 
+
+\ifdef{\mathcolor}{
+
+}{
+
+    \def\mathcolor#1#{\@mathcolor{#1}}
+    \def\@mathcolor#1#2#3{%
+        \protect\leavevmode
+        \begingroup
+           \color#1{#2}#3%
+        \endgroup
+    }
+}
+
+\definecolor{dunkelblau}{rgb}{0, 0, 0.5}
+\definecolor{mittelblau}{rgb}{0,0,0.7}
+\definecolor{dunkelgrau}{rgb}{0.4, 0.4, 0.4}
+\definecolor{grau}{rgb}{0.5, 0.5, 0.5}
+\definecolor{hellgrau}{rgb}{0.9, 0.9, 0.9}
+\definecolor{türkis}{rgb}{0, 0.5, 0.5}
+\definecolor{blasstürkis}{rgb}{0.5, 0.9., 0.9}
+\definecolor{blassblau}{rgb}{0.9,0.9,1}
+\definecolor{blasshellblau}{rgb}{0.76,0.97,1}
+\definecolor{hellblau}{rgb}{0.31,0.87,1}
+\definecolor{hellgrün}{rgb}{0.9,1,0.9}
+\definecolor{lila}{rgb}{0.5,0,0.5}
+\definecolor{dunkelgrün}{rgb}{0,0.5,0}
+\definecolor{dunkelrot}{rgb}{0.5,0.05,0.05}
+\definecolor{dunkeltürkis}{HTML}{2A7B88}
+
+\definecolor{Überschrift}{rgb}{0,0,0.6}
+\definecolor{Links}{named}{Überschrift}
+%%% END OF INSERTED FILE src\Colors.tex %%%
+
+
 \ifJHPreamble@omitTheorems
 \else
 
@@ -836,31 +877,23 @@
 }
 \newtcolorbox{leftLineBox}[2][]{
     enhanced,
+    use~color~stack, % This fixes the coloring problem (i.e. that the page breaks reverted color changes), see https://github.com/T-F-S/tcolorbox/issues/110
     empty,
     breakable=true,
     left=7pt,
-    overlay={ \drawLeftLine[-25pt]{#2} },
-    % code for the first part of a break sequence:
-    skin~first~is~subskin~of = { emptyfirst }{ 
-        overlay = {\drawLeftLine[-25pt]{#2} }
-    },
-    % code for the middle part of a break sequence:
-    skin~middle~is~subskin~of = { emptymiddle }{
-        overlay = { \drawLeftLine{#2} }
-    },
-    % code for the last part of a break sequence:
-    skin~last~is~subskin~of = { emptylast }{
-        overlay = { \drawLeftLine{#2} }
-    },
+    parbox=false, % this fixes the indentation of paragraphs
+    overlay~unbroken~and~first={ \drawLeftLine[-25pt]{#2} },
+    overlay~middle~and~last={ \drawLeftLine{#2} },
     #1
 }
 
-\NewDocumentEnvironment{leftLined}{m D(){dunkelgrün}}{ 
+
+\NewDocumentEnvironment{leftLined}{m D(){dunkelgrün}}{     
     \begin{leftLineBox}{#2}
-            \hspace { -11pt }
-            \itshape 
-            #1 :
-            \upshape
+    \hspace { -11pt }
+    \itshape 
+    #1 :
+    \upshape
 }{ 
     \end{leftLineBox}
 }
@@ -899,45 +932,6 @@
 %%% END OF INSERTED FILE src\Theorems.tex %%%
 
 \fi
-
-
-%%% FILE src\Colors.tex  %%%
-
-% \RequirePackage{color}
-\RequirePackage{xcolor} % Option [svgnames] may cause option clash ↦ \PassOptionsToPackage before first potential load 
-
-\ifdef{\mathcolor}{
-
-}{
-
-    \def\mathcolor#1#{\@mathcolor{#1}}
-    \def\@mathcolor#1#2#3{%
-        \protect\leavevmode
-        \begingroup
-           \color#1{#2}#3%
-        \endgroup
-    }
-}
-
-\definecolor{dunkelblau}{rgb}{0, 0, 0.5}
-\definecolor{mittelblau}{rgb}{0,0,0.7}
-\definecolor{dunkelgrau}{rgb}{0.4, 0.4, 0.4}
-\definecolor{grau}{rgb}{0.5, 0.5, 0.5}
-\definecolor{hellgrau}{rgb}{0.9, 0.9, 0.9}
-\definecolor{türkis}{rgb}{0, 0.5, 0.5}
-\definecolor{blasstürkis}{rgb}{0.5, 0.9., 0.9}
-\definecolor{blassblau}{rgb}{0.9,0.9,1}
-\definecolor{blasshellblau}{rgb}{0.76,0.97,1}
-\definecolor{hellblau}{rgb}{0.31,0.87,1}
-\definecolor{hellgrün}{rgb}{0.9,1,0.9}
-\definecolor{lila}{rgb}{0.5,0,0.5}
-\definecolor{dunkelgrün}{rgb}{0,0.5,0}
-\definecolor{dunkelrot}{rgb}{0.5,0.05,0.05}
-\definecolor{dunkeltürkis}{HTML}{2A7B88}
-
-\definecolor{Überschrift}{rgb}{0,0,0.6}
-\definecolor{Links}{named}{Überschrift}
-%%% END OF INSERTED FILE src\Colors.tex %%%
 
 
 \ifJHPreamble@Presentation
@@ -1105,4 +1099,64 @@
 \fi
 \ifJHPreamble@useIdealSymbols
     \RequirePackageByPath{JHIdealSymbols}
+\fi
+
+\ifJHPreamble@useCollapsible
+
+%%% FILE src\Collapsible.tex  %%%
+\RequirePackage{etoolbox}
+
+\directlua{dofile("src/Collapsible.lua")}
+
+\def\collapsibleResetForNextDocument{\cleardoublepage}
+
+\NewDocumentCommand\DeclareCollapsible{mmO{}}{
+    \directlua{DeclareCollapsible("#1","#2","#3")}
+}
+
+\NewDocumentEnvironment{collapsible}{m +b}{ 
+    \def\collapsibleCurrentEnvironmentContent{#2}
+    \directlua{collapsibleEnvironment("#1")}
+    % the lua code then either prints out the content of the environment, #2, or not, plus links to the document that contains/doesn't contain the content.
+}{}
+
+\NewDocumentEnvironment{CollapsibleDocument}{O{} +b}{
+    \def\collapsibleResetForNextDocumentTwo{#1}
+    \def\collapsibleCurrentDocumentContent{\protecting{#2}}
+    \typeout{Now parsing the CollapsibleDocument with no environments collapsed.}
+    #2 
+    \collapsibleResetForNextDocument
+    \collapsibleResetForNextDocumentTwo
+    % \tl_set:Ne
+    \directlua{produceExtraDocuments()}
+}{}
+
+\RequirePackage{graphicx, hyperref}
+
+% \RequirePackage{tikz}
+% \usetikzlibrary{fadings}
+% \usetikzlibrary{patterns}
+% \usetikzlibrary{shadows.blur}
+% \usetikzlibrary{shapes,arrows,positioning,fit,calc}
+
+% \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt     
+% \NewDocumentCommand\collapseButton{m}{
+%     \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%         % Rounded Rect 
+%         \draw[draw opacity=0, fill=#1] (50,54) .. controls (50,49.58) and (53.58,46) .. (58,46) -- (242,46) .. controls (246.42,46) and (250,49.58) .. (250,54) -- (250,78) .. controls (250,82.42) and (246.42,86) .. (242,86) -- (58,86) .. controls (53.58,86) and (50,82.42) .. (50,78) -- cycle ;
+%         % Pentagon Arrow
+%         \draw[fill={rgb, 255:red, 128; green, 128; blue, 128 }] (170,53) -- (170,62.92) -- (150,83) -- (130,62.92) -- (130,53) -- cycle ;
+%     \end{tikzpicture}
+% }
+    
+\NewDocumentCommand\collapseButton{m}{
+    \includegraphics[height=1em]{src/collapse-vertical-solid-svgrepo-com.pdf}
+}
+
+\NewDocumentCommand\expandButton{m}{
+    \includegraphics[height=1em]{src/expand-vertical-solid-svgrepo-com.pdf}
+}
+
+%%% END OF INSERTED FILE src\Collapsible.tex %%%
+
 \fi

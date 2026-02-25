@@ -31,6 +31,7 @@
 \DeclareBoolOption{useSilence}
 \DeclareBoolOption{useIdealSymbols}
 \DeclareBoolOption{useIndex}
+\DeclareBoolOption{useCollapsible}
 \DeclareBoolOption{omitFloat}
 \DeclareBoolOption{omitAnimate}
 \DeclareBoolOption{omitOwnPackages}
@@ -104,12 +105,13 @@
 % !TeX input GeneralSetup
 \fi
 
+% !TeX input Colors
+
 \ifJHPreamble@omitTheorems
 \else
 % !TeX input Theorems
 \fi
 
-% !TeX input Colors
 
 \ifJHPreamble@Presentation
 % !TeX input PresentationFormatSettings
@@ -137,4 +139,8 @@
 \fi
 \ifJHPreamble@useIdealSymbols
     \RequirePackageByPath{JHIdealSymbols}
+\fi
+
+\ifJHPreamble@useCollapsible
+% !TeX input Collapsible
 \fi
