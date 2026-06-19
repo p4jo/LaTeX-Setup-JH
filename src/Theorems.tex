@@ -2,27 +2,6 @@
 \usepackage{amsthm}
 \usepackage{thmtools}
 
-\declaretheoremstyle[
-    bodyfont=\upshape,
-    headfont={\sffamily\bfseries},
-    notefont={\sffamily\bfseries},
-    headpunct={:},
-]{JHDefinition}
-
-\declaretheoremstyle[
-    bodyfont={\color{dunkelgrau}},
-    headpunct={:},
-    headfont={\itshape},
-    notefont={\itshape}
-]{JHProof}
-
-% Bemerkung mit Rahmen (man muss die Umgebung noch in leftLined setzen)
-\declaretheoremstyle[
-    bodyfont={\upshape},
-    headpunct={:},
-    headfont={\hspace{-11pt}\itshape}, %\itshape
-    notefont={\itshape}
-]{JHRemark}
 
 \cs_if_exist:NTF\chapter{
     \newcommand\__numberwithin{chapter}
@@ -62,66 +41,299 @@
     \addto\captionsngerman{\theorem_language_set_ngerman:}
 }
 
-\declaretheorem[
-    style=JHDefinition,
-    shaded={
-        rulecolor=white, % xcolor throws error 'undefined color shaderulecolor', when omitExternalPackages, even though Packages1, Packages2, BibliographySettings and GeneralSetup don't seem to do anything regarding this.
-        bgcolor=hellgrün
-    },
-    numberwithin=\__numberwithin,
-    name=\protect\theorem_name_theorem
-]{Satz}
-\declaretheorem[
-    style=JHDefinition,
-    shaded={
-        rulecolor=white,
-        bgcolor=hellgrün
-    },
-    numberlike=Satz,
-    name=\protect\theorem_name_lemma
-]{Lemma}
-\declaretheorem[
-    style=JHDefinition,
-    shaded={
-        rulecolor=white,
-        bgcolor=hellgrau
-    },
-    numberlike=Satz,
-    name=\protect\theorem_name_corollary
-]{Korollar}
 
-% numbered like Definition
-\ifJHPreamble@NumberDefLikeSatz
-    \declaretheorem[
-        style=JHDefinition,
-        shaded={
-            rulecolor=white,
-            bgcolor=blasshellblau
-        },
-        numberlike=Satz,
-        name=\protect\theorem_name_definition
-    ]{Definition}
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{skins}
+\tcbuselibrary{breakable}
+\newcommand\drawLeftLine[2][-8pt]{ % #2=the color
+    \draw[line~width = 2pt, #2, opacity = 0.7]
+        ([ shift = { (1pt, #1) } ] interior.north~west )
+    -- ([ shift = { (1pt, 8pt) } ] interior.south~west );
+}
+\newcommand\drawLeftBottomLine[2][-8pt]{ % #2=the color
+    \draw[line~width = 2pt, #2, opacity = 0.7]
+        ([ shift = { (1pt, #1) } ] interior.north~west )
+    -- ([ shift = { (1pt, 0pt) } ] interior.south~west )
+    -- ([ shift = { (1pt, 0pt) } ] interior.south~east );
+}
+
+\newtcolorbox{leftLineBox}[2][]{
+    enhanced,
+    use~color~stack, % This fixes the coloring problem (i.e. that the page breaks reverted color changes), see https://github.com/T-F-S/tcolorbox/issues/110
+    empty,
+    breakable=true,
+    left=7pt,
+    parbox=false, % this fixes the indentation of paragraphs
+    overlay~unbroken~and~first={ \drawLeftLine[-25pt]{#2} },
+    overlay~middle~and~last={ \drawLeftLine{#2} },
+    #1
+}
+
+\newtcolorbox{leftBottomLineBox}[2][]{
+    enhanced,
+    use~color~stack, % This fixes the coloring problem (i.e. that the page breaks reverted color changes), see https://github.com/T-F-S/tcolorbox/issues/110
+    empty,
+    breakable=true,
+    left=7pt,
+    parbox=false, % this fixes the indentation of paragraphs
+    overlay~first={ \drawLeftLine[-25pt]{#2} },
+    overlay~middle={ \drawLeftLine{#2} },
+    overlay~last={ \drawLeftBottomLine{#2} },
+    overlay~unbroken={ \drawLeftBottomLine[-25pt]{#2} },
+    #1
+}
+
+
+\NewDocumentEnvironment{leftLined}{m D(){dunkelgrün}}{     
+    \begin{leftLineBox}{#2}
+    \hspace { -11pt }
+    \itshape 
+    #1 :
+    \upshape
+}{ 
+    \end{leftLineBox}
+}
+
+\NewDocumentEnvironment{boxLined}{m D(){dunkelgrün}}{     
+    \begin{leftBottomLineBox}{#2}
+    \hspace { -11pt }
+    \itshape 
+    #1 :
+    \upshape
+}{ 
+    \end{leftBottomLineBox}
+}
+
+\NewDocumentCommand{\DeclareLinedTheorem}{o m m}{ 
+    \declaretheorem[#1]{internal_#2}
+    \NewDocumentEnvironment{#2}{o d()}{
+        \IfValueTF{##2}{
+            \begin{leftLineBox}{##2}
+        }{
+            \begin{leftLineBox}{#3}
+        }
+        \IfValueTF{##1}{
+            \begin{internal_#2}[##1]
+        }{
+            \begin{internal_#2}
+        }
+    }{
+        \end{internal_#2}
+        \end{leftLineBox}
+    }
+}
+
+\NewDocumentCommand{\DeclareBoxLinedTheorem}{o m m}{ 
+    \declaretheorem[#1]{internal_#2}
+    \NewDocumentEnvironment{#2}{o d()}{
+        \IfValueTF{##2}{
+            \begin{leftBottomLineBox}{##2}
+        }{
+            \begin{leftBottomLineBox}{#3}
+        }
+        \IfValueTF{##1}{
+            \begin{internal_#2}[##1]
+        }{
+            \begin{internal_#2}
+        }
+    }{
+        \end{internal_#2}
+        \end{leftBottomLineBox}
+    }
+}
+
+\declaretheoremstyle[
+    bodyfont={\upshape},
+    headpunct={:},
+    headfont={\hspace{-11pt}\itshape}, %\itshape
+    notefont={\itshape}
+]{JHRemark}
+
+\DeclareLinedTheorem[
+    style=JHRemark,
+    numbered=no,
+    name=\protect\theorem_name_remark
+]{Bemerkung}{dunkelgrün}
+
+
+\DeclareLinedTheorem[
+    style=JHRemark,
+    numbered=no,
+    name=\protect\theorem_name_example
+]{Beispiel}{dunkelblau}
+
+
+
+\declaretheoremstyle[
+    bodyfont=\upshape,
+    headfont={\hspace{-11pt}\sffamily\bfseries},
+    notefont={\sffamily\bfseries},
+    headpunct={:},
+]{JHNewDefinition}
+
+\declaretheoremstyle[
+    % bodyfont={\color{dunkelgrau}},
+    headpunct={:},
+    headfont={\itshape},
+    notefont={\itshape},
+    qed=\qedsymbol
+]{JHNewProof}
+
+\declaretheoremstyle[
+    bodyfont=\upshape,
+    headfont={\sffamily\bfseries},
+    notefont={\sffamily\bfseries},
+    headpunct={:},
+]{JHDefinition}
+
+\declaretheoremstyle[
+    bodyfont={\color{dunkelgrau}},
+    headpunct={:},
+    headfont={\itshape},
+    notefont={\itshape}
+]{JHProof}
+
+
+\ifJHPreamble@newTheorems
+
+    \DeclareBoxLinedTheorem[
+        style=JHNewDefinition,
+        numberwithin=\__numberwithin,
+        name=\protect\theorem_name_theorem
+    ]{Satz}{Mdunkelgrün}
+    \DeclareBoxLinedTheorem[
+        style=JHNewDefinition,
+        numberlike=internal_Satz,
+        name=\protect\theorem_name_lemma
+    ]{Lemma}{Mdunkelgrün}
+    \DeclareBoxLinedTheorem[
+        style=JHNewDefinition,
+        numberlike=internal_Satz,
+        name=\protect\theorem_name_corollary
+    ]{Korollar}{Mgrau}
+
+    % numbered like Definition
+    \ifJHPreamble@NumberDefLikeSatz
+        \DeclareBoxLinedTheorem[
+            style=JHNewDefinition,
+            numberlike=internal_Satz,
+            name=\protect\theorem_name_definition
+        ]{Definition}{Mblau}
+    \else
+        \DeclareBoxLinedTheorem[
+            style=JHNewDefinition,
+            numberwithin=\__numberwithin,
+            name=\protect\theorem_name_definition
+        ]{Definition}{Mblau}
+    \fi
+    \DeclareBoxLinedTheorem[
+        style=JHNewDefinition,
+        name=\protect\theorem_name_defLemma,
+        refname=\protect\theorem_refname_defLemma,
+        numberlike=internal_Definition
+    ]{DefLemma}{dunkeltürkis}
+    
+
+    \DeclareBoxLinedTheorem[
+        style=JHNewDefinition,
+        numbered=no,
+        name=\protect\theorem_name_question
+    ]{Frage}{Orange}
+
+    
+    \ifJHPreamble@removeProofs
+        \NewDocumentEnvironment{Beweis}{o +b}{}{} % b collects the body of the environment :) 
+    \else
+        \declaretheorem[
+            style=JHNewProof,
+            numbered=no,
+            name=\protect\theorem_name_proof
+        ]{Beweis}
+    \fi    
 \else
+
     \declaretheorem[
         style=JHDefinition,
         shaded={
-            rulecolor=white,
-            bgcolor=blasshellblau
+            rulecolor=white, % xcolor throws error 'undefined color shaderulecolor', when omitExternalPackages, even though Packages1, Packages2, BibliographySettings and GeneralSetup don't seem to do anything regarding this.
+            bgcolor=hellgrün
         },
         numberwithin=\__numberwithin,
-        name=\protect\theorem_name_definition
-    ]{Definition}
+        name=\protect\theorem_name_theorem
+    ]{Satz}
+    \declaretheorem[
+        style=JHDefinition,
+        shaded={
+            rulecolor=white,
+            bgcolor=hellgrün
+        },
+        numberlike=Satz,
+        name=\protect\theorem_name_lemma
+    ]{Lemma}
+    \declaretheorem[
+        style=JHDefinition,
+        shaded={
+            rulecolor=white,
+            bgcolor=hellgrau
+        },
+        numberlike=Satz,
+        name=\protect\theorem_name_corollary
+    ]{Korollar}
+
+    % numbered like Definition
+    \ifJHPreamble@NumberDefLikeSatz
+        \declaretheorem[
+            style=JHDefinition,
+            shaded={
+                rulecolor=white,
+                bgcolor=blasshellblau
+            },
+            numberlike=Satz,
+            name=\protect\theorem_name_definition
+        ]{Definition}
+    \else
+        \declaretheorem[
+            style=JHDefinition,
+            shaded={
+                rulecolor=white,
+                bgcolor=blasshellblau
+            },
+            numberwithin=\__numberwithin,
+            name=\protect\theorem_name_definition
+        ]{Definition}
+    \fi
+    \declaretheorem[
+        style=JHDefinition,
+        shaded={
+            rulecolor=white,
+            bgcolor=blasstürkis
+        },
+        name=\protect\theorem_name_defLemma,
+        refname=\protect\theorem_refname_defLemma,
+        numberlike=Definition
+    ]{DefLemma}
+    
+
+    \declaretheorem[
+        style=JHDefinition,
+        shaded={
+            rulecolor=white,
+            bgcolor=Orange
+        },
+        numbered=no,
+        name=\protect\theorem_name_question
+    ]{Frage}
+
+    \ifJHPreamble@removeProofs
+        \NewDocumentEnvironment{Beweis}{o +b}{}{} % b collects the body of the environment :) 
+    \else
+        \declaretheorem[
+            style=JHProof,
+            numbered=no,
+            name=\protect\theorem_name_proof
+        ]{Beweis}
+    \fi
 \fi
-\declaretheorem[
-    style=JHDefinition,
-    shaded={
-        rulecolor=white,
-        bgcolor=blasstürkis
-    },
-    name=\protect\theorem_name_defLemma,
-    refname=\protect\theorem_refname_defLemma,
-    numberlike=Definition
-]{DefLemma}
 
 % not numbered
 % \declaretheorem[
@@ -129,25 +341,9 @@
 %     numbered=no,
 %     name=Beispiel
 % ]{beispiel}
-\ifJHPreamble@removeProofs
-    \NewDocumentEnvironment{Beweis}{o +b}{}{} % b collects the body of the environment :) 
-\else
-    \declaretheorem[
-        style=JHProof,
-        numbered=no,
-        name=\protect\theorem_name_proof
-    ]{Beweis}
-\fi
 
-\declaretheorem[
-    style=JHDefinition,
-    shaded={
-        rulecolor=white,
-        bgcolor=Orange
-    },
-    numbered=no,
-    name=\protect\theorem_name_question
-]{Frage}
+
+
 % \declaretheorem[
 %     style=JHRemark,
 %     name=Bemerkung,
@@ -172,65 +368,3 @@
 %     innerbottommargin=0pt,
 % ]{Bemerkung}
 
-\usepackage[most]{tcolorbox}
-\tcbuselibrary{skins}
-\tcbuselibrary{breakable}
-\newcommand\drawLeftLine[2][-8pt]{ % #2=the color
-    \draw[line~width = 2pt, #2, opacity = 0.7]
-        ([ shift = { (1pt, #1) } ] interior.north~west )
-    -- ([ shift = { (1pt, 8pt) } ] interior.south~west );
-}
-\newtcolorbox{leftLineBox}[2][]{
-    enhanced,
-    use~color~stack, % This fixes the coloring problem (i.e. that the page breaks reverted color changes), see https://github.com/T-F-S/tcolorbox/issues/110
-    empty,
-    breakable=true,
-    left=7pt,
-    parbox=false, % this fixes the indentation of paragraphs
-    overlay~unbroken~and~first={ \drawLeftLine[-25pt]{#2} },
-    overlay~middle~and~last={ \drawLeftLine{#2} },
-    #1
-}
-
-
-\NewDocumentEnvironment{leftLined}{m D(){dunkelgrün}}{     
-    \begin{leftLineBox}{#2}
-    \hspace { -11pt }
-    \itshape 
-    #1 :
-    \upshape
-}{ 
-    \end{leftLineBox}
-}
-
-\NewDocumentCommand{\DeclareLinedTheorem}{o m m}{ 
-    \declaretheorem[#1]{internal_#2}
-    \NewDocumentEnvironment{#2}{o d()}{
-        \IfValueTF{##2}{
-            \begin{leftLineBox}{##2}
-        }{
-            \begin{leftLineBox}{#3}
-        }
-        \IfValueTF{##1}{
-            \begin{internal_#2}[##1]
-        }{
-            \begin{internal_#2}
-        }
-    }{
-        \end{internal_#2}
-        \end{leftLineBox}
-    }
-}
-
-\DeclareLinedTheorem[
-    style=JHRemark,
-    numbered=no,
-    name=\protect\theorem_name_remark
-]{Bemerkung}{dunkelgrün}
-
-
-\DeclareLinedTheorem[
-    style=JHRemark,
-    numbered=no,
-    name=\protect\theorem_name_example
-]{Beispiel}{dunkelblau}
