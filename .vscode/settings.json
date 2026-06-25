@@ -1,0 +1,42 @@
+{
+    "latex-workshop.latex.recipes": [
+        {
+            "name": ".mcls -> .cls, lualatex",
+            "tools": [
+                "mcls",
+                "lualatex"
+            ]
+        }
+    ],
+    "latex-workshop.latex.search.rootFiles.include": [
+        "test.tex"
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "mcls",
+            "command": "python",
+            "args": [
+                ".\\src\\inlineMagicInputs.py",
+                ".\\src\\JHPreamble.mcls",
+                "-o",
+                ".\\tex\\latex\\JHPreamble.cls"    
+            ]
+        },
+        {
+            "name": "lualatex",
+            "command": "lualatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                // "--outdir=%OUTDIR%",
+                "%DOC%"
+            ],
+            "env": {}
+        }
+    ],
+    "files.associations": {
+        "*.tex": "latex-expl3"
+    },
+    "svg.preview.background": "transparent"
+}
