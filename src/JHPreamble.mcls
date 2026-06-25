@@ -43,6 +43,7 @@
 \DeclareBoolOption{omitRedefinitions}
 \DeclareBoolOption{omitTheorems}
 \DeclareBoolOption{omitAll}
+\DeclareBoolOption{newTheorems}
 
 \DeclareBoolOption{removeProofs}
 
