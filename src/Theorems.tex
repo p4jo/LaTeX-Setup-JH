@@ -1,7 +1,18 @@
 
 \usepackage{amsthm}
 \usepackage{thmtools}
+% THIS IS A WORKAROUND FOR THE BUG IN THMTOOLS THAT GOT INTRODUCED BY AN UPDATE IN (LUA)LATEX (\NeedsTeXFormat{LaTeX2e}[2026/06/01])
+% https://github.com/muzimuzhi/thmtools/issues/75#issuecomment-4804901577
+\@ifundefined{newcounteralias}{}{
+    \renewcommand\thmt@autorefsetup{
+        \@xa\def\csname\thmt@envname autorefname\@xa\endcsname\@xa{\thmt@thmname}
+    }
+} 
 
+\newlength{\JHTheorems_line_width}
+\setlength{\JHTheorems_line_width}{0.2em}
+\newlength{\JHTheorems_line_half_width}
+\setlength{\JHTheorems_line_half_width}{0.5\JHTheorems_line_width}
 
 \cs_if_exist:NTF\chapter{
     \newcommand\__numberwithin{chapter}
@@ -45,16 +56,17 @@
 \usepackage[most]{tcolorbox}
 \tcbuselibrary{skins}
 \tcbuselibrary{breakable}
-\newcommand\drawLeftLine[2][-8pt]{ % #2=the color
-    \draw[line~width = 2pt, #2, opacity = 0.7]
-        ([ shift = { (1pt, #1) } ] interior.north~west )
-    -- ([ shift = { (1pt, 8pt) } ] interior.south~west );
+
+\newcommand\drawLeftLine[2][-1ex]{ % #1 = vertical shift, #2 = the color
+    \draw[color = #2, line~width = \JHTheorems_line_width, opacity = 0.7]
+        ([ shift = { (\JHTheorems_line_half_width, #1) } ] interior.north~west )
+    -- ([ shift = { (\JHTheorems_line_half_width, 0.8em) } ] interior.south~west );
 }
-\newcommand\drawLeftBottomLine[2][-8pt]{ % #2=the color
-    \draw[line~width = 2pt, #2, opacity = 0.7]
-        ([ shift = { (1pt, #1) } ] interior.north~west )
-    -- ([ shift = { (1pt, 0pt) } ] interior.south~west )
-    -- ([ shift = { (1pt, 0pt) } ] interior.south~east );
+\newcommand\drawLeftBottomLine[2][-1ex]{ % #1 = vertical shift, #2 = the color
+    \draw[color = #2, line~width = \JHTheorems_line_width, opacity = 0.7]
+        ([ shift = { (\JHTheorems_line_half_width, #1) } ] interior.north~west )
+    -- ([ shift = { (\JHTheorems_line_half_width, 0pt) } ] interior.south~west )
+    -- ([ shift = { (-1em, 0pt) } ] interior.south~east );
 }
 
 \newtcolorbox{leftLineBox}[2][]{
@@ -64,7 +76,7 @@
     breakable=true,
     left=7pt,
     parbox=false, % this fixes the indentation of paragraphs
-    overlay~unbroken~and~first={ \drawLeftLine[-25pt]{#2} },
+    overlay~unbroken~and~first={ \drawLeftLine[-4ex]{#2} },
     overlay~middle~and~last={ \drawLeftLine{#2} },
     #1
 }
@@ -76,10 +88,10 @@
     breakable=true,
     left=7pt,
     parbox=false, % this fixes the indentation of paragraphs
-    overlay~first={ \drawLeftLine[-25pt]{#2} },
+    overlay~first={ \drawLeftLine[-4ex]{#2} },
     overlay~middle={ \drawLeftLine{#2} },
     overlay~last={ \drawLeftBottomLine{#2} },
-    overlay~unbroken={ \drawLeftBottomLine[-25pt]{#2} },
+    overlay~unbroken={ \drawLeftBottomLine[-4ex]{#2} },
     #1
 }
 
@@ -105,11 +117,15 @@
 }
 
 \NewDocumentCommand{\DeclareLinedTheorem}{o m m}{ 
+    % #1 = options for the theorem, #2 = name of the theorem, #3 = color
     \declaretheorem[#1]{internal_#2}
     \NewDocumentEnvironment{#2}{o d()}{
+        % #1 = optional argument for the theorem, #2 = optional argument for the color
         \IfValueTF{##2}{
+            \def\JHTheorems_current_color{##2}
             \begin{leftLineBox}{##2}
         }{
+            \def\JHTheorems_current_color{#3}
             \begin{leftLineBox}{#3}
         }
         \IfValueTF{##1}{
@@ -127,8 +143,10 @@
     \declaretheorem[#1]{internal_#2}
     \NewDocumentEnvironment{#2}{o d()}{
         \IfValueTF{##2}{
+            \def\JHTheorems_current_color{##2}
             \begin{leftBottomLineBox}{##2}
         }{
+            \def\JHTheorems_current_color{#3}
             \begin{leftBottomLineBox}{#3}
         }
         \IfValueTF{##1}{
@@ -144,8 +162,10 @@
 
 \declaretheoremstyle[
     bodyfont={\upshape},
+    headformat={\NAME \; \NUMBER \NOTE},
     headpunct={:},
-    headfont={\hspace{-11pt}\itshape}, %\itshape
+    headindent=-11pt,
+    headfont={\itshape},
     notefont={\itshape}
 ]{JHRemark}
 
@@ -162,20 +182,32 @@
     name=\protect\theorem_name_example
 ]{Beispiel}{dunkelblau}
 
+\newsavebox{\JHTheoremsHeadBox}
 
+\newcommand{\FancyHead}[1]{
+    \sbox{\JHTheoremsHeadBox}{#1}%
+    \begin{tikzpicture}[baseline=(head.base)]
+        \draw[draw=\JHTheorems_current_color, line~width=\JHTheorems_line_width, opacity=0.7]
+            (0,-0.5ex) -- (\wd\JHTheoremsHeadBox,-0.5ex);
+        \node[inner~sep=0pt,outer~sep=0pt,anchor=base~west] (head) at (0,0) {\usebox{\JHTheoremsHeadBox}};
+    \end{tikzpicture}%
+}
 
 \declaretheoremstyle[
     bodyfont=\upshape,
-    headfont={\hspace{-11pt}\sffamily\bfseries},
-    notefont={\sffamily\bfseries},
+    headindent=-11pt,
+    headfont={\sffamily\bfseries},
+    headformat={\FancyHead{\NAME \; \NUMBER \NOTE}},
     headpunct={:},
 ]{JHNewDefinition}
 
+
 \declaretheoremstyle[
-    % bodyfont={\color{dunkelgrau}},
+    bodyfont={\color{Dunkelgrau}},
     headpunct={:},
     headfont={\itshape},
     notefont={\itshape},
+    headformat={\NAME \; \NUMBER \NOTE},
     qed=\qedsymbol
 ]{JHNewProof}
 
@@ -183,6 +215,7 @@
     bodyfont=\upshape,
     headfont={\sffamily\bfseries},
     notefont={\sffamily\bfseries},
+    headformat={\NAME \; \NUMBER \NOTE},
     headpunct={:},
 ]{JHDefinition}
 
@@ -190,6 +223,7 @@
     bodyfont={\color{dunkelgrau}},
     headpunct={:},
     headfont={\itshape},
+    headformat={\NAME \; \NUMBER \NOTE},
     notefont={\itshape}
 ]{JHProof}
 
